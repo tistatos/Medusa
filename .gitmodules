@@ -4,6 +4,6 @@
 [submodule "libfreenect"]
     path = external/libfreenect
     url = git@github.com:OpenKinect/libfreenect.git
-[submodule "openCV"]
+[submodule "external/opencv"]
     path = external/opencv
-    url = git@github.com:Itseez/opencv.git
+    url = https://github.com/Itseez/opencv.git
