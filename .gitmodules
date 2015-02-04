@@ -1,0 +1,9 @@
+[submodule "PCL"]
+    path = external/pcl
+    url = git@github.com:PointCloudLibrary/pcl.git
+[submodule "libfreenect"]
+    path = external/libfreenect
+    url = git@github.com:OpenKinect/libfreenect.git
+[submodule "openCV"]
+    path = external/opencv
+    url = git@github.com:Itseez/opencv.git
