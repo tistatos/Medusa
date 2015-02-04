@@ -5,5 +5,11 @@
     path = external/libfreenect
     url = git@github.com:OpenKinect/libfreenect.git
 [submodule "external/opencv"]
-    path = external/opencv
-    url = https://github.com/Itseez/opencv.git
+	path = external/opencv
+	url = https://github.com/Itseez/opencv.git
+[submodule "external/libfreenect"]
+	path = external/libfreenect
+	url = https://github.com/OpenKinect/libfreenect.git
+[submodule "external/pcl"]
+	path = external/pcl
+	url = https://github.com/PointCloudLibrary/pcl.git
