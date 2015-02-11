@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.11)
 set(PROJECT_NAME medusa)
-project($(PROJECT_NAME) C CXX)
+project(${PROJECT_NAME} C CXX)
 include(ExternalProject)
 set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
 
