@@ -16,13 +16,6 @@ set(PROJECT_EXT_DIR ${PROJECT_SOURCE_DIR}/external)
 # PCL settings
 # ---------------
 
-
-
-
-
-
-
-
  ExternalProject_Add( pcl
   URL ${PROJECT_EXT_DIR}/pcl/
   CMAKE_CACHE_ARGS
@@ -45,11 +38,11 @@ ExternalProject_Add( opencv
 # ---------------
 # libfreenect settings
 # ---------------
-set(OFF CACHE BOOL "")
 
 ExternalProject_Add( libfreenect
  URL ${PROJECT_EXT_DIR}/libfreenect/
- CMAKE_CACHE_ARGS -DBUILD_EXAMPLES:BOOL=OFF
+ CMAKE_CACHE_ARGS
+  -DBUILD_EXAMPLES:BOOL=OFF
 )
 
 
