@@ -4,9 +4,9 @@ Using Kinect cameras with [libfreenect](https://github.com/OpenKinect/libfreenec
 
 Developers:
 - [Carl Englund](https://github.com/CarlEnglund)
-- Caroline Gard
-- Isabell Jansson
-- Cecilia Lagerwall
+- [Caroline Gard](https://github.com/CarolineGard)
+- [Isabell Jansson](https://github.com/isabelljansson)
+- [Cecilia Lagerwall](https://github.com/cecla)
 - [Erik Sandrén](http://git.io/erki)
-- Johan Reimann
+- [Johan Reimann](https://github.com/johanreimann)
 - [Pelle Serander](https://github.com/Pelse862)
