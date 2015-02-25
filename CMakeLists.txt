@@ -13,7 +13,35 @@ set(PROJECT_CXX_DIR ${PROJECT_SOURCE_DIR}/src)
 set(PROJECT_LIBS_DIR ${PROJECT_SOURCE_DIR}/libs)
 set(PROJECT_EXT_DIR ${PROJECT_SOURCE_DIR}/external)
 
+###############
+# PCL Settings
+###############
+
+set(PCL_DIR "/path/to/PCLConfig.cmake")
+find_package(PCL REQUIRED COMPONENTS common)
+include_directories(${PCL_INCLUDE_DIRS})
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
+
+##################
+# OpenCV Settings
+##################
+
+find_package(OpenCV REQUIRED )
+
+##################
+# freenect Settings
+##################
+
+find_package(libfreenect REQUIRED )
+include_directories(${libfreenect_INCLUDE_DIRS})
+link_directories(${FREENECT_LIBRARY_DIRS})
+
+
 include_directories(
-        ${ext_libs}
         ${PROJECT_INCLUDE_DIR}
 )
+
+
+add_executable(test src/main.cpp)
+target_link_libraries(test ${PCL_COMMON_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES})
