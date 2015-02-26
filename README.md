@@ -11,3 +11,12 @@ Developers:
 - [Johan Reimann](https://github.com/johanreimann)
 - [Pelle Serander](https://github.com/Pelse862)
 
+
+
+## Getting started (and after each pull)
+go to the medusa folder
+```bash
+§ mkdir build
+§ cmake ..
+§ make
+```
