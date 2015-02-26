@@ -3,7 +3,7 @@
 #include <pcl/common/projection_matrix.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include "libfreenect.h"
+#include <libfreenect/libfreenect.h>
 
 using namespace cv;
 
