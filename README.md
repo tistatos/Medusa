@@ -20,3 +20,5 @@ go to the medusa folder
 § cmake ..
 § make
 ```
+
+Automated documentation with each build found at: http://bit.do/medusadoc
