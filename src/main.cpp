@@ -9,7 +9,7 @@ using namespace cv;
 
 int main(int argc, char const *argv[])
 {
-
+  will destroy
   pcl::PointCloud<pcl::PointXYZ> cloud;
 
   // Fill in the cloud data
