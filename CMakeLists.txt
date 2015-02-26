@@ -27,7 +27,9 @@ add_definitions(${PCL_DEFINITIONS})
 # OpenCV Settings
 ##################
 
-find_package(OpenCV REQUIRED )
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
+link_directories(${OpenCV_LIBRARY_DIRS})
 
 ##################
 # freenect Settings
