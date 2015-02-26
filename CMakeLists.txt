@@ -22,7 +22,7 @@ find_package(PCL REQUIRED COMPONENTS common)
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
-
+include_directories(${EIGEN_INCLUDE_DIRS})
 ##################
 # OpenCV Settings
 ##################
