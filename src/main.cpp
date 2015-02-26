@@ -4,18 +4,23 @@
 //! @author Erik Sandrén
 //! @version 1.0
 //! @date 2015-02-26
-//!
-//!
+
 #include <iostream>
 #include <pcl/point_types.h>
-#include <pcl/common/projection_matrix.h>
+#include <pcl/point_cloud.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <libfreenect/libfreenect.h>
 
 using namespace cv;
 
-int main(int argc, char const *argv[])
+/**
+ * @brief Main test function
+ * @details testing all functionality and dependencies needed for medusa
+ *
+ * @return -1 image is not found.
+ */
+int main()
 {
 
   pcl::PointCloud<pcl::PointXYZ> cloud;
@@ -38,7 +43,7 @@ int main(int argc, char const *argv[])
 
 
   Mat image;
-  image = imread("dick.png", CV_LOAD_IMAGE_COLOR);   // Read the file
+  image = imread("dick.png");   // Read the file
 
   if(! image.data )                              // Check for invalid input
   {
