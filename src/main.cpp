@@ -1,3 +1,11 @@
+//! @file main.cpp
+//! Test file for medusa. Test so PCL, OpenCV and Freenect works
+//!
+//! @author Erik Sandrén
+//! @version 1.0
+//! @date 2015-02-26
+//!
+//!
 #include <iostream>
 #include <pcl/point_types.h>
 #include <pcl/common/projection_matrix.h>
