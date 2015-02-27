@@ -9,9 +9,8 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
 set(PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
-set(PROJECT_CXX_DIR ${PROJECT_SOURCE_DIR}/src)
 set(PROJECT_LIBS_DIR ${PROJECT_SOURCE_DIR}/libs)
-set(PROJECT_EXT_DIR ${PROJECT_SOURCE_DIR}/external)
+set(PROJECT_CXX_DIR ${PROJECT_SOURCE_DIR}/src)
 
 ###############
 # PCL Settings
@@ -40,10 +39,43 @@ include_directories(${libfreenect_INCLUDE_DIRS})
 link_directories(${FREENECT_LIBRARY_DIRS})
 
 
+
+
+
+##################
+# targets
+##################
 include_directories(
         ${PROJECT_INCLUDE_DIR}
 )
 
+set(ALL_LIBS ${PCL_COMMON_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES})
 
-add_executable(test src/main.cpp)
-target_link_libraries(test ${PCL_COMMON_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES})
+
+
+add_executable(dependencies_test src/main.cpp)
+target_link_libraries(dependencies_test ${PCL_COMMON_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES})
+
+add_library(kinect src/kinect.cpp)
+
+
+##################
+# testing
+##################
+
+add_subdirectory(
+  ${PROJECT_SOURCE_DIR}/gtest
+)
+
+enable_testing()
+
+set(PROJECT_TEST_NAME ${PROJECT_NAME}_test)
+include_directories(${GTEST_INCLUDE_DIRS} ${COMMON_INCLUDES})
+
+file(GLOB TEST_SRC_FILES ${PROJECT_SOURCE_DIR}/test/*.cpp)
+
+add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES} )
+
+
+target_link_libraries(${PROJECT_TEST_NAME}
+    ${ALL_LIBS} kinect)
