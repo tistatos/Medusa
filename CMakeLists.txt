@@ -62,12 +62,12 @@ add_library(kinect src/kinect.cpp)
 ##################
 # testing
 ##################
+enable_testing()
 
 add_subdirectory(
   ${PROJECT_SOURCE_DIR}/gtest
 )
 
-enable_testing()
 
 set(PROJECT_TEST_NAME ${PROJECT_NAME}_test)
 include_directories(${GTEST_INCLUDE_DIRS} ${COMMON_INCLUDES})
