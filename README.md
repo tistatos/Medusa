@@ -1,4 +1,5 @@
 # Medusa
+[![Build Status](http://olkvartere.se:8181/job/Medusa/21/badge/icon)](http://olkvartere.se:8181/job/Medusa/21/)
 ### Bachelor thesis on 3D scanning and reconstruction
 Using Kinect cameras with [libfreenect](https://github.com/OpenKinect/libfreenect), [PCL](https://github.com/PointCloudLibrary/pcl) and [OpenCV](https://github.com/Itseez/opencv)
 
@@ -20,3 +21,5 @@ go to the medusa folder
 § cmake ..
 § make
 ```
+
+Automated documentation with each build found at: http://bit.do/medusadoc
