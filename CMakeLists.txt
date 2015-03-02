@@ -48,24 +48,24 @@ include_directories(
         ${PROJECT_INCLUDE_DIR}
 )
 
-set(ALL_LIBS ${PCL_COMMON_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES})
-
-
 
 add_executable(dependencies_test src/main.cpp)
 target_link_libraries(dependencies_test ${PCL_COMMON_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES})
 
 add_library(kinect src/kinect.cpp)
 
+set(ALL_LIBS ${PCL_COMMON_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES} kinect)
+
 
 ##################
 # testing
 ##################
-enable_testing()
 
 add_subdirectory(
   ${PROJECT_SOURCE_DIR}/gtest
 )
+
+enable_testing()
 
 set(PROJECT_TEST_NAME ${PROJECT_NAME}_test)
 include_directories(${GTEST_INCLUDE_DIRS} ${COMMON_INCLUDES})
@@ -75,9 +75,7 @@ file(GLOB TEST_SRC_FILES ${PROJECT_SOURCE_DIR}/test/*.cpp)
 add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES} )
 add_dependencies(${PROJECT_TEST_NAME} googletest)
 
-
-
 target_link_libraries(${PROJECT_TEST_NAME}
-    ${ALL_LIBS} kinect)
+    ${ALL_LIBS} )
 
 add_test(test ${PROJECT_TEST_NAME})
