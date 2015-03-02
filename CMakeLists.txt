@@ -4,6 +4,8 @@ set(PROJECT_NAME medusa)
 project(${PROJECT_NAME} C CXX)
 include(ExternalProject)
 
+find_package(Threads REQUIRED)
+
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
@@ -76,6 +78,11 @@ add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES} )
 add_dependencies(${PROJECT_TEST_NAME} googletest)
 
 target_link_libraries(${PROJECT_TEST_NAME}
-    ${ALL_LIBS} )
-
+    ${ALL_LIBS}
+    ${GTEST_LIBS_DIR}/ReleaseLibs/libgtest.a
+    ${GTEST_LIBS_DIR}/ReleaseLibs/libgtest_main.a
+    )
+target_link_libraries(${PROJECT_TEST_NAME} ${CMAKE_THREAD_LIBS_INIT})
 add_test(test ${PROJECT_TEST_NAME})
+
+message(${GTEST_LIBS_DIR})
