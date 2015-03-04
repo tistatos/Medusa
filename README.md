@@ -18,6 +18,7 @@ Developers:
 go to the medusa folder
 ```bash
 § mkdir build
+§ cd build
 § cmake ..
 § make
 ```
