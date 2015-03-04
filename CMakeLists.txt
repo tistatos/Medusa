@@ -18,7 +18,7 @@ set(PROJECT_CXX_DIR ${PROJECT_SOURCE_DIR}/src)
 ###############
 
 set(PCL_DIR "/path/to/PCLConfig.cmake")
-find_package(PCL REQUIRED COMPONENTS)
+find_package(PCL REQUIRED COMPONENTS common io)
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
