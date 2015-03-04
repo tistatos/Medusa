@@ -5,8 +5,8 @@
  * @date  2015-02-27
  */
 
-
 #include "kinect.h"
+#include "libfreenect.h"
 
 Kinect::Kinect()
 { }
