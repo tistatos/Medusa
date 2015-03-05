@@ -18,11 +18,12 @@ set(PROJECT_CXX_DIR ${PROJECT_SOURCE_DIR}/src)
 ###############
 
 set(PCL_DIR "/path/to/PCLConfig.cmake")
-find_package(PCL REQUIRED COMPONENTS)
+find_package(PCL 1.6 REQUIRED COMPONENTS common io)
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 include_directories(${EIGEN_INCLUDE_DIRS})
+
 ##################
 # OpenCV Settings
 ##################
@@ -54,7 +55,8 @@ include_directories(
 add_executable(dependencies_test src/main.cpp)
 target_link_libraries(dependencies_test ${PCL_COMMON_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES})
 add_executable(PCD_test src/loadPCD.cpp)
-target_link_libraries(PCD_test
+
+target_link_libraries(PCD_test 
  ${PCL_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES})
 
 add_library(kinect src/kinect.cpp)
