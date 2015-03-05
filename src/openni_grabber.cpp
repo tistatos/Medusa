@@ -13,7 +13,7 @@
 #include <pcl/kdtree/kdtree_flann.h>
 #include <pcl/features/normal_3d.h>
 #include <pcl/surface/gp3.h>
-
+#include <pcl/filters/voxel_grid.h>
 
 /**
  * @brief Simple point cloud viewer connected to kinect
@@ -30,8 +30,18 @@ public:
       */
      void cloud_cb_ (const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr &cloud)
      {
+       
+       pcl::PointCloud<pcl::PointXYZRGBA>::Ptr filteredCloud;
+
+       pcl::VoxelGrid<pcl::PointXYZRGBA> filter;
+
+       filter.setInputCloud(cloud);
+
+       filter.filter(*filteredCloud);
+
        if (!viewer.wasStopped())
-         viewer.showCloud (cloud);
+         viewer.showCloud (filteredCloud);
+
      }
 
      /**
@@ -43,13 +53,17 @@ public:
       //Create interface
        pcl::Grabber* interface = new pcl::OpenNIGrabber();
 
-       //create a function pointe to cloud_cb_
+       //create a function pointe to cloud_cb_1
        boost::function<void (const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr&)> f =
          boost::bind (&SimpleOpenNIProcessor::cloud_cb_, this, _1);
+        
+
+         
        //register callback function to interface
        interface->registerCallback (f);
        //Start capture on interface
        interface->start ();
+
 
        //running loop
        while (!viewer.wasStopped())
@@ -62,51 +76,7 @@ public:
      //The point cloud viewer
      pcl::visualization::CloudViewer viewer;
 
-/*public:
-  pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cld;
-  void cloud_cb_ (const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr &cloud)
-  {
-    static unsigned count = 0;
-    static unsigned pictureNumber = 1;
-    static double last = pcl::getTime ();
-    if (++count == 30)
-    {
-      double now = pcl::getTime ();
-      std::cout << "number of points: " << cloud->size() << std::endl;
-      std::cout << "Width: " << cloud->width << std::endl;
-      std::cout << "Height: " << cloud->height << std::endl;
-      //pcl::io::savePCDFileASCII(pictureNumber + "test_pcd.pcd", *cloud);
-      //pictureNumber++;
-      count = 0;
-      last = now;
-      cld = cloud;
-    }
-  }
 
-  void run ()
-  {
-    // create a new grabber for OpenNI devices
-    pcl::Grabber* interface = new pcl::OpenNIGrabber();
-
-    // make callback function from member function
-    boost::function<void (const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr&)> f =
-      boost::bind (&SimpleOpenNIProcessor::cloud_cb_, this, _1);
-
-    // connect callback function for desired signal. In this case its a point cloud with color values
-    boost::signals2::connection c = interface->registerCallback (f);
-    pcl::visualization::CloudViewer viewer("Cloud Viewer");
-
-    // start receiving point clouds
-    interface->start ();
-
-    // wait until user quits program with Ctrl-C, but no busy-waiting -> sleep (1);
-    while (!viewer.wasStopped ())
-    {
-      viewer.showCloud(cld);
-    }
-    // stop the grabber
-    interface->stop ();
-  }*/
 };
 
 int main ()
