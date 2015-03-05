@@ -39,10 +39,6 @@ find_package(libfreenect REQUIRED )
 include_directories(${libfreenect_INCLUDE_DIRS})
 link_directories(${FREENECT_LIBRARY_DIRS})
 
-
-
-
-
 ##################
 # targets
 ##################
@@ -56,8 +52,10 @@ target_link_libraries(dependencies_test ${PCL_COMMON_LIBRARIES} ${OpenCV_LIBS} $
 
 add_library(kinect src/kinect.cpp)
 
-set(ALL_LIBS ${PCL_COMMON_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES} kinect)
+set(ALL_LIBS ${PCL_COMMON_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${FREENECT_LIBRARIES} libfreenect_sync.so)
 
+add_executable(kinect_rgb src/kinect.cpp)
+target_link_libraries(kinect_rgb ${ALL_LIBS})
 
 ##################
 # testing
