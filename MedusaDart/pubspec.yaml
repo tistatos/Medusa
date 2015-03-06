@@ -6,3 +6,4 @@ environment:
 dependencies:
   browser: any
   three: any
+  vector_math: any
