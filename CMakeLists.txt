@@ -13,6 +13,10 @@ set(PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set(PROJECT_LIBS_DIR ${PROJECT_SOURCE_DIR}/libs)
 set(PROJECT_CXX_DIR ${PROJECT_SOURCE_DIR}/src)
 
+if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+  message(FATAL_ERROR "You must create a build folder and call cmake .. from there!")
+endif()
+
 ###############
 # PCL Settings
 ###############
