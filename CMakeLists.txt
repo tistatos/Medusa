@@ -13,6 +13,10 @@ set(PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set(PROJECT_LIBS_DIR ${PROJECT_SOURCE_DIR}/libs)
 set(PROJECT_CXX_DIR ${PROJECT_SOURCE_DIR}/src)
 
+if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+  message(FATAL_ERROR "You must create a build folder and call cmake .. from there!")
+endif()
+
 ###############
 # PCL Settings
 ###############
@@ -57,11 +61,13 @@ include_directories(
 add_executable(dependencies_test src/main.cpp)
 target_link_libraries(dependencies_test ${PCL_COMMON_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES})
 
-add_library(kinect src/kinect.cpp)
 set(ALL_LIBS ${PCL_COMMON_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB})
 
 add_executable(kinect_rgb src/kinect.cpp)
 target_link_libraries(kinect_rgb ${ALL_LIBS})
+
+add_executable(kinect_depth src/kinect_depth.cpp)
+target_link_libraries(kinect_depth ${ALL_LIBS})
 
 
 add_executable (openni_grabber src/openni_grabber.cpp)
