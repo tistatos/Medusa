@@ -39,10 +39,11 @@ int main(int argc, char const *argv[])
   uint32_t ts;
   freenect_raw_tilt_state *state = 0;
 
-  FILE *fp;
+  FILE *fp1;
+  FILE *fp2;
 
   //set led to red
-  freenect_sync_set_led(LED_RED,0);
+  freenect_sync_set_led(LED_YELLOW,0);
 
   //set Kinect to 0 degrees(pointing forward), -27<tilt<27
   freenect_sync_set_tilt_degs(0, 0);
@@ -59,16 +60,19 @@ int main(int argc, char const *argv[])
   //ts= timestamp, take a pic
   ret = freenect_sync_get_video((void**)&rgb, &ts, 0, FREENECT_VIDEO_RGB);
   std::cout << "first " << ts << std::endl;
-  freenect_sync_set_tilt_degs(27, 0);
+  //tilt kinect to second state
+  freenect_sync_set_tilt_degs(26, 0);
 
-  //open file, .ppm = format and set the name of the file to "bild"
-  fp = open_dump("bild.ppm");
+  //open file, .ppm = format and set the name of the file to "bild1"
+  fp1 = open_dump("bild1.ppm");
   //resolution 640x480
-  dump_rgb(fp, rgb, 640, 480);
+  dump_rgb(fp1, rgb, 640, 480);
   //close file
-  fclose(fp);
+  fclose(fp1);
 
-  while(state->tilt_angle != 27)
+  int angle = 26 * 2;
+
+  while(state->tilt_angle != angle)
   {
     freenect_sync_get_tilt_state(&state, 0);
     int ang = state->tilt_angle;
@@ -78,6 +82,12 @@ int main(int argc, char const *argv[])
   ret = freenect_sync_get_video((void**)&rgb, &ts, 0, FREENECT_VIDEO_RGB);
 
   std::cout << "second " << ts << std::endl;
+  //save second image and save as "bild2"
+  fp2 = open_dump("bild2.ppm");
+  dump_rgb(fp2, rgb, 640, 480);
+  fclose(fp2);
+
+
   freenect_sync_set_led(LED_BLINK_GREEN,0);
 
   return 0;
