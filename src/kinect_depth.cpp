@@ -37,12 +37,12 @@ public:
      uint16_t* depth = static_cast<uint16_t*>(_depth);
     copy(depth, depth+getDepthBufferSize()/2, m_buffer_depth.begin());
 
-    float f = 595.f;
+    float f = 59500.f;
     for (int i = 0; i < 480*640; ++i)
     {
       cloud.points[i].x = (i%640 - (640-1)/2.f) * depth[i] / f;  // X = (x - cx) * d / fx
       cloud.points[i].y = (i/640 - (480-1)/2.f) * depth[i] / f;  // Y = (y - cy) * d / fy
-      cloud.points[i].z = depth[i]; // Z = d
+      cloud.points[i].z = depth[i]/1000.f;; // Z = d
     }
    m_new_depth_frame = true;
   }
