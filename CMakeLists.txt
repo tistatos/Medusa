@@ -65,7 +65,7 @@ set(ALL_LIBS ${PCL_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES} kinect)
 ##################
 # testing
 ##################
-
+if(${BUILD_TESTS})
 add_subdirectory(
   ${PROJECT_SOURCE_DIR}/gtest
 )
@@ -89,3 +89,4 @@ target_link_libraries(${PROJECT_TEST_NAME} ${CMAKE_THREAD_LIBS_INIT})
 add_test(test ${PROJECT_TEST_NAME})
 
 message(${GTEST_LIBS_DIR})
+endif()
