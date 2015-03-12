@@ -13,12 +13,17 @@ set(PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set(PROJECT_LIBS_DIR ${PROJECT_SOURCE_DIR}/libs)
 set(PROJECT_CXX_DIR ${PROJECT_SOURCE_DIR}/src)
 
+if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+  message(FATAL_ERROR "You must create a build folder and call cmake .. from there!")
+endif()
+
+
 ###############
 # PCL Settings
 ###############
 
 set(PCL_DIR "/path/to/PCLConfig.cmake")
-find_package(PCL REQUIRED COMPONENTS)
+find_package(PCL 1.7 REQUIRED COMPONENTS common visualization io filters features parse console surface kdtree)
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
@@ -53,8 +58,14 @@ include_directories(
 
 add_executable(dependencies_test src/main.cpp)
 target_link_libraries(dependencies_test ${PCL_COMMON_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES})
+
+
 add_executable(PCD_test src/loadPCD.cpp)
 target_link_libraries(PCD_test
+ ${PCL_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES})
+
+ add_executable(pcl_for_file src/pclFunctionsForFile.cpp)
+target_link_libraries(pcl_for_file
  ${PCL_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES})
 
 add_library(kinect src/kinect.cpp)
@@ -89,4 +100,7 @@ target_link_libraries(${PROJECT_TEST_NAME} ${CMAKE_THREAD_LIBS_INIT})
 add_test(test ${PROJECT_TEST_NAME})
 
 message(${GTEST_LIBS_DIR})
+<<<<<<< HEAD
 endif()
+=======
+>>>>>>> b2e191a8d36a1dc79712ab801ea4322f7bf81666
