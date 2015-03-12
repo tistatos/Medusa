@@ -17,13 +17,13 @@ set(PROJECT_CXX_DIR ${PROJECT_SOURCE_DIR}/src)
 # PCL Settings
 ###############
 
-set(PCL_DIR "/path/to/PCLConfig.cmake")
-find_package(PCL 1.7 REQUIRED COMPONENTS common visualization io)
-include_directories(${PCL_INCLUDE_DIRS})
-link_directories(${PCL_LIBRARY_DIRS})
-message(${PCL_LIBRARY_DIRS})
-add_definitions(${PCL_DEFINITIONS})
-include_directories(${EIGEN_INCLUDE_DIRS})
+#set(PCL_DIR "/path/to/PCLConfig.cmake")
+#find_package(PCL 1.7 COMPONENTS common  )
+#include_directories(${PCL_INCLUDE_DIRS})
+#link_directories(${PCL_LIBRARY_DIRS})
+#message(${PCL_LIBRARY_DIRS})
+#add_definitions(${PCL_DEFINITIONS})
+#include_directories(${EIGEN_INCLUDE_DIRS})
 ##################
 # OpenCV Settings
 ##################
@@ -63,6 +63,11 @@ set(ALL_LIBS ${PCL_COMMON_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES} ${CMAK
 add_executable(kinect_rgb src/kinect.cpp)
 target_link_libraries(kinect_rgb ${ALL_LIBS})
 
+add_executable(calibration src/calibration.cpp)
+target_link_libraries(calibration ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB} ${OpenCV_LIBS})
+
+add_executable(write_xml_file src/write_xml_file.cpp)
+target_link_libraries(write_xml_file ${OpenCV_LIBS})
 
 add_executable (openni_grabber src/openni_grabber.cpp)
 target_link_libraries (openni_grabber ${PCL_LIBRARIES})
