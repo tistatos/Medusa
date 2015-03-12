@@ -6,6 +6,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <libfreenect/libfreenect.h>
+
 #include <pcl/pcl_base.h>
 
 #include <pcl/filters/statistical_outlier_removal.h>
@@ -13,10 +14,16 @@
 #include <boost/thread/thread.hpp>
 #include <pcl/common/common_headers.h>
 
+#include <stdlib.h>
+#include <pcl/features/normal_3d.h>
+#include <pcl/visualization/pcl_visualizer.h>
+#include <pcl/console/parse.h>
+
 #include <pcl/compression/octree_pointcloud_compression.h>
 
 
 using namespace cv;
+using namespace std;
 
 
 int main(int argc, char** argv) { 
