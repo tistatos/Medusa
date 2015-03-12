@@ -10,15 +10,21 @@
  
   <body> 
     
-    <div id ="showObj">
+    <div id ="container"> 
+      <div class ="left">
+      </div>
+      <div class ="right">
+        <button class ="save"><span>Spara</span></button>
+        <button class ="qr">QR-kod</button>
+        <button class ="mail">Maila</button>
+        <button id ="reDo">Gör om</button>
+        <a href="index.html"><button id ="quit">Avsluta</button></a>
+      </div> 
     </div>
     
-    <div class ="menu">
-    <button>Spara</button>
-    <button>Gör om</button>
-    <button>Avsluta</button>
-    </div>
     <script type="application/dart" src="main.dart"></script>
+    <script type="application/javascript" src="js/mainPage.js"></script>
+    <script type="application/javascript" src="js/classie.js"></script>
     <script src="packages/browser/dart.js"></script>
   </body>
 </html>

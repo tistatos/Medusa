@@ -1,0 +1,132 @@
+html, body 
+{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+/*Right div: buttons...*/
+.right
+{
+  background: white;
+  width: 20%;
+  height: 100%;
+  left: 80%;
+  display: inline-block;;
+  position: fixed;
+}
+
+/*Left div: show object*/
+.left
+{
+  background: black;
+  width: 80%;
+  height: 100%;
+  display: inline-block;;
+  position: fixed;
+}
+
+
+/*Buttons in right div*/
+
+/*Button: Save object*/
+.save
+{
+  top:20%;
+  position: absolute;
+  
+  background-color: LawnGreen;
+  display: block;
+  height: 7%;
+  width: 95%; 
+  left:2.5%;
+  border-style:none;
+  text-align: center;
+  font-size: 100%; 
+  outline:none; 
+}
+
+/*Button: redo scanning process*/
+#reDo
+{
+  top:40%;
+  position: absolute;
+  background-color: LawnGreen;
+  display: block;
+  height: 7%;
+  width: 95%; 
+  left:2.5%;
+  border-style:none;
+  text-align: center;
+  font-size: 100%; 
+  outline:none; 
+}
+
+/*Button: Quit program*/
+#quit
+{
+  top:60%;
+  position: absolute;
+  background-color: LawnGreen;
+  display: block;
+  height: 7%;
+  width: 95%; 
+  left:2.5%;
+  border-style:none;
+  text-align: center;
+  font-size: 100%; 
+  outline:none; 
+}
+
+/*Extended menu for saving object*/
+
+/*Button: QR*/
+.qr 
+{
+  text-align: center;
+  font-size: 100%;
+  font-family: Arial;
+  background-color: #67b5d1;
+  position: absolute; 
+  top:28%;
+  width: 30%;
+  height: 5%;
+  right:18%;
+  border-style:none;
+  outline:none; 
+  opacity: 0;
+}
+
+/*Button: Mail object*/
+.mail 
+{
+  text-align: center;
+  font-size: 100%;
+  font-family: Arial;
+  background-color: #67b5d1; 
+  position: relative;
+  top:28%;
+  width: 30%;
+  height: 5%;
+  left: 18%;
+  border-style:none;
+  outline:none; 
+  opacity: 0;
+}
+
+/*show qr/mail button when save button is pushed*/
+.qr-open .qr 
+{
+  opacity: 1;
+}
+
+.mail-open .mail
+{
+  opacity: 1;
+}
+
+
+
+

@@ -3,12 +3,13 @@
 //classie.js is used to easily add and remove classes
  
 
-(function( window ){
+(function( window )
+{
   
   var infoMenu = document.querySelector( ".infoMenu" ),
       infoButton = document.querySelector( ".infoButton" ),
       startButton = document.querySelector( ".startButton" ),
-      continueBotton = document.querySelector( ".continueBotton" ),
+      continueButton = document.querySelector( ".continueButton" ),
       body = document.body,
       mask = document.createElement("div"), 
       activeNav;
@@ -23,7 +24,6 @@
     classie.add(body, "instructions-open");
     document.body.appendChild(mask);
     activeNav="startButton-open";
-  
   });
   
   //Show information menu when the information button is pushed
