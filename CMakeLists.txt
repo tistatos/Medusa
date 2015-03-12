@@ -100,7 +100,4 @@ target_link_libraries(${PROJECT_TEST_NAME} ${CMAKE_THREAD_LIBS_INIT})
 add_test(test ${PROJECT_TEST_NAME})
 
 message(${GTEST_LIBS_DIR})
-<<<<<<< HEAD
 endif()
-=======
->>>>>>> b2e191a8d36a1dc79712ab801ea4322f7bf81666
