@@ -10,11 +10,10 @@
 #include <pcl/common/time.h>
 #include <pcl/io/pcd_io.h>
 #include <pcl/visualization/cloud_viewer.h>
-#include <pcl/kdtree/kdtree_flann.h>
-#include <pcl/features/normal_3d.h>
-#include <pcl/surface/gp3.h>
-
-
+#include <pcl/common/transforms.h>
+#include <pcl/filters/filter.h>
+#include <pcl/filters/radius_outlier_removal.h>
+#include <pcl/filters/conditional_removal.h>
 /**
  * @brief Simple point cloud viewer connected to kinect
  */
@@ -23,15 +22,28 @@ class SimpleOpenNIProcessor
 
 public:
      SimpleOpenNIProcessor () : viewer ("PCL OpenNI Viewer") {}
-
+     Eigen::Affine3f transform_1;
+     pcl::PointCloud<pcl::PointXYZRGBA>::Ptr filteredCloud;
      /**
       * @brief Callback function for openNI
       * @details gets point cloud from kinect with color and shows it in the view.
       */
      void cloud_cb_ (const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr &cloud)
      {
-       if (!viewer.wasStopped())
-         viewer.showCloud (cloud);
+
+      pcl::PointCloud<pcl::PointXYZRGBA>::Ptr transformed_cloud (new pcl::PointCloud<pcl::PointXYZRGBA> ());
+      pcl::transformPointCloud (*cloud, *transformed_cloud, transform_1);
+      pcl::ConditionAnd<pcl::PointXYZRGBA>::Ptr range_cond ( new pcl::ConditionAnd<pcl::PointXYZRGBA>);
+      range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZRGBA>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZRGBA> ("z", pcl::ComparisonOps::LT, 2)));
+
+      pcl::ConditionalRemoval<pcl::PointXYZRGBA> condrem (range_cond);
+      condrem.setInputCloud(transformed_cloud);
+      condrem.setKeepOrganized(true);
+      condrem.filter(*transformed_cloud);
+
+      if (!viewer.wasStopped())
+        viewer.showCloud (transformed_cloud);
+
      }
 
      /**
@@ -40,16 +52,25 @@ public:
       */
      void run ()
      {
+      transform_1 = Eigen::Affine3f::Identity();
+      float theta = M_PI;
+      transform_1.rotate (Eigen::AngleAxisf (theta, Eigen::Vector3f::UnitZ()));
+
+
       //Create interface
        pcl::Grabber* interface = new pcl::OpenNIGrabber();
 
-       //create a function pointe to cloud_cb_
+       //create a function pointe to cloud_cb_1
        boost::function<void (const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr&)> f =
          boost::bind (&SimpleOpenNIProcessor::cloud_cb_, this, _1);
+
+
+
        //register callback function to interface
        interface->registerCallback (f);
        //Start capture on interface
        interface->start ();
+
 
        //running loop
        while (!viewer.wasStopped())
@@ -62,51 +83,7 @@ public:
      //The point cloud viewer
      pcl::visualization::CloudViewer viewer;
 
-/*public:
-  pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cld;
-  void cloud_cb_ (const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr &cloud)
-  {
-    static unsigned count = 0;
-    static unsigned pictureNumber = 1;
-    static double last = pcl::getTime ();
-    if (++count == 30)
-    {
-      double now = pcl::getTime ();
-      std::cout << "number of points: " << cloud->size() << std::endl;
-      std::cout << "Width: " << cloud->width << std::endl;
-      std::cout << "Height: " << cloud->height << std::endl;
-      //pcl::io::savePCDFileASCII(pictureNumber + "test_pcd.pcd", *cloud);
-      //pictureNumber++;
-      count = 0;
-      last = now;
-      cld = cloud;
-    }
-  }
 
-  void run ()
-  {
-    // create a new grabber for OpenNI devices
-    pcl::Grabber* interface = new pcl::OpenNIGrabber();
-
-    // make callback function from member function
-    boost::function<void (const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr&)> f =
-      boost::bind (&SimpleOpenNIProcessor::cloud_cb_, this, _1);
-
-    // connect callback function for desired signal. In this case its a point cloud with color values
-    boost::signals2::connection c = interface->registerCallback (f);
-    pcl::visualization::CloudViewer viewer("Cloud Viewer");
-
-    // start receiving point clouds
-    interface->start ();
-
-    // wait until user quits program with Ctrl-C, but no busy-waiting -> sleep (1);
-    while (!viewer.wasStopped ())
-    {
-      viewer.showCloud(cld);
-    }
-    // stop the grabber
-    interface->stop ();
-  }*/
 };
 
 int main ()

@@ -13,6 +13,10 @@ set(PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set(PROJECT_LIBS_DIR ${PROJECT_SOURCE_DIR}/libs)
 set(PROJECT_CXX_DIR ${PROJECT_SOURCE_DIR}/src)
 
+if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+  message(FATAL_ERROR "You must create a build folder and call cmake .. from there!, Also remove CMakeCache.txt before trying to cmake again")
+endif()
+
 ###############
 # PCL Settings
 ###############
@@ -24,6 +28,7 @@ set(PROJECT_CXX_DIR ${PROJECT_SOURCE_DIR}/src)
 #message(${PCL_LIBRARY_DIRS})
 #add_definitions(${PCL_DEFINITIONS})
 #include_directories(${EIGEN_INCLUDE_DIRS})
+
 ##################
 # OpenCV Settings
 ##################
@@ -54,20 +59,25 @@ include_directories(
 )
 
 
+set(ALL_LIBS ${PCL_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB})
+
 add_executable(dependencies_test src/main.cpp)
 target_link_libraries(dependencies_test ${PCL_COMMON_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES})
 
-add_library(kinect src/kinect.cpp)
-set(ALL_LIBS ${PCL_COMMON_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB})
 
 add_executable(kinect_rgb src/kinect.cpp)
 target_link_libraries(kinect_rgb ${ALL_LIBS})
+
 
 add_executable(calibration src/calibration.cpp)
 target_link_libraries(calibration ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB} ${OpenCV_LIBS})
 
 add_executable(write_xml_file src/write_xml_file.cpp)
 target_link_libraries(write_xml_file ${OpenCV_LIBS})
+
+add_executable(kinect_depth src/kinect_depth.cpp)
+target_link_libraries(kinect_depth ${ALL_LIBS})
+
 
 add_executable (openni_grabber src/openni_grabber.cpp)
 target_link_libraries (openni_grabber ${PCL_LIBRARIES})
