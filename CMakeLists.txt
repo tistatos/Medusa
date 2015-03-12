@@ -22,11 +22,15 @@ endif()
 ###############
 
 set(PCL_DIR "/path/to/PCLConfig.cmake")
-find_package(PCL 1.7 REQUIRED COMPONENTS common io)
+find_package(PCL 1.7 REQUIRED COMPONENTS common io filters visualization boost compression)
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 include_directories(${EIGEN_INCLUDE_DIRS})
+
+
+
+
 ##################
 # OpenCV Settings
 ##################
@@ -42,9 +46,6 @@ link_directories(${OpenCV_LIBRARY_DIRS})
 find_package(libfreenect REQUIRED )
 include_directories(${libfreenect_INCLUDE_DIRS})
 link_directories(${FREENECT_LIBRARY_DIRS})
-
-
-
 
 
 ##################
