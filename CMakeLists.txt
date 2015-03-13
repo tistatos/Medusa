@@ -72,31 +72,3 @@ add_library(kinect src/kinect.cpp)
 
 set(ALL_LIBS ${PCL_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES} kinect)
 
-
-##################
-# testing
-##################
-
-add_subdirectory(
-  ${PROJECT_SOURCE_DIR}/gtest
-)
-
-enable_testing()
-
-set(PROJECT_TEST_NAME ${PROJECT_NAME}_test)
-include_directories(${GTEST_INCLUDE_DIRS} ${COMMON_INCLUDES})
-
-file(GLOB TEST_SRC_FILES ${PROJECT_SOURCE_DIR}/test/*.cpp)
-
-add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES} )
-add_dependencies(${PROJECT_TEST_NAME} googletest)
-
-target_link_libraries(${PROJECT_TEST_NAME}
-    ${ALL_LIBS}
-    ${GTEST_LIBS_DIR}/ReleaseLibs/libgtest.a
-    ${GTEST_LIBS_DIR}/ReleaseLibs/libgtest_main.a
-    )
-target_link_libraries(${PROJECT_TEST_NAME} ${CMAKE_THREAD_LIBS_INIT})
-add_test(test ${PROJECT_TEST_NAME})
-
-message(${GTEST_LIBS_DIR})
