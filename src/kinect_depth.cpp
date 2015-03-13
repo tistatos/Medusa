@@ -144,6 +144,5 @@ int main(int argc, char const *argv[])
   //close file
   // fclose(fp2);
 
-
   return 0;
 }
