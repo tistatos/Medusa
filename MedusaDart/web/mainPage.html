@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+  	<meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/mainPage.css">
+    <title>mainPage</title>
+  </head>
+ 
+  <body> 
+    
+    <div id ="container"> 
+      <div class ="left">
+      </div>
+      <div class ="right">
+        <button class ="save">Spara</button>
+        <button class ="qr">QR-kod</button>
+        <button class ="mail">Maila</button>
+        <button id ="reDo">Gör om</button>
+        <a href="index.html"><button id ="quit">Avsluta</button></a>
+      </div> 
+      
+      <div class="popupMail" role="alert">
+        <div class="popupContainer">
+          <p>Skicka min modell via mail</p>
+          <a href="#0" class="closePopup">Stäng</a>
+        </div>
+      </div> 
+      
+      <div class="popupQR" role="alert">
+        <div class="popupContainer">
+          <p>Skicka min modell via mail</p>
+          <a href="#0" class="closePopup">Stäng</a>
+        </div>
+      </div> 
+      
+    </div>
+    
+    <script type="application/dart" src="main.dart"></script>
+    <script type="application/javascript" src="js/mainPage.js"></script>
+    <script type="application/javascript" src="js/classie.js"></script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>

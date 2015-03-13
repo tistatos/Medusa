@@ -1,5 +1,6 @@
-// Copyright (c) 2015, <your name>. All rights reserved. Use of this source code
-// is governed by a BSD-style license that can be found in the LICENSE file.
+//Medusa 3D-reconstruction
+
+//Do the c++ calls here...
 
 import 'dart:html';
 import 'package:three/three.dart';
@@ -8,10 +9,9 @@ import 'package:vector_math/vector_math.dart' hide Ray;
 
 var camera, cameraTarget, scene, renderer;
 
-
-
 void main() {
- init();
+}
+ /*init();
     renderer = new WebGLRenderer(antialias: true, alpha: false);
      renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -33,7 +33,6 @@ init() {
   var container = document.createElement('div');
   document.body.append(container);
  
-
   camera = new PerspectiveCamera(35.0, window.innerWidth / window.innerHeight, 1.0, 15.0);
   camera.position.setValues(3.0, 0.15, 3.0);
 
@@ -47,15 +46,10 @@ init() {
     plane.position.y = -0.5;
     scene.add(plane);
 
-  
-  
-
-    
-
-
     //window.onResize.listen(onWindowResize);
   
 }
+
 
 
 
@@ -66,4 +60,4 @@ render() {
 
   renderer.render(scene, camera);
 
-}
+}*/

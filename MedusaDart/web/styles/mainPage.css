@@ -1,0 +1,206 @@
+html, body 
+{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    position:fixed;
+}
+
+/*Right div: buttons...*/
+.right
+{
+  background: white;
+  width: 20%;
+  height: 100%;
+  left: 80%;
+  display: inline-block;;
+  position: fixed;
+}
+
+/*Left div: show object*/
+.left
+{
+  background: black;
+  width: 80%;
+  height: 100%;
+  display: inline-block;;
+  position: fixed;
+}
+
+
+/*Buttons in right div*/
+
+/*Button: Save object*/
+.save
+{
+  top:20%;
+  position: absolute;
+  
+  background-color: LawnGreen;
+  display: block;
+  height: 7%;
+  width: 95%; 
+  left:2.5%;
+  border-style:none;
+  text-align: center;
+  font-size: 100%; 
+  outline:none; 
+}
+
+/*Button: redo scanning process*/
+#reDo
+{
+  top:40%;
+  position: absolute;
+  background-color: LawnGreen;
+  display: block;
+  height: 7%;
+  width: 95%; 
+  left:2.5%;
+  border-style:none;
+  text-align: center;
+  font-size: 100%; 
+  outline:none; 
+}
+
+/*Button: Quit program*/
+#quit
+{
+  top:60%;
+  position: absolute;
+  background-color: LawnGreen;
+  display: block;
+  height: 7%;
+  width: 95%; 
+  left:2.5%;
+  border-style:none;
+  text-align: center;
+  font-size: 100%; 
+  outline:none; 
+}
+
+/*Extended menu for saving object*/
+
+/*Button: QR*/
+.qr 
+{
+  text-align: center;
+  font-size: 100%;
+  font-family: Arial;
+  background-color: #67b5d1;
+  position: absolute; 
+  top:20%;
+  width: 30%;
+  height: 5%;
+  right:35%;  
+  border-style:none;
+  outline:none; 
+  z-index: -1;
+  opacity: 0;
+  
+  -webkit-transition: all 0.5s !important;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s; 
+}
+
+/*Button: Mail object*/
+.mail 
+{
+  text-align: center;
+  font-size: 100%;
+  font-family: Arial;
+  background-color: #67b5d1; 
+  position: relative;
+  top: 20%;
+  width: 30%;
+  height: 5%;
+  left: 35%;
+  border-style:none;
+  outline:none; 
+  z-index: -1;
+  opacity: 0;
+  
+  -webkit-transition: all 0.5s !important;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s; 
+}
+
+/*show qr/mail button when save button is pushed*/
+.qr-open .qr 
+{
+  top:28%;
+  right:18%;
+  opacity: 1;
+}
+
+.mail-open .mail
+{
+  top:28%;
+  left: 18%;
+  opacity: 1;
+}
+
+.qr-close .qr 
+{
+  top:20%;
+  right:35%;
+  opacity: 1;
+}
+
+.mail-close .mail
+{
+  top:20%;
+  left: 35%;
+  opacity: 1;
+}
+
+/*Popups*/
+
+.popupMail 
+{
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s 0s, visibility 0s 0.3s;
+}
+
+.popupQR 
+{
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s 0s, visibility 0s 0.3s;
+}
+
+.popupMail.is-visible 
+{
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s 0s, visibility 0s 0s;
+}
+
+.popupQR.is-visible 
+{
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s 0s, visibility 0s 0s;
+}
+
+popupContainer 
+{
+  transform: translateY(-40px);
+  transition-property: transform;
+  transition-duration: 0.3s;
+}
+ 
+.is-visible popupContainer {
+  transform: translateY(0);
+}
+
+
+
+
