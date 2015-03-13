@@ -36,6 +36,11 @@ body.startButton-open .startButton
   overflow: hidden;
 }
 
+/*Info button*/
+.infoButton
+{
+}
+
 /*Custum information menu*/
 .infoMenu
 {
