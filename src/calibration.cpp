@@ -9,6 +9,8 @@
 #include <time.h>
 #include <stdio.h>
 
+#include <unistd.h>
+
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
@@ -74,7 +76,8 @@ public:
 	//take the next image from the Kinect
 Mat nextImage()
 {
-	Mat result;
+	Mat result_rgb;
+	Mat result_ir;
 	int ret;
 	char *rgb = 0;
 
@@ -82,15 +85,25 @@ Mat nextImage()
 
 	FILE *fp;	
 	
-	ret = freenect_sync_get_video((void**)&rgb, &ts, 0, FREENECT_VIDEO_RGB);
+	//if(n == 1)
+	//{ 
+		ret = freenect_sync_get_video((void**)&rgb, &ts, 0, FREENECT_VIDEO_RGB);
+		fp = open_dump("cali_rgb.ppm");
+		dump_rgb(fp, rgb, 640, 480);
+		fclose(fp);
+		result_rgb = imread("cali_rgb.ppm");
+		return result_rgb;
+	//}
 
-	fp = open_dump("cali.ppm");
-	dump_rgb(fp, rgb, 640, 480);
-	fclose(fp);
-
-	result = imread("cali.ppm");
-
-	return result;
+/*	else
+	{ 
+		ret = freenect_sync_get_video((void**)&rgb, &ts, 0, FREENECT_VIDEO_IR_8BIT);
+		fp = open_dump("cali_ir.ppm");
+		dump_rgb(fp, rgb, 640, 480);
+		fclose(fp);
+		result_ir = imread("cali_ir.ppm");
+		return result_ir;
+	}*/
 }
 
 public:
@@ -104,15 +117,15 @@ static void read(const FileNode& node, Settings& x, const Settings& default_valu
 
 int keyPressed()
 {
-	char s;
+	char key;
 
 	do
 	{
 		cout << "Press a to take next image or press q to quit" << endl;
-		cin >> s;
-	}while((s != 'a') && (s != 'q'));
+		cin >> key;
+	}while((key != 'a') && (key != 'q'));
 
-	if(s == 'q')
+	if(key == 'q')
 	{
 		return -1;
 	}else return 1;
@@ -146,33 +159,62 @@ int main(int argc, char const *argv[])
 	freenect_raw_tilt_state *state = 0;	
 
 	Size imageSize;
+	Size boardSize;
+	boardSize.width = 7;
+	boardSize.height = 5;
 	//vector<vector<Point2f>> imagePoints;
 	int q;
+	int counter = 0;
+	int rgb_img = 1;
+	int ir_img = 2;
+	Mat view_rgb;
+	Mat view_ir;
 	//take ten images and then do the calibration. The loop should continue when the key ENTER have been pressed
-	for(int i = 0; ; ++i)
+	do
 	{
-		Mat view; //InputArray image
-		bool blinkOutput = false;
+		//RGB
+		Mat view_rgb; //InputArray image
+		//Mat view_ir; //InputArray image
+		//bool blinkOutput = false;
 
-		view = s.nextImage();
+		view_rgb = s.nextImage();
+		//view_ir = s.nextImage(ir_img);
+
 		//cout << "size: " << view.size() << endl;
-		imageSize = view.size();
+		//imageSize = view1.size();
 
 		vector<Point2f> pointBuf;
 		//findChessboardCorners(InputArray image, Size patternSize, OutputArray corners, int flags=CALIB_CB_ADAPTIVE_THRESH+CALIB_CB_NORMALIZE_IMAGE )
-		bool found = findChessboardCorners(view, imageSize, pointBuf, 
-			CALIB_CB_ADAPTIVE_THRESH | CALIB_CB_FAST_CHECK | CALIB_CB_NORMALIZE_IMAGE);
+		bool found_rgb = findChessboardCorners(view_rgb, boardSize, pointBuf);
+		//bool found_ir = findChessboardCorners(view_ir, boardSize, pointBuf);
 
-		if(found)
+		if(found_rgb)
 		{
+			counter++;
 			cout << "hej" << endl;
+			
+			//view_rgb *= 1./255;
+			//Mat viewGray;
+			//cvtColor(view, viewGray, COLOR_BGR2GRAY);
+
+ 			//cornerSubPix(view, pointBuf, Size(11, 11), Size(-1, -1),
+    		//TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
+			
+			drawChessboardCorners(view_rgb, boardSize, Mat(pointBuf), found_rgb);
+			//drawChessboardCorners(view_ir, boardSize, Mat(pointBuf), found_ir);
+			//view = s.nextImage(v);
+			//the user needs to press a or q to continue the loop. q = break the loop
+/*			q = keyPressed();
+			if(q == -1) break;*/
+			imshow("Image View", view_rgb);
+			//imshow("Image View", view_ir);
+
+			if(keyPressed() == -1) break;
 		}
 
-		//the user needs to press a or q to continue the loop. q = break the loop
-		//q = keyPressed();
-		//if(q == -1) break;
+	}while(counter != 1);
 
-	}
+
 
 	cout << "Calibration done!" << endl;
 
