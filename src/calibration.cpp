@@ -72,9 +72,10 @@ public:
 	}
 
 	//take the next image from the Kinect
-Mat nextImage()
+Mat nextImage(int n)
 {
-	Mat result;
+	Mat result_rgb;
+	Mat result_ir;
 	int ret;
 	char *rgb = 0;
 
@@ -82,17 +83,25 @@ Mat nextImage()
 
 	FILE *fp;	
 	
-	ret = freenect_sync_get_video((void**)&rgb, &ts, 0, FREENECT_VIDEO_RGB);
+	if(n == 1)
+	{ 
+		ret = freenect_sync_get_video((void**)&rgb, &ts, 0, FREENECT_VIDEO_RGB);
+		fp = open_dump("cali_rgb.ppm");
+		dump_rgb(fp, rgb, 640, 480);
+		fclose(fp);
+		result_rgb = imread("cali_rgb.ppm");
+		return result_rgb;
+	}
 
-	fp = open_dump("cali.ppm");
-	dump_rgb(fp, rgb, 640, 480);
-	fclose(fp);
-
-	//CV_LOAD_IMAGE_GRAYSCALE
-	result = imread("cali.ppm");
-
-	return result;
-	
+	else
+	{ 
+		ret = freenect_sync_get_video((void**)&rgb, &ts, 0, FREENECT_VIDEO_IR_8BIT);
+		fp = open_dump("cali_ir.ppm");
+		dump_rgb(fp, rgb, 640, 480);
+		fclose(fp);
+		result_ir = imread("cali_ir.ppm");
+		return result_ir;
+	}
 }
 
 public:
@@ -156,21 +165,28 @@ int main(int argc, char const *argv[])
 	//vector<vector<Point2f>> imagePoints;
 	int q;
 	int counter = 0;
+	int rgb_img = 1;
+	int ir_img = 2;
 	//take ten images and then do the calibration. The loop should continue when the key ENTER have been pressed
-	for(int i = 0; ; ++i)
+	do
 	{
-		Mat view; //InputArray image
-		bool blinkOutput = false;
+		//RGB
+		Mat view_rgb; //InputArray image
+		Mat view_ir; //InputArray image
+		//bool blinkOutput = false;
 
-		view = s.nextImage();
+		view_rgb = s.nextImage(rgb_img);
+		view_ir = s.nextImage(ir_img);
+
 		//cout << "size: " << view.size() << endl;
-		imageSize = view.size();
+		//imageSize = view1.size();
 
 		vector<Point2f> pointBuf;
 		//findChessboardCorners(InputArray image, Size patternSize, OutputArray corners, int flags=CALIB_CB_ADAPTIVE_THRESH+CALIB_CB_NORMALIZE_IMAGE )
-		bool found = findChessboardCorners(view, boardSize, pointBuf);
+		bool found_rgb = findChessboardCorners(view_rgb, boardSize, pointBuf);
+		bool found_ir = findChessboardCorners(view_ir, boardSize, pointBuf);
 
-		if(found)
+		if(found_rgb && found_ir)
 		{
 			counter++;
 			cout << "hej" << endl;
@@ -181,22 +197,13 @@ int main(int argc, char const *argv[])
  			//cornerSubPix(view, pointBuf, Size(11, 11), Size(-1, -1),
     		//TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
 			
-			drawChessboardCorners(view, boardSize,pointBuf, found);
-			view = s.nextImage();
+			//drawChessboardCorners(view, boardSize,pointBuf, found);
+			//view = s.nextImage(v);
 			//the user needs to press a or q to continue the loop. q = break the loop
-			q = keyPressed();
-			if(q == -1) break;
+/*			q = keyPressed();
+			if(q == -1) break;*/
 		}
-
-		if(counter == 10)
-		{
-			cout << "Nu har jag hittat 10 bilder" << endl;
-			break;
-		}
-		
-
-	}
-
+	}while(counter != 10);
 
 	cout << "Calibration done!" << endl;
 
