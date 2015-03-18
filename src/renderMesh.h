@@ -1,6 +1,3 @@
-
-
-
 #include <iostream>
 
 #include <pcl/point_types.h>
@@ -32,28 +29,31 @@
 #include <pcl/compression/octree_pointcloud_compression.h>
 
 
-
 class renderMesh
 {
+	public:
 
-public:
+	void run();
 
-void run();
-pcl::PointCloud<pcl::PointXYZ> loadData();
-void show (pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
+	pcl::PointCloud<pcl::PointXYZ> loadData();
+	void show (pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
 
-void showMesh(pcl::PolygonMesh mesh);
+	void showMesh(pcl::PolygonMesh mesh);
 
-pcl::PointCloud<pcl::PointNormal>::Ptr getNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+	pcl::PointCloud<pcl::PointNormal>::Ptr getNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
-void runGp3(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+	void runGp3(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
-pcl::PointCloud<pcl::PointXYZ>::Ptr setDelims(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+	pcl::PointCloud<pcl::PointXYZ>::Ptr setDelims(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
-pcl::PointCloud<pcl::PointXYZ>::Ptr reduceData(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+	pcl::PointCloud<pcl::PointXYZ>::Ptr reduceData(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
-pcl::PointCloud<pcl::PointXYZ>::Ptr mirrorCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+	pcl::PointCloud<pcl::PointXYZ>::Ptr mirrorCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
-protected:
+	protected:
 
 };
+
+
+
+
