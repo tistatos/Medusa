@@ -38,9 +38,7 @@ class renderMesh
 
 public:
 
-	void run(pcl::PointCloud<pcl::PointXYZ> cloud&);
-
-	pcl::PointCloud<pcl::PointXYZ> loadData();
+	void run(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
 	void show (pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
 

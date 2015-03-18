@@ -34,17 +34,7 @@
 
 using namespace cv;
 
-pcl::PointCloud<pcl::PointXYZ> renderMesh::loadData()
-{
-  pcl::PointCloud<pcl::PointXYZ> cloud;
 
-  if(pcl::io::loadPCDFile<pcl::PointXYZ> ("model.pcd", cloud) == -1)
-  {
-    std::cout << "failed to load file" << std::endl;
-    return cloud;
-  }
-  return cloud;
-}
 
 void renderMesh::run(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
