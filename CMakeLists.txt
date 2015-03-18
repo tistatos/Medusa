@@ -49,7 +49,7 @@ if(APPLE)
   set(FREENECT_SYNC_LIB libfreenect_sync.dylib)
 ELSE()
   set(FREENECT_SYNC_LIB libfreenect_sync.so)
-ENDIF()
+ENDIF() 	
 
 ##################
 # targets
@@ -75,12 +75,10 @@ target_link_libraries(calibration ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB} ${O
 add_executable(write_xml_file src/write_xml_file.cpp)
 target_link_libraries(write_xml_file ${OpenCV_LIBS})
 
-add_executable(kinect_depth src/kinect_depth.cpp)
-target_link_libraries(kinect_depth ${ALL_LIBS})
+add_executable(mainRender src/mainRender.cpp src/kinect_depth.cpp src/renderMesh.cpp)
+target_link_libraries(mainRender ${ALL_LIBS})
 
 
-add_executable (openni_grabber src/openni_grabber.cpp)
-target_link_libraries (openni_grabber ${PCL_LIBRARIES})
 
 ##################
 # testing
