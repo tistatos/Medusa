@@ -88,6 +88,7 @@ Mat nextImage()
 	dump_rgb(fp, rgb, 640, 480);
 	fclose(fp);
 
+	//CV_LOAD_IMAGE_GRAYSCALE
 	result = imread("cali.ppm");
 
 	return result;
@@ -105,15 +106,15 @@ static void read(const FileNode& node, Settings& x, const Settings& default_valu
 
 int keyPressed()
 {
-	char s;
+	char key;
 
 	do
 	{
 		cout << "Press a to take next image or press q to quit" << endl;
-		cin >> s;
-	}while((s != 'a') && (s != 'q'));
+		cin >> key;
+	}while((key != 'a') && (key != 'q'));
 
-	if(s == 'q')
+	if(key == 'q')
 	{
 		return -1;
 	}else return 1;
@@ -146,9 +147,15 @@ int main(int argc, char const *argv[])
 	freenect_sync_set_tilt_degs(0, 0);
 	freenect_raw_tilt_state *state = 0;	
 
+
+
 	Size imageSize;
+	Size boardSize;
+	boardSize.width = 7;
+	boardSize.height = 5;
 	//vector<vector<Point2f>> imagePoints;
 	int q;
+	int counter = 0;
 	//take ten images and then do the calibration. The loop should continue when the key ENTER have been pressed
 	for(int i = 0; ; ++i)
 	{
@@ -161,19 +168,35 @@ int main(int argc, char const *argv[])
 
 		vector<Point2f> pointBuf;
 		//findChessboardCorners(InputArray image, Size patternSize, OutputArray corners, int flags=CALIB_CB_ADAPTIVE_THRESH+CALIB_CB_NORMALIZE_IMAGE )
-		bool found = findChessboardCorners(view, imageSize, pointBuf, 
-			CALIB_CB_ADAPTIVE_THRESH | CALIB_CB_FAST_CHECK | CALIB_CB_NORMALIZE_IMAGE);
+		bool found = findChessboardCorners(view, boardSize, pointBuf);
 
 		if(found)
 		{
+			counter++;
 			cout << "hej" << endl;
+			
+			//Mat viewGray;
+			//cvtColor(view, viewGray, COLOR_BGR2GRAY);
+
+ 			//cornerSubPix(view, pointBuf, Size(11, 11), Size(-1, -1),
+    		//TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
+			
+			drawChessboardCorners(view, boardSize,pointBuf, found);
+			view = s.nextImage();
+			//the user needs to press a or q to continue the loop. q = break the loop
+			q = keyPressed();
+			if(q == -1) break;
 		}
 
-		//the user needs to press a or q to continue the loop. q = break the loop
-		//q = keyPressed();
-		//if(q == -1) break;
+		if(counter == 10)
+		{
+			cout << "Nu har jag hittat 10 bilder" << endl;
+			break;
+		}
+		
 
 	}
+
 
 	cout << "Calibration done!" << endl;
 
