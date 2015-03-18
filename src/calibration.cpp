@@ -74,36 +74,41 @@ public:
 	}
 
 	//take the next image from the Kinect
-Mat nextImage()
+Mat nextImage(int n)
 {
 	Mat result_rgb;
 	Mat result_ir;
 	int ret;
 	char *rgb = 0;
+	int rows = 212;
+	int columns = 162;
 
 	uint32_t ts;
 
-	FILE *fp;	
+	FILE *fp;
 	
-	//if(n == 1)
-	//{ 
+	if(n == 1)
+	{ 
 		ret = freenect_sync_get_video((void**)&rgb, &ts, 0, FREENECT_VIDEO_RGB);
 		fp = open_dump("cali_rgb.ppm");
 		dump_rgb(fp, rgb, 640, 480);
 		fclose(fp);
 		result_rgb = imread("cali_rgb.ppm");
+		resize(result_rgb, result_rgb, Size(212,162));
 		return result_rgb;
-	//}
+	}
 
-/*	else
+	else
 	{ 
 		ret = freenect_sync_get_video((void**)&rgb, &ts, 0, FREENECT_VIDEO_IR_8BIT);
 		fp = open_dump("cali_ir.ppm");
 		dump_rgb(fp, rgb, 640, 480);
 		fclose(fp);
 		result_ir = imread("cali_ir.ppm");
+		result_ir = result_ir(Range(0,162), Range(0,212));
+
 		return result_ir;
-	}*/
+	}
 }
 
 public:
@@ -149,6 +154,7 @@ int main(int argc, char const *argv[])
 	fs["Settings"] >> s;
 	fs.release();
 
+
 	//if(!s.goodInput)
 	//{
 	//	cout << "Invalid input detected. Application stopping" << endl;
@@ -174,21 +180,22 @@ int main(int argc, char const *argv[])
 	{
 		//RGB
 		Mat view_rgb; //InputArray image
-		//Mat view_ir; //InputArray image
+		Mat view_ir; //InputArray image
 		//bool blinkOutput = false;
 
-		view_rgb = s.nextImage();
-		//view_ir = s.nextImage(ir_img);
+		view_rgb = s.nextImage(rgb_img);
+		view_ir = s.nextImage(ir_img);
 
 		//cout << "size: " << view.size() << endl;
 		//imageSize = view1.size();
 
-		vector<Point2f> pointBuf;
+		vector<Point2f> pointBuf_RGB;
+		vector<Point2f> pointBuf_IR;
 		//findChessboardCorners(InputArray image, Size patternSize, OutputArray corners, int flags=CALIB_CB_ADAPTIVE_THRESH+CALIB_CB_NORMALIZE_IMAGE )
-		bool found_rgb = findChessboardCorners(view_rgb, boardSize, pointBuf);
-		//bool found_ir = findChessboardCorners(view_ir, boardSize, pointBuf);
+		bool found_rgb = findChessboardCorners(view_rgb, boardSize, pointBuf_RGB);
+		bool found_ir = findChessboardCorners(view_ir, boardSize, pointBuf_IR);
 
-		if(found_rgb)
+		if(found_rgb == true && found_ir == true)
 		{
 			counter++;
 			cout << "hej" << endl;
@@ -200,14 +207,14 @@ int main(int argc, char const *argv[])
  			//cornerSubPix(view, pointBuf, Size(11, 11), Size(-1, -1),
     		//TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
 			
-			drawChessboardCorners(view_rgb, boardSize, Mat(pointBuf), found_rgb);
-			//drawChessboardCorners(view_ir, boardSize, Mat(pointBuf), found_ir);
+			drawChessboardCorners(view_rgb, boardSize, Mat(pointBuf_RGB), found_rgb);
+			drawChessboardCorners(view_ir, boardSize, Mat(pointBuf_IR), found_ir);
 			//view = s.nextImage(v);
 			//the user needs to press a or q to continue the loop. q = break the loop
-/*			q = keyPressed();
-			if(q == -1) break;*/
-			imshow("Image View", view_rgb);
-			//imshow("Image View", view_ir);
+			//q = keyPressed();
+			//if(q == -1) break;
+			imwrite("rgb_corners.ppm", view_rgb);
+			imwrite("ir_corners.ppm", view_ir);
 
 			if(keyPressed() == -1) break;
 		}
