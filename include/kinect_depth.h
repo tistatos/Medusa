@@ -9,14 +9,14 @@
 #include <pcl/point_types.h>
 #include <pcl/io/pcd_io.h>
 #include <iostream>
-#include "libfreenect/libfreenect.hpp"
+#include <libfreenect/libfreenect.hpp>
 #include <string.h>
 
 class MyFreenectDevice : public Freenect::FreenectDevice
 {
 public:
 
-	
+
    MyFreenectDevice(freenect_context* ctx, int index): Freenect::FreenectDevice(ctx,index),
     m_buffer_video(freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_RGB).bytes),
     m_buffer_depth(freenect_find_depth_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_DEPTH_REGISTERED).bytes / 2),
@@ -36,7 +36,7 @@ public:
   void DepthCallback(void *_depth, uint32_t timestamp);
 
   void savePointCloud(std::string filename);
-  
+
 public:
   std::vector<uint8_t> m_buffer_video;
   std::vector<uint16_t> m_buffer_depth;
