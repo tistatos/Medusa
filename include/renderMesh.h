@@ -1,12 +1,5 @@
-
-
-
-#include <iostream>
-
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
 #include <libfreenect/libfreenect.h>
 
 #include <pcl/io/vtk_io.h>
