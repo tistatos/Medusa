@@ -91,6 +91,7 @@ Mat nextImage()
 	result = imread("cali.ppm");
 
 	return result;
+	
 }
 
 public:
