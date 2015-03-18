@@ -9,6 +9,8 @@
 #include <time.h>
 #include <stdio.h>
 
+#include <unistd.h>
+
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
@@ -72,7 +74,7 @@ public:
 	}
 
 	//take the next image from the Kinect
-Mat nextImage(int n)
+Mat nextImage()
 {
 	Mat result_rgb;
 	Mat result_ir;
@@ -83,17 +85,17 @@ Mat nextImage(int n)
 
 	FILE *fp;	
 	
-	if(n == 1)
-	{ 
+	//if(n == 1)
+	//{ 
 		ret = freenect_sync_get_video((void**)&rgb, &ts, 0, FREENECT_VIDEO_RGB);
 		fp = open_dump("cali_rgb.ppm");
 		dump_rgb(fp, rgb, 640, 480);
 		fclose(fp);
 		result_rgb = imread("cali_rgb.ppm");
 		return result_rgb;
-	}
+	//}
 
-	else
+/*	else
 	{ 
 		ret = freenect_sync_get_video((void**)&rgb, &ts, 0, FREENECT_VIDEO_IR_8BIT);
 		fp = open_dump("cali_ir.ppm");
@@ -101,7 +103,7 @@ Mat nextImage(int n)
 		fclose(fp);
 		result_ir = imread("cali_ir.ppm");
 		return result_ir;
-	}
+	}*/
 }
 
 public:
@@ -156,8 +158,6 @@ int main(int argc, char const *argv[])
 	freenect_sync_set_tilt_degs(0, 0);
 	freenect_raw_tilt_state *state = 0;	
 
-
-
 	Size imageSize;
 	Size boardSize;
 	boardSize.width = 7;
@@ -167,16 +167,18 @@ int main(int argc, char const *argv[])
 	int counter = 0;
 	int rgb_img = 1;
 	int ir_img = 2;
+	Mat view_rgb;
+	Mat view_ir;
 	//take ten images and then do the calibration. The loop should continue when the key ENTER have been pressed
 	do
 	{
 		//RGB
 		Mat view_rgb; //InputArray image
-		Mat view_ir; //InputArray image
+		//Mat view_ir; //InputArray image
 		//bool blinkOutput = false;
 
-		view_rgb = s.nextImage(rgb_img);
-		view_ir = s.nextImage(ir_img);
+		view_rgb = s.nextImage();
+		//view_ir = s.nextImage(ir_img);
 
 		//cout << "size: " << view.size() << endl;
 		//imageSize = view1.size();
@@ -184,26 +186,35 @@ int main(int argc, char const *argv[])
 		vector<Point2f> pointBuf;
 		//findChessboardCorners(InputArray image, Size patternSize, OutputArray corners, int flags=CALIB_CB_ADAPTIVE_THRESH+CALIB_CB_NORMALIZE_IMAGE )
 		bool found_rgb = findChessboardCorners(view_rgb, boardSize, pointBuf);
-		bool found_ir = findChessboardCorners(view_ir, boardSize, pointBuf);
+		//bool found_ir = findChessboardCorners(view_ir, boardSize, pointBuf);
 
-		if(found_rgb && found_ir)
+		if(found_rgb)
 		{
 			counter++;
 			cout << "hej" << endl;
 			
+			//view_rgb *= 1./255;
 			//Mat viewGray;
 			//cvtColor(view, viewGray, COLOR_BGR2GRAY);
 
  			//cornerSubPix(view, pointBuf, Size(11, 11), Size(-1, -1),
     		//TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
 			
-			//drawChessboardCorners(view, boardSize,pointBuf, found);
+			drawChessboardCorners(view_rgb, boardSize, Mat(pointBuf), found_rgb);
+			//drawChessboardCorners(view_ir, boardSize, Mat(pointBuf), found_ir);
 			//view = s.nextImage(v);
 			//the user needs to press a or q to continue the loop. q = break the loop
 /*			q = keyPressed();
 			if(q == -1) break;*/
+			imshow("Image View", view_rgb);
+			//imshow("Image View", view_ir);
+
+			if(keyPressed() == -1) break;
 		}
-	}while(counter != 10);
+
+	}while(counter != 1);
+
+
 
 	cout << "Calibration done!" << endl;
 
