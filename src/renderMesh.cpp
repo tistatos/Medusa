@@ -47,8 +47,8 @@ void renderMesh::run(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   cloud = reduceData(cloud);
   std::cout << "cloud reduced" << endl; 
   cloud = setDelims(cloud);
-  std::cout << "cloud gp3" << endl;
-  runGp3(cloud);
+  std::cout << "cloud Poisson" << endl;
+  runPoisson(cloud);
 
 }
 
@@ -83,14 +83,15 @@ void renderMesh::showMesh(pcl::PolygonMesh mesh){
 pcl::PointCloud<pcl::PointNormal>::Ptr renderMesh::getNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
   pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> n;
-  pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
+
   pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>);
-  tree->setInputCloud (cloud);
-  
   n.setInputCloud (cloud);
   n.setSearchMethod (tree);
-  n.setKSearch (3);
+  n.setKSearch (20);
+  //n.setRadiusSearch(5);
+  pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
   n.compute (*normals);
+ 
 
   pcl::PointCloud<pcl::PointNormal>::Ptr cloudWithNormals (new pcl::PointCloud<pcl::PointNormal>);
   pcl::concatenateFields(*cloud,*normals, *cloudWithNormals);
@@ -100,36 +101,22 @@ pcl::PointCloud<pcl::PointNormal>::Ptr renderMesh::getNormals(pcl::PointCloud<pc
 
 }
 
-void renderMesh::runGp3(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+void renderMesh::runPoisson(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
   
   //pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
   pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
   tree2->setInputCloud(getNormals(cloud));
 
-  //initialize
-  pcl::GreedyProjectionTriangulation<pcl::PointNormal> gp3;
-  pcl::PolygonMesh triangle;
-  std::cout << "cloud gp3 shit" << endl;
-  //set constraints
-  gp3.setSearchRadius(0.05);
-  gp3.setMu (5);
-  gp3.setMaximumNearestNeighbors (100);
-  gp3.setMaximumSurfaceAngle(M_PI); // 45 degrees
-  gp3.setMinimumAngle(M_PI/18); // 10 degrees
-  gp3.setMaximumAngle(2*M_PI/3); // 120 degrees
-  gp3.setNormalConsistency(false);
-  gp3.setInputCloud (getNormals(cloud));
-  gp3.setSearchMethod (tree2);      
 
-  std::cout << "reconstruct mesh" << std::endl;
-  gp3.reconstruct (triangle);
-
-  //saves to an obj file
-  //pcl::io::saveOBJFile ("mesh.obj", triangle, 5);
-  std::cout << "show mesh" << std::endl;
-
-  showMesh(triangle);
+ 
+  pcl::Poisson<pcl::PointNormal> poisson;
+  poisson.setSearchMethod(tree2);
+  poisson.setInputCloud (getNormals(cloud));
+  pcl::PolygonMesh mesh;
+  poisson.reconstruct (mesh);
+ // pcl::io::saveOBJFile ("bunny_poisson.obj", mesh); 
+  showMesh(mesh);
 }
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::setDelims(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)

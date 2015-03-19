@@ -46,7 +46,7 @@ public:
 
 	pcl::PointCloud<pcl::PointNormal>::Ptr getNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
-	void runGp3(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+	void runPoisson(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr setDelims(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
