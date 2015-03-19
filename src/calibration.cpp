@@ -63,24 +63,6 @@ void dump_depth(FILE *fp, void *data, unsigned int width, unsigned int height)
 	fwrite(data, width * height * 2, 1, fp);
 }
 
-class Settings
-{
-public: 
-	Settings () : goodInput(false) {}
-	enum Pattern { NOT_EXISTING, CHESSBOARD};
-	enum InputType {INVALID, CAMERA, VIDEO_FILE, IMAGE_LIST};
-
-	void write(FileStorage& fs) const
-	{
-		
-	}
-
-	void read(const FileNode& node)
-	{
-
-	}
-
-	//take the next image from the Kinect
 Mat nextImage(int n)
 {
 	Mat result_rgb;
@@ -118,15 +100,6 @@ Mat nextImage(int n)
 	}
 }
 
-public:
-	bool goodInput;
-};
-
-static void read(const FileNode& node, Settings& x, const Settings& default_value = Settings())
-{
-	
-}
-
 int keyPressed()
 {
 	char key;
@@ -147,101 +120,45 @@ int main(int argc, char const *argv[])
 {
 	//text in the beginning about the file
 	help();
-	Settings s;
-	//open default.yml as default
-	const string inputFile = argc > 1 ? argv[1] : "default.yml";
-	//read the settings
-	FileStorage fs(inputFile, FileStorage::READ);
-
-	if(!fs.isOpened())
-	{
-		cout << "Could not open the file, sorry!" << endl;
-		return -1;
-	}
-	fs["Settings"] >> s;
-	fs.release();
-
-
-	//if(!s.goodInput)
-	//{
-	//	cout << "Invalid input detected. Application stopping" << endl;
-	//	return -1;
-	//}
 
 	freenect_sync_set_tilt_degs(0, 0);
 	freenect_raw_tilt_state *state = 0;	
 
-	Size imageSize;
-	Size boardSize;
-	boardSize.width = 7;
-	boardSize.height = 5;
-	//vector<vector<Point2f>> imagePoints;
-	int q;
+	Size boardSize(7,5); //how many corners that have to be found
 	int counter = 0;
-	int rgb_img = 1;
-	int ir_img = 2;
-	Mat view_rgb;
-	Mat view_ir;
-	//take ten images and then do the calibration. The loop should continue when the key ENTER have been pressed
+	int rgb_img = 1; //for function nextImage
+	int ir_img = 2; //for function nextImage
 	do
 	{
-		//RGB
 		Mat view_rgb; //InputArray image
 		Mat view_ir; //InputArray image
-		//bool blinkOutput = false;
 
-		view_rgb = s.nextImage(rgb_img);
-		view_ir = s.nextImage(ir_img);
-
-		//cout << "size: " << view.size() << endl;
-		//imageSize = view1.size();
+		view_rgb = nextImage(rgb_img); //
+		view_ir = nextImage(ir_img);
 
 		vector<Point2f> pointBuf_RGB;
 		vector<Point2f> pointBuf_IR;
-		//findChessboardCorners(InputArray image, Size patternSize, OutputArray corners, int flags=CALIB_CB_ADAPTIVE_THRESH+CALIB_CB_NORMALIZE_IMAGE )
+		
 		bool found_rgb = findChessboardCorners(view_rgb, boardSize, pointBuf_RGB);
 		bool found_ir = findChessboardCorners(view_ir, boardSize, pointBuf_IR);
 
 		if(found_rgb && found_ir)
 		{
-			counter++;
-			cout << "hej" << endl;
-			
-			//view_rgb *= 1./255;
-			//Mat viewGray;
-			//cvtColor(view, viewGray, COLOR_BGR2GRAY);
+			counter++; //counter for every image that have been taken
+			cout << "Bild " << counter << " tagen" << endl;
 
- 			//cornerSubPix(view, pointBuf, Size(11, 11), Size(-1, -1),
-    		//TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
-			
+			//find chessboardcorners and draw lines in view_rgb and view_ir
 			drawChessboardCorners(view_rgb, boardSize, Mat(pointBuf_RGB), found_rgb);
-			//view = s.nextImage(v);
-			//the user needs to press a or q to continue the loop. q = break the loop
-/*			q = keyPressed();
-			if(q == -1) break;*/
-			#ifdef _APPLE_ 
-				namedWindow( "RGB", WINDOW_AUTOSIZE );
-				imshow("RGB", view_rgb);
+			drawChessboardCorners(view_ir, boardSize, Mat(pointBuf_IR), found_ir);
 
-				drawChessboardCorners(view_ir, boardSize, Mat(pointBuf_IR), found_ir);
-				namedWindow( "IR", WINDOW_AUTOSIZE );
-				imshow("IR", view_ir);
-				waitKey(0);
-			#else
-				drawChessboardCorners(view_ir, boardSize, Mat(pointBuf_IR), found_ir);
-				//view = s.nextImage(v);
-				//the user needs to press a or q to continue the loop. q = break the loop
-				//q = keyPressed();
-				//if(q == -1) break;
-				imwrite("rgb_corners.ppm", view_rgb);
-				imwrite("ir_corners.ppm", view_ir);
-
-			#endif
+			//make a string for the filename
+			string RGB_name = "rgb_corners" + to_string(counter) + ".ppm";
+			string IR_name = "ir_corners" + to_string(counter) + ".ppm";
+			//save image
+			imwrite(RGB_name, view_rgb);
+			imwrite(IR_name, view_ir);
 		}
-
-	}while(counter != 1);
-
-
+	}while(counter != 10); //stop loop when 10 images have been taken 
 
 	cout << "Calibration done!" << endl;
 
