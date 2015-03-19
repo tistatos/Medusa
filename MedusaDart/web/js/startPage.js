@@ -9,7 +9,7 @@
   var infoMenu = document.querySelector( ".infoMenu" ),
       infoButton = document.querySelector( ".infoButton" ),
       startButton = document.querySelector( ".startButton" ),
-      continueButton = document.querySelector( ".continueButton" ),
+      continueButton = document.querySelector( "#continueButton" ),
       body = document.body,
       mask = document.createElement("div"), 
       activeNav;

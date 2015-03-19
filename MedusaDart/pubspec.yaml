@@ -5,7 +5,7 @@ environment:
   sdk: '>=1.0.0 <2.0.0'
 dependencies:
   browser: any
-  vector_math: any
+  http: any
+  http_server: any
   three:
     git: https://github.com/threeDart/three.dart.git
-
