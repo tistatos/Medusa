@@ -1,3 +1,10 @@
+//! @file websocket.cpp
+//! Websocket file for medusa. Opens up a websocketserver for the C++ application
+//!
+//! @author Carl Englund
+//! @version 1.0
+//! @date 2015-03-19
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -90,6 +97,12 @@ static struct libwebsocket_protocols protocols[] = {
 };
 
 
+/**
+ * @brief Main function
+ * @details Loads and starts a websocketserver. Runs until stopped by user.
+ *
+ * @return -1 if context is null
+ */
 int main(int argc, char **argv) {
 
 	//Init variables needed
