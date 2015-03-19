@@ -87,10 +87,12 @@ Mat nextImage(int n)
 	Mat result_ir;
 	int ret;
 	char *rgb = 0;
+	int rows = 212;
+	int columns = 162;
 
 	uint32_t ts;
 
-	FILE *fp;	
+	FILE *fp;
 	
 	if(n == 1)
 	{ 
@@ -99,6 +101,7 @@ Mat nextImage(int n)
 		dump_rgb(fp, rgb, 640, 480);
 		fclose(fp);
 		result_rgb = imread("cali_rgb.ppm");
+		resize(result_rgb, result_rgb, Size(212,162));
 		return result_rgb;
 	}
 
@@ -109,6 +112,8 @@ Mat nextImage(int n)
 		dump_ir(fp, rgb, 640, 480);
 		fclose(fp);
 		result_ir = imread("cali_ir.ppm");
+		result_ir = result_ir(Range(0,162), Range(0,212));
+
 		return result_ir;
 	}
 }
@@ -156,6 +161,7 @@ int main(int argc, char const *argv[])
 	fs["Settings"] >> s;
 	fs.release();
 
+
 	//if(!s.goodInput)
 	//{
 	//	cout << "Invalid input detected. Application stopping" << endl;
@@ -186,7 +192,6 @@ int main(int argc, char const *argv[])
 
 		view_rgb = s.nextImage(rgb_img);
 		view_ir = s.nextImage(ir_img);
-
 
 		//cout << "size: " << view.size() << endl;
 		//imageSize = view1.size();
@@ -221,8 +226,16 @@ int main(int argc, char const *argv[])
 				drawChessboardCorners(view_ir, boardSize, Mat(pointBuf_IR), found_ir);
 				namedWindow( "IR", WINDOW_AUTOSIZE );
 				imshow("IR", view_ir);
-
 				waitKey(0);
+			#else
+				drawChessboardCorners(view_ir, boardSize, Mat(pointBuf_IR), found_ir);
+				//view = s.nextImage(v);
+				//the user needs to press a or q to continue the loop. q = break the loop
+				//q = keyPressed();
+				//if(q == -1) break;
+				imwrite("rgb_corners.ppm", view_rgb);
+				imwrite("ir_corners.ppm", view_ir);
+
 			#endif
 		}
 
