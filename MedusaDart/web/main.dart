@@ -8,15 +8,15 @@ import 'dart:async';
 
 class Client
 {
+  static const Duration RECONNECT_DELAY = const Duration(milliseconds: 500);
+  
   ButtonElement button = querySelector('#continueButton');
   WebSocket ws;
   
   //Constructor
   Client()
   {
-    
-    connect();
-    
+    connect(); 
     button.onClick.listen(sendToServer);
   }
   
@@ -29,12 +29,18 @@ class Client
     {
       onConnected();    
     });
+    
+    ws.onError.listen((e) 
+    {
+      print("Error connecting to ws");
+      reconnect();
+    });
   }
   
+  //When connected to server...
   void onConnected()
   {
     print('Connected');
-    //ws.send('hej');
     
     ws.onMessage.listen((e) 
     {
@@ -42,15 +48,22 @@ class Client
     });
   }
   
+  //Handle data from server
   void handleMessage(data)
   { 
-      print('något från servern');
+     print('något från servern');
   }
   
-  
+  //Send data to server (start scanning process)
   void sendToServer(Event e) 
   {
     ws.send('hej');
+  }
+  
+  //If error in connection, reconnect in 500 ms
+  void reconnect()
+  {
+    new Timer(RECONNECT_DELAY, connect);
   }
   
 }
