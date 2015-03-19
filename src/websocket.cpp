@@ -19,21 +19,7 @@ static int callback_http(struct libwebsocket_context *context,
                          enum libwebsocket_callback_reasons reason, void *user,
                          void *in, size_t len)
 {
-    return 0;
-}
-
-
-//Callback for when connected, right now this is working for a htmlfile.
-static int callback_increment(struct libwebsocket_context *context,
-                                   struct libwebsocket *wsi,
-                                   enum libwebsocket_callback_reasons reason,
-                                   void *user, void *in, size_t len)
-{
-   
-   	//Differents methods called for different events, such as send message
-   	//Connect to websocket and such
-   	//This code was "stolen" from an example found at libwebsockets. It takes the message
-   	//recieved and reverses the order of letters (then sends it as a responese)
+        //recieved and reverses the order of letters (then sends it as a responese)
     switch (reason) {
         case LWS_CALLBACK_ESTABLISHED: // Someone is connecting
             printf("connection established\n");
@@ -80,6 +66,7 @@ static int callback_increment(struct libwebsocket_context *context,
     return 0;
 }
 
+//Websocket protocols, can do own ones if wanted..
 static struct libwebsocket_protocols protocols[] = {
 	/* first protocol must always be HTTP handler */
 	{
@@ -87,12 +74,6 @@ static struct libwebsocket_protocols protocols[] = {
 		callback_http,		// callback
 		0			        //per_session_data_size 
 	},
-   {
-        "increment-protocol", 
-        callback_increment,   
-        0                          
-
-    },
 	{ NULL, NULL, 0, 0 } // terminator
 };
 
