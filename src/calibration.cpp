@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <string>
 #include <time.h>
 #include <stdio.h>
 
@@ -116,6 +117,13 @@ int keyPressed()
 	}else return 1;
 }
 
+string convertInt(int number)
+{
+   stringstream ss;
+   ss << number;
+   return ss.str();
+}
+
 int main(int argc, char const *argv[])
 {
 	//text in the beginning about the file
@@ -152,8 +160,8 @@ int main(int argc, char const *argv[])
 			drawChessboardCorners(view_ir, boardSize, Mat(pointBuf_IR), found_ir);
 
 			//make a string for the filename
-			string RGB_name = "rgb_corners" + to_string(counter) + ".ppm";
-			string IR_name = "ir_corners" + to_string(counter) + ".ppm";
+			string RGB_name = "rgb_corners" + convertInt(counter) + ".ppm";
+			string IR_name = "ir_corners" + convertInt(counter) + ".ppm";
 			//save image
 			imwrite(RGB_name, view_rgb);
 			imwrite(IR_name, view_ir);
