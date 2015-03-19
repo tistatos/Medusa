@@ -50,6 +50,13 @@ void dump_rgb(FILE *fp, void *data, unsigned int width, unsigned int height)
 	fwrite(data, width * height * 3, 1, fp);
 }
 
+void dump_ir(FILE *fp, void *data, unsigned int width, unsigned int height)
+{
+	fprintf(fp, "P6 %u %u 255\n", width, height);
+	//write to file
+	fwrite(data, width * height, 1, fp);
+}
+
 void dump_depth(FILE *fp, void *data, unsigned int width, unsigned int height)
 {
 	fprintf(fp, "P5 %u %u 65535\n", width, height);
@@ -74,7 +81,7 @@ public:
 	}
 
 	//take the next image from the Kinect
-Mat nextImage()
+Mat nextImage(int n)
 {
 	Mat result_rgb;
 	Mat result_ir;
@@ -85,25 +92,25 @@ Mat nextImage()
 
 	FILE *fp;	
 	
-	//if(n == 1)
-	//{ 
+	if(n == 1)
+	{ 
 		ret = freenect_sync_get_video((void**)&rgb, &ts, 0, FREENECT_VIDEO_RGB);
 		fp = open_dump("cali_rgb.ppm");
 		dump_rgb(fp, rgb, 640, 480);
 		fclose(fp);
 		result_rgb = imread("cali_rgb.ppm");
 		return result_rgb;
-	//}
+	}
 
-/*	else
+	else
 	{ 
 		ret = freenect_sync_get_video((void**)&rgb, &ts, 0, FREENECT_VIDEO_IR_8BIT);
 		fp = open_dump("cali_ir.ppm");
-		dump_rgb(fp, rgb, 640, 480);
+		dump_ir(fp, rgb, 640, 480);
 		fclose(fp);
 		result_ir = imread("cali_ir.ppm");
 		return result_ir;
-	}*/
+	}
 }
 
 public:
@@ -174,21 +181,23 @@ int main(int argc, char const *argv[])
 	{
 		//RGB
 		Mat view_rgb; //InputArray image
-		//Mat view_ir; //InputArray image
+		Mat view_ir; //InputArray image
 		//bool blinkOutput = false;
 
-		view_rgb = s.nextImage();
-		//view_ir = s.nextImage(ir_img);
+		view_rgb = s.nextImage(rgb_img);
+		view_ir = s.nextImage(ir_img);
+
 
 		//cout << "size: " << view.size() << endl;
 		//imageSize = view1.size();
 
-		vector<Point2f> pointBuf;
+		vector<Point2f> pointBuf_RGB;
+		vector<Point2f> pointBuf_IR;
 		//findChessboardCorners(InputArray image, Size patternSize, OutputArray corners, int flags=CALIB_CB_ADAPTIVE_THRESH+CALIB_CB_NORMALIZE_IMAGE )
-		bool found_rgb = findChessboardCorners(view_rgb, boardSize, pointBuf);
-		//bool found_ir = findChessboardCorners(view_ir, boardSize, pointBuf);
+		bool found_rgb = findChessboardCorners(view_rgb, boardSize, pointBuf_RGB);
+		bool found_ir = findChessboardCorners(view_ir, boardSize, pointBuf_IR);
 
-		if(found_rgb)
+		if(found_rgb && found_ir)
 		{
 			counter++;
 			cout << "hej" << endl;
@@ -200,16 +209,21 @@ int main(int argc, char const *argv[])
  			//cornerSubPix(view, pointBuf, Size(11, 11), Size(-1, -1),
     		//TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
 			
-			drawChessboardCorners(view_rgb, boardSize, Mat(pointBuf), found_rgb);
-			//drawChessboardCorners(view_ir, boardSize, Mat(pointBuf), found_ir);
+			drawChessboardCorners(view_rgb, boardSize, Mat(pointBuf_RGB), found_rgb);
 			//view = s.nextImage(v);
 			//the user needs to press a or q to continue the loop. q = break the loop
 /*			q = keyPressed();
 			if(q == -1) break;*/
-			imshow("Image View", view_rgb);
-			//imshow("Image View", view_ir);
+			#ifdef _APPLE_ 
+				namedWindow( "RGB", WINDOW_AUTOSIZE );
+				imshow("RGB", view_rgb);
 
-			if(keyPressed() == -1) break;
+				drawChessboardCorners(view_ir, boardSize, Mat(pointBuf_IR), found_ir);
+				namedWindow( "IR", WINDOW_AUTOSIZE );
+				imshow("IR", view_ir);
+
+				waitKey(0);
+			#endif
 		}
 
 	}while(counter != 1);
