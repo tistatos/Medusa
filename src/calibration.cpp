@@ -72,8 +72,8 @@ Mat nextImage(int n)
 	Mat result_ir;
 	int ret;
 	char *rgb = 0;
-	int rows = 212;
-	int columns = 162;
+	int width = 640;
+	int height = 480;
 
 	uint32_t ts;
 
@@ -83,10 +83,10 @@ Mat nextImage(int n)
 	{ 
 		ret = freenect_sync_get_video((void**)&rgb, &ts, 0, FREENECT_VIDEO_RGB);
 		fp = open_dump("cali_rgb.ppm");
-		dump_rgb(fp, rgb, 640, 480);
+		dump_rgb(fp, rgb, width, height);
 		fclose(fp);
 		result_rgb = imread("cali_rgb.ppm");
-		resize(result_rgb, result_rgb, Size(212,162));
+		resize(result_rgb, result_rgb, Size(width/3,height/3));
 		return result_rgb;
 	}
 
@@ -94,10 +94,10 @@ Mat nextImage(int n)
 	{ 
 		ret = freenect_sync_get_video((void**)&rgb, &ts, 0, FREENECT_VIDEO_IR_8BIT);
 		fp = open_dump("cali_ir.ppm");
-		dump_ir(fp, rgb, 640, 480);
+		dump_ir(fp, rgb, width, height);
 		fclose(fp);
 		result_ir = imread("cali_ir.ppm");
-		result_ir = result_ir(Range(0,162), Range(0,212));
+		result_ir = result_ir(Range(0,height/3), Range(0,width/3));
 
 		return result_ir;
 	}
@@ -142,6 +142,7 @@ int main(int argc, char const *argv[])
 	{
 		Mat view_rgb; //InputArray image
 		Mat view_ir; //InputArray image
+		char bajs;
 
 		view_rgb = nextImage(rgb_img); //
 		view_ir = nextImage(ir_img);
@@ -156,6 +157,11 @@ int main(int argc, char const *argv[])
 		{
 			counter++; //counter for every image that have been taken
 			cout << "Bild " << counter << " tagen" << endl;
+			cout << endl << pointBuf_RGB << endl;
+			cout << endl << pointBuf_IR << endl;
+			imwrite("testrgb.jpg", view_rgb);
+			imwrite("testir.jpg", view_ir);
+			cin >> bajs;
 
 			//find chessboardcorners and draw lines in view_rgb and view_ir
 			drawChessboardCorners(view_rgb, boardSize, Mat(pointBuf_RGB), found_rgb);
