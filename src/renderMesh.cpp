@@ -36,22 +36,13 @@ using namespace cv;
 
 
 
-/*
-  //Read PCD file
-  pcl::PointCloud<pcl::PointXYZ> renderMesh::loadData()
-  {
-    pcl::PointCloud<pcl::PointXYZ> cloud;
 
-    //Read file and test
-    if (pcl::io::loadPCDFile<pcl::PointXYZ> ("model.pcd", cloud) == -1)
-    {
-      std::cout << "failed to load file" << std::endl;
-      return cloud;
-    }
-    return cloud;
-  }*/
-
-  //Visualize Cloud data
+  /**
+   * @brief [Displays a pcl::PointCloud]
+   * @details [long description]
+   * 
+   * @param d [description]
+   */
   void renderMesh::show (pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud)
   {
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
@@ -69,7 +60,12 @@ using namespace cv;
     }
   }
 
-  //Visualize Mesh data
+  /**
+   * @brief [Displays a pcl PolygonMesh]
+   * @details [long description]
+   * 
+   * @param mesh [description]
+   */
   void renderMesh::showMesh (pcl::PolygonMesh mesh) 
   {
     pcl::visualization::PCLVisualizer viewer ("surface fitting");
@@ -82,7 +78,12 @@ using namespace cv;
     }
   }
 
-
+/**
+ * @brief [Initiate class process]
+ * @details [long description]
+ * 
+ * @param d [description]
+ */
 void renderMesh::run(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
  /* pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2
@@ -103,7 +104,13 @@ void renderMesh::run(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 }
 
 
-  //Sample Down data
+  /**
+   * @brief [Ŕeduce noise and nr of points]
+   * @details [long description]
+   * 
+   * @param d [description]
+   * @return [description]
+   */
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::reduceData (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
     /*
@@ -141,7 +148,13 @@ void renderMesh::run(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 
 
 
-
+/**
+ * @brief [Returns normals for a pcl::PointCloud]
+ * @details [long description]
+ * 
+ * @param d [description]
+ * @return [description]
+ */
 
 pcl::PointCloud<pcl::PointNormal>::Ptr renderMesh::getNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
@@ -164,7 +177,12 @@ pcl::PointCloud<pcl::PointNormal>::Ptr renderMesh::getNormals(pcl::PointCloud<pc
   return cloudWithNormals;
 
 }
-
+/**
+ * @brief [Builds a mesh from a PointCloud]
+ * @details [long description]
+ * 
+ * @param d [description]
+ */
 void renderMesh::runPoisson(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
   /*
@@ -225,6 +243,13 @@ void renderMesh::runPoisson(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   showMesh (mesh);
   
 }
+/**
+ * @brief [Removes points outside a set span]
+ * @details [long description]
+ * 
+ * @param  [description]
+ * @return [description]
+ */
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::setDelims(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
@@ -242,7 +267,13 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::setDelims(pcl::PointCloud<pcl::P
 
   return cloud;
 }
-
+/**
+ * @brief [Mirrors a cloud]
+ * @details [long description]
+ * 
+ * @param d [description]
+ * @return [description]
+ */
 pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::mirrorCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
   Eigen::Matrix4f transform = Eigen::Matrix4f::Identity();

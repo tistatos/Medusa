@@ -13,7 +13,13 @@
 #include <string.h>
 #include "kinect_depth.h"
 
-
+/**
+ * @brief [Get RGB Data]
+ * @details [long description]
+ * 
+ * @param video [description]
+ * @param timestamp [description]
+ */
 
   void MyFreenectDevice::VideoCallback(void *video, uint32_t timestamp)
   {
@@ -24,7 +30,13 @@
 
     m_new_rgb_frame = true;
   }
-
+/**
+ * @brief [Get depth data]
+ * @details [long description]
+ * 
+ * @param _depth [description]
+ * @param timestamp [description]
+ */
   void MyFreenectDevice::DepthCallback(void *_depth, uint32_t timestamp)
   {
     if(m_new_depth_frame)
@@ -41,7 +53,12 @@
     }
     m_new_depth_frame = true;
   }
-
+  /**
+   * @brief [saves into a pcl::PointCloud]
+   * @details [long description]
+   * 
+   * @param filename [description]
+   */
   void MyFreenectDevice::savePointCloud(std::string filename)
   {
     std::cout << cloud.points.size() << std::endl;

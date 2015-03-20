@@ -36,11 +36,11 @@
 #include "renderMesh.h"
 #include "kinect_depth.h"
 
-
+//nrKinects is howmany - 1 to fit indexing.
+const int nrKinects = 0;
 Freenect::Freenect freenect;
 MyFreenectDevice* device;
-MyFreenectDevice* device2;
-MyFreenectDevice* deviceSecond;
+
 
 
 FILE *open_dump(const char *filename)
@@ -64,103 +64,56 @@ void dump_rgb(FILE *fp, void *data, unsigned int width, unsigned int height)
   fwrite(data, width * height * 3, 1, fp);
 }
 
+pcl::PointCloud<pcl::PointXYZ> runAllKinects(int kinectIndex)
+{
+  device = &freenect.createDevice<MyFreenectDevice>(nrKinects);
 
+  device->startDepth();
+  device->startVideo();
+ 
+
+  while(!device->m_new_rgb_frame && !device->m_new_depth_frame)
+  {
+    //run loop as long as we dont have depth data
+    std::cout << "running..." << std::endl;
+  }
+
+  device->stopDepth();
+  device->stopVideo();
+
+  device->savePointCloud("first.pcd");
+  
+  return device->cloud;
+}
 
 
 int main(int argc, char const *argv[])
 {
 
-    //get kinect count
-    std::cout << "device count: " << freenect.deviceCount() << std::endl;
-    std::cout << 1 << std::endl;
-    //try to connect to first kinect
-    device = &freenect.createDevice<MyFreenectDevice>(0);
-    // deviceSecond = &freenect.createDevice<MyFreenectDevice>(1);
-
-    //start depthcallback
-    device->startDepth();
-    device->startVideo();
-    // deviceSecond->startDepth();
-    // deviceSecond->startVideo();
-
-    while(!device->m_new_rgb_frame && !device->m_new_depth_frame)
-    {
-      //run loop as long as we dont have depth data
-      std::cout << "running..." << std::endl;
-    }
-    //stop depth callback
-    // deviceSecond->stopDepth();
-    // deviceSecond->stopVideo();
-    device->stopDepth();
-    device->stopVideo();
-
-
-    //save data to file
-    device->savePointCloud("first.pcd");
-    // deviceSecond->savePointCloud("second.pcd");
-    //FILE *fp1;
-    // FILE *fp2;
-    //fp1 = open_dump("bild1.ppm");
-    //resolution 640x480
-    //dump_rgb(fp1, device->mrgb, 640, 480);
-    //close file
-    //fclose(fp1);
-
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud1 (new pcl::PointCloud<pcl::PointXYZ>(device->cloud));
-
-     std::cout << "device count: " << freenect.deviceCount() << std::endl;
-    std::cout << 0 << std::endl;
-    //try to connect to first kinect
-    device2 = &freenect.createDevice<MyFreenectDevice>(1);
-    // deviceSecond = &freenect.createDevice<MyFreenectDevice>(1);
-
-    //start depthcallback
-    device2->startDepth();
-    device2->startVideo();
-    // deviceSecond->startDepth();
-    // deviceSecond->startVideo();
-
-    while(!device2->m_new_rgb_frame && !device2->m_new_depth_frame)
-    {
-      //run loop as long as we dont have depth data
-      std::cout << "running..." << std::endl;
-    }
-    //stop depth callback
-    // deviceSecond->stopDepth();
-    // deviceSecond->stopVideo();
-    device2->stopDepth();
-    device2->stopVideo();
-
-
-    //save data to file
-    device2->savePointCloud("first.pcd");
-    // deviceSecond->savePointCloud("second.pcd");
-    //FILE *fp1;
-    // FILE *fp2;
-    //fp1 = open_dump("bild1.ppm");
-    //resolution 640x480
-    //dump_rgb(fp1, device->mrgb, 640, 480);
-    //close file
-    //fclose(fp1);
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2 (new pcl::PointCloud<pcl::PointXYZ>(device2->cloud));
-
-  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud3 (new pcl::PointCloud<pcl::PointXYZ>());
-  renderMesh* r;
-
-    cloud1 = r->mirrorCloud(cloud1);
-
-  *cloud3 = *cloud2 + *cloud1;
-
+  std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr > v;
   
-  //pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2(new pcl::PointCloud<pcl::PointXYZ>(device->cloud));
-  std::cout<<"lolo" << endl << endl;
-  r->run(cloud3);
+  
+  for(int i = 0; i<= nrKinects; i)
+  { 
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>(runAllKinects(i)));
+    v.push_back(cloud);
+  }
 
-  // fp2 = open_dump("bild2.ppm");
-  //resolution 640x480
-  // dump_rgb(fp2, deviceSecond->mrgb, 640, 480);
-  //close file
-  // fclose(fp2);
+  pcl::PointCloud<pcl::PointXYZ>::Ptr cloudAll (new pcl::PointCloud<pcl::PointXYZ>());
+  //important to know index of all kinects to preform transforms
+  // transforms goes here
+
+
+  //
+  for(int i = 0; i<= nrKinects; i)
+  {
+    *cloudAll = *cloudAll + *v[i];
+  }
+  renderMesh* r;
+ 
+  r->run(cloudAll);
+
 
   return 0;
 }
+
