@@ -29,6 +29,7 @@
 #include <pcl/filters/conditional_removal.h>
 #include <pcl/common/transforms.h>
 
+#include <pcl/filters/statistical_outlier_removal.h>
 #include <pcl/compression/octree_pointcloud_compression.h>
 #include <pcl/filters/voxel_grid.h>
 
@@ -42,10 +43,11 @@ using namespace cv;
    */
   void renderMesh::run(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
+    cloud = removeNoise(cloud);
     cloud = reduceData(cloud);
     cloud = setDelims(cloud);    
-    runPoisson(cloud);
-    //runGreedyProjectionTriangulation(cloud);
+    //runPoisson(cloud);
+    runGreedyProjectionTriangulation(cloud);
   }
   /**
    * @brief [Displays a pcl::PointCloud]
@@ -88,6 +90,29 @@ using namespace cv;
       boost::this_thread::sleep (boost::posix_time::microseconds (100000));
     }
   }
+
+   /**
+   * @brief [Remove Noise]
+   * @details [long description0]
+   * 
+   * @param d [description]
+   * @return [description]
+   */
+  pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::removeNoise (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+  {
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_filtered (new pcl::PointCloud<pcl::PointXYZ>);
+
+    //Removing outliers using a statisticalOutlierRemoval filter
+    //Create the filtering object
+    pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor2;
+    sor2.setInputCloud (cloud);
+    sor2.setMeanK (50);
+    sor2.setStddevMulThresh (1.0);
+    sor2.filter (*cloud_filtered);
+
+    return cloud_filtered;
+  }
+
   /**
    * @brief [Reduce A pointCloud]
    * @details [long description0]

@@ -61,7 +61,7 @@
    */
   void MyFreenectDevice::savePointCloud(std::string filename)
   {
-    std::cout << cloud.points.size() << std::endl;
+    //std::cout << cloud.points.size() << std::endl;
     pcl::io::savePCDFileASCII (filename, cloud);
   
   }

@@ -93,7 +93,7 @@ int main(int argc, char const *argv[])
   std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr > v;
   
   
-  for(int i = 0; i<= nrKinects; i)
+  for(int i = 0; i<= nrKinects; i++)
   { 
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>(runAllKinects(i)));
     v.push_back(cloud);
@@ -105,7 +105,8 @@ int main(int argc, char const *argv[])
 
 
   //
-  for(int i = 0; i<= nrKinects; i)
+
+  for(int i = 0; i<= nrKinects; i++)
   {
     *cloudAll = *cloudAll + *v[i];
   }

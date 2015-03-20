@@ -47,6 +47,8 @@ class renderMesh
 
 		pcl::PointCloud<pcl::PointXYZ>::Ptr setDelims(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
+		pcl::PointCloud<pcl::PointXYZ>::Ptr removeNoise (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+
 		pcl::PointCloud<pcl::PointXYZ>::Ptr reduceData(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
 		pcl::PointCloud<pcl::PointXYZ>::Ptr mirrorCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
