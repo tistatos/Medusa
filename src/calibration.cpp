@@ -130,8 +130,8 @@ int main(int argc, char const *argv[])
 	//text in the beginning about the file
 	help();
 
-	freenect_sync_set_tilt_degs(0, 0);
-	freenect_raw_tilt_state *state = 0;	
+	//freenect_sync_set_tilt_degs(0, 0);
+	//freenect_raw_tilt_state *state = 0;	
 
 	Size boardSize(7,5); //how many corners that have to be found
 	int counter = 0;
