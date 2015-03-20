@@ -39,6 +39,7 @@
 
 Freenect::Freenect freenect;
 MyFreenectDevice* device;
+MyFreenectDevice* device2;
 MyFreenectDevice* deviceSecond;
 
 
@@ -69,46 +70,91 @@ void dump_rgb(FILE *fp, void *data, unsigned int width, unsigned int height)
 int main(int argc, char const *argv[])
 {
 
+    //get kinect count
+    std::cout << "device count: " << freenect.deviceCount() << std::endl;
+    std::cout << 1 << std::endl;
+    //try to connect to first kinect
+    device = &freenect.createDevice<MyFreenectDevice>(0);
+    // deviceSecond = &freenect.createDevice<MyFreenectDevice>(1);
 
-  //get kinect count
-  std::cout << "device count: " << freenect.deviceCount() << std::endl;
-  std::cout << atoi(argv[0]) << std::endl;
-  //try to connect to first kinect
-  device = &freenect.createDevice<MyFreenectDevice>(atoi(argv[0]));
-  // deviceSecond = &freenect.createDevice<MyFreenectDevice>(1);
+    //start depthcallback
+    device->startDepth();
+    device->startVideo();
+    // deviceSecond->startDepth();
+    // deviceSecond->startVideo();
 
-  //start depthcallback
-  device->startDepth();
-  device->startVideo();
-  // deviceSecond->startDepth();
-  // deviceSecond->startVideo();
-
-  while(!device->m_new_rgb_frame && !device->m_new_depth_frame)
-  {
-    //run loop as long as we dont have depth data
-    std::cout << "running..." << std::endl;
-  }
-  //stop depth callback
-  // deviceSecond->stopDepth();
-  // deviceSecond->stopVideo();
-  device->stopDepth();
-  device->stopVideo();
+    while(!device->m_new_rgb_frame && !device->m_new_depth_frame)
+    {
+      //run loop as long as we dont have depth data
+      std::cout << "running..." << std::endl;
+    }
+    //stop depth callback
+    // deviceSecond->stopDepth();
+    // deviceSecond->stopVideo();
+    device->stopDepth();
+    device->stopVideo();
 
 
-  //save data to file
-  device->savePointCloud("first.pcd");
-  // deviceSecond->savePointCloud("second.pcd");
-  FILE *fp1;
-  // FILE *fp2;
-  fp1 = open_dump("bild1.ppm");
-  //resolution 640x480
-  dump_rgb(fp1, device->mrgb, 640, 480);
-  //close file
-  fclose(fp1);
+    //save data to file
+    device->savePointCloud("first.pcd");
+    // deviceSecond->savePointCloud("second.pcd");
+    //FILE *fp1;
+    // FILE *fp2;
+    //fp1 = open_dump("bild1.ppm");
+    //resolution 640x480
+    //dump_rgb(fp1, device->mrgb, 640, 480);
+    //close file
+    //fclose(fp1);
+
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud1 (new pcl::PointCloud<pcl::PointXYZ>(device->cloud));
+
+     std::cout << "device count: " << freenect.deviceCount() << std::endl;
+    std::cout << 0 << std::endl;
+    //try to connect to first kinect
+    device2 = &freenect.createDevice<MyFreenectDevice>(1);
+    // deviceSecond = &freenect.createDevice<MyFreenectDevice>(1);
+
+    //start depthcallback
+    device2->startDepth();
+    device2->startVideo();
+    // deviceSecond->startDepth();
+    // deviceSecond->startVideo();
+
+    while(!device2->m_new_rgb_frame && !device2->m_new_depth_frame)
+    {
+      //run loop as long as we dont have depth data
+      std::cout << "running..." << std::endl;
+    }
+    //stop depth callback
+    // deviceSecond->stopDepth();
+    // deviceSecond->stopVideo();
+    device2->stopDepth();
+    device2->stopVideo();
+
+
+    //save data to file
+    device2->savePointCloud("first.pcd");
+    // deviceSecond->savePointCloud("second.pcd");
+    //FILE *fp1;
+    // FILE *fp2;
+    //fp1 = open_dump("bild1.ppm");
+    //resolution 640x480
+    //dump_rgb(fp1, device->mrgb, 640, 480);
+    //close file
+    //fclose(fp1);
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2 (new pcl::PointCloud<pcl::PointXYZ>(device2->cloud));
+
+  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud3 (new pcl::PointCloud<pcl::PointXYZ>());
   renderMesh* r;
-  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2(new pcl::PointCloud<pcl::PointXYZ>(device->cloud));
+
+    cloud1 = r->mirrorCloud(cloud1);
+
+  *cloud3 = *cloud2 + *cloud1;
+
+  
+  //pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2(new pcl::PointCloud<pcl::PointXYZ>(device->cloud));
   std::cout<<"lolo" << endl << endl;
-  r->run(cloud2);
+  r->run(cloud3);
 
   // fp2 = open_dump("bild2.ppm");
   //resolution 640x480

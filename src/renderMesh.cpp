@@ -88,15 +88,15 @@ void renderMesh::run(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
  /* pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2
       (new pcl::PointCloud<pcl::PointXYZ>(cloud));
 */
-  show(cloud); 
+  //show(cloud); 
 
   cloud = reduceData(cloud);
-  show(cloud);
+  //show(cloud);
   std::cout << "cloud reduced" << endl; 
   //cloud = mirrorCloud(cloud);
   std::cout << "cloud mirrord" << endl;
   cloud = setDelims(cloud);
-  show(cloud);
+  //show(cloud);
   std::cout << "cloud Poisson" << endl;
   runPoisson(cloud);
 
@@ -130,7 +130,7 @@ void renderMesh::run(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
     // Create the filtering object
     pcl::VoxelGrid<pcl::PCLPointCloud2> sor;
     sor.setInputCloud (cloud2);
-    sor.setLeafSize (0.01f, 0.01f, 0.01f);
+    sor.setLeafSize (0.005f, 0.005f, 0.005f);
     sor.filter (*cloud_blob);
 
     //convert to the templated PointCloud
@@ -151,7 +151,7 @@ pcl::PointCloud<pcl::PointNormal>::Ptr renderMesh::getNormals(pcl::PointCloud<pc
   tree->setInputCloud(cloud);
   n.setInputCloud (cloud);
   n.setSearchMethod (tree);
-  n.setKSearch (200);
+  n.setRadiusSearch (5);
   //n.setRadiusSearch(5);
   pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
   n.compute (*normals);
@@ -167,13 +167,14 @@ pcl::PointCloud<pcl::PointNormal>::Ptr renderMesh::getNormals(pcl::PointCloud<pc
 
 void renderMesh::runPoisson(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
+  /*
   pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>);
   tree->setInputCloud (cloud);
  
   pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> n;
   n.setInputCloud (cloud);
   n.setSearchMethod (tree);
-  n.setKSearch (15);
+  n.setKSearch (200);
  // n.setRadiusSearch(0.03);
   pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
   n.compute (*normals);
@@ -188,38 +189,50 @@ void renderMesh::runPoisson(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 
   pcl::PolygonMesh mesh;
 
-  pcl::GridProjection<pcl::PointNormal> gp;
+  //pcl::GridProjection<pcl::PointNormal> gp;
+  pcl::GreedyProjectionTriangulation<pcl::PointNormal> gp3;
 
-  gp.setInputCloud(cloudAndNormals);
-  gp.setSearchMethod(tree2);
-  gp.setResolution(0.001);
-  gp.reconstruct(mesh);
+
+  gp3.setSearchRadius(0.5);
+  gp3.setMu(3);
+  gp3.setMaximumNearestNeighbors(200);
+  gp3.setMaximumSurfaceAngle(M_PI/4);
+  gp3.setMinimumAngle(M_PI/18);
+  gp3.setMaximumAngle(2*M_PI/3);
+  gp3.setNormalConsistency(false);
+
+  gp3.setInputCloud(cloudAndNormals);
+  gp3.setSearchMethod(tree2);
+  //gp.setResolution(1);
+
+  gp3.reconstruct(mesh);
 
   showMesh(mesh);
- /* //pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
-  pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
-  tree2->setInputCloud(getNormals(cloud));
 
+  //pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
+  //pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
+  //tree2->setInputCloud(getNormals(cloud));
 
+*/
  
   pcl::Poisson<pcl::PointNormal> poisson;
 
-  poisson.setSearchMethod(tree2);
-  poisson.setInputCloud (getNormals(cloud));
+  //poisson.setSearchMethod(tree2);
+  poisson.setInputCloud (getNormals (cloud));
   pcl::PolygonMesh mesh;
   poisson.reconstruct (mesh);
  // pcl::io::saveOBJFile ("bunny_poisson.obj", mesh); 
-  showMesh(mesh);
-  */
+  showMesh (mesh);
+  
 }
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::setDelims(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
   pcl::ConditionAnd<pcl::PointXYZ>::Ptr range_cond ( new pcl::ConditionAnd<pcl::PointXYZ>);
   range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::LT, 2)));
- // range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::GT, -0.1)));
-  range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::LT, 2.7)));
-  range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::GT, -2.3)));
+  range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::GT, -2.1)));
+  range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::LT, 0.5)));
+  range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::GT, -0.5)));
  
   pcl::ConditionalRemoval<pcl::PointXYZ> condrem (range_cond);
   condrem.setInputCloud(cloud);
@@ -233,7 +246,11 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::setDelims(pcl::PointCloud<pcl::P
 pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::mirrorCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
   Eigen::Matrix4f transform = Eigen::Matrix4f::Identity();
-  transform(2,2) = -1;
+  transform(2, 2) = -1;
+  transform(2, 3) = 2.405; //z
+  transform(1, 3) = -0.05;  //y
+  //transform(0, 3) = 0.03; //x
+
   std::cout << "reducerat" << std::endl;
   pcl::PointCloud<pcl::PointXYZ>::Ptr transformed_cloud (new pcl::PointCloud<pcl::PointXYZ> ());
   // You can either apply transform_1 or transform_2; they are the same
