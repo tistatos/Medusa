@@ -6,7 +6,6 @@
 
 #include <iostream>
 #include <sstream>
-#include <string>
 #include <time.h>
 #include <stdio.h>
 
@@ -119,7 +118,7 @@ int keyPressed()
 	}else return 1;
 }
 
-string convertInt(int number)
+string intToString(int number)
 {
    stringstream ss;
    ss << number;
@@ -144,6 +143,7 @@ int main(int argc, char const *argv[])
 		Mat view_ir; //InputArray image
 		char bajs;
 
+		//TODO: Gör två funktioner för rgb resp. ir
 		view_rgb = nextImage(rgb_img); //
 		view_ir = nextImage(ir_img);
 
@@ -168,8 +168,8 @@ int main(int argc, char const *argv[])
 			drawChessboardCorners(view_ir, boardSize, Mat(pointBuf_IR), found_ir);
 
 			//make a string for the filename
-			string RGB_name = "rgb_corners" + convertInt(counter) + ".ppm";
-			string IR_name = "ir_corners" + convertInt(counter) + ".ppm";
+			string RGB_name = "rgb_corners" + intToString(counter) + ".ppm";
+			string IR_name = "ir_corners" + intToString(counter) + ".ppm";
 			//save image
 			imwrite(RGB_name, view_rgb);
 			imwrite(IR_name, view_ir);
