@@ -1,6 +1,3 @@
-
-
-
 #include <iostream>
 
 #include <pcl/point_types.h>
@@ -32,7 +29,6 @@
 #include <pcl/compression/octree_pointcloud_compression.h>
 
 
-
 class renderMesh
 {
 	public:
@@ -43,14 +39,16 @@ class renderMesh
 
 		void showMesh(pcl::PolygonMesh mesh);
 
+		void runPoisson(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+
 		pcl::PointCloud<pcl::PointNormal>::Ptr getNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
-		void runPoisson(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+		void runGreedyProjectionTriangulation(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
 		pcl::PointCloud<pcl::PointXYZ>::Ptr setDelims(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
 		pcl::PointCloud<pcl::PointXYZ>::Ptr reduceData(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
 		pcl::PointCloud<pcl::PointXYZ>::Ptr mirrorCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
-
 };
+
