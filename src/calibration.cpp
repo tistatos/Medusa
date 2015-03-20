@@ -6,7 +6,6 @@
 
 #include <iostream>
 #include <sstream>
-#include <string>
 #include <time.h>
 #include <stdio.h>
 
@@ -75,8 +74,8 @@ Mat nextImage(int n)
 	Mat result_ir;
 	int ret;
 	char *rgb = 0;
-	int rows = 212;
-	int columns = 162;
+	int width = 640;
+	int height = 480;
 
 	uint32_t ts;
 
@@ -195,7 +194,7 @@ vector<Point2f> calibration_ir_one_image(vector<Point2f> ir1, vector<Point2f> ir
 	return temp;
 }
 
-string convertInt(int number)
+string intToString(int number)
 {
    stringstream ss;
    ss << number;
@@ -207,8 +206,8 @@ int main(int argc, char const *argv[])
 	//text in the beginning about the file
 	help();
 
-	freenect_sync_set_tilt_degs(0, 0);
-	freenect_raw_tilt_state *state = 0;	
+	//freenect_sync_set_tilt_degs(0, 0);
+	//freenect_raw_tilt_state *state = 0;	
 
 	Size boardSize(7,5); //how many corners that have to be found
 	int counter = 0;
@@ -223,6 +222,7 @@ int main(int argc, char const *argv[])
 		Mat view_ir2;
 		Mat view_ir3;
 
+		//TODO: Gör två funktioner för rgb resp. ir
 		view_rgb = nextImage(rgb_img); //
 		view_ir1 = nextImage(ir_img1);
 		view_ir2 = nextImage(ir_img2);
@@ -243,6 +243,10 @@ int main(int argc, char const *argv[])
 		{
 			counter++; //counter for every image that have been taken
 			cout << "Bild " << counter << " tagen" << endl;
+			cout << endl << pointBuf_RGB << endl;
+			cout << endl << pointBuf_IR << endl;
+			imwrite("testrgb.jpg", view_rgb);
+			imwrite("testir.jpg", view_ir);
 
 			pointBuf_IR = calibration_ir_one_image(pointBuf_IR1, pointBuf_IR2, pointBuf_IR3);
 			//find chessboardcorners and draw lines in view_rgb and view_ir
@@ -252,13 +256,14 @@ int main(int argc, char const *argv[])
 			drawChessboardCorners(view_ir3, boardSize, Mat(pointBuf_IR), found_ir3);
 
 			//make a string for the filename
-			string RGB_name = "rgb_corners" + convertInt(counter) + ".jpg";
-			//string IR_name1 = "ir_corners1" + convertInt(counter) + ".jpg";
-			//string IR_name2 = "ir_corners2" + convertInt(counter) + ".jpg";
-			string IR_name3 = "ir_corners3" + convertInt(counter) + ".jpg";
+			string RGB_name = "rgb_corners" + intToString(counter) + ".jpg";
+			//string IR_name1 = "ir_corners1" + intToString(counter) + ".jpg";
+			//string IR_name2 = "ir_corners2" + intToString(counter) + ".jpg";
+			string IR_name3 = "ir_corners3" + intToString(counter) + ".jpg";
 
 			pointBuf_IR = calibration_ir_one_image(pointBuf_IR1, pointBuf_IR2 ,pointBuf_IR3);
 			drawChessboardCorners(view_ir3, boardSize, Mat(pointBuf_IR), found_ir3);
+
 			//save image
 			imwrite(RGB_name, view_rgb);
 			//imwrite(IR_name1, view_ir1);
