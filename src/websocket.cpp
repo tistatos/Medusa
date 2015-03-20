@@ -152,12 +152,14 @@ void Websocket::destroy() {
  */
 int main() {
 
-	Websocket server(7681);
-	if(server.init())
+	Websocket* server = new Websocket(7681);
+	if(server->init())
   {  
-    server.run();
-    server.destroy();
+    server->run();
   }
+
+  server->destroy();
+  
 	return 0;
 
 
