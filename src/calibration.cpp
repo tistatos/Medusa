@@ -243,10 +243,10 @@ int main(int argc, char const *argv[])
 		{
 			counter++; //counter for every image that have been taken
 			cout << "Bild " << counter << " tagen" << endl;
-			cout << endl << pointBuf_RGB << endl;
-			cout << endl << pointBuf_IR << endl;
-			imwrite("testrgb.jpg", view_rgb);
-			imwrite("testir.jpg", view_ir);
+			//cout << endl << pointBuf_RGB << endl;
+			//cout << endl << pointBuf_IR << endl;
+			//imwrite("testrgb.jpg", view_rgb);
+			//imwrite("testir.jpg", view_ir);
 
 			pointBuf_IR = calibration_ir_one_image(pointBuf_IR1, pointBuf_IR2, pointBuf_IR3);
 			//find chessboardcorners and draw lines in view_rgb and view_ir
