@@ -1,11 +1,9 @@
 html, body 
 {
-    width: 100%;
-    height: 100%;
+    
     margin: 0;
     padding: 0;
-    font-family: 'Roboto', sans-serif;
-    position:fixed;
+
 }
 
 /*Right div: buttons...*/
@@ -15,17 +13,17 @@ html, body
   width: 20%;
   height: 100%;
   left: 80%;
-  display: inline-block;;
+  display: inline-block;
   position: fixed;
 }
 
 /*Left div: show object*/
-.left
+#left
 {
   background: black;
   width: 80%;
   height: 100%;
-  display: inline-block;;
+  display: inline-block;
   position: fixed;
 }
 
@@ -182,7 +180,7 @@ html, body
   visibility: visible;
   transition: opacity 0.3s 0s, visibility 0s 0s;
 }
-
+/*
 .popupQR.is-visible 
 {
   opacity: 1;
@@ -200,7 +198,12 @@ popupContainer
 .is-visible popupContainer {
   transform: translateY(0);
 }
-
+*/
+canvas
+{
+  max-height: 100% !important;
+  max-width: 100% !important;
+}
 
 
 
