@@ -9,11 +9,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <iostream>
 #include <libwebsockets.h>
+#include "websocket.h"
 
 
-//Apparently this is needed as a standard for the websocketlibrary.
-//Needs to be the first protocol
+/**
+ * @brief Struct for http_callback
+ * @details What shouldh happen when a httprequest is initated.
+*/
 static int callback_http(struct libwebsocket_context *context,
                          struct libwebsocket *wsi,
                          enum libwebsocket_callback_reasons reason, void *user,
@@ -66,67 +70,94 @@ static int callback_http(struct libwebsocket_context *context,
     return 0;
 }
 
-//Websocket protocols, can do own ones if wanted..
+
+/**
+ * @brief Protocols
+ * @details Protocols we accept on the server
+ * 
+ */
 static struct libwebsocket_protocols protocols[] = {
-	/* first protocol must always be HTTP handler */
-	{
-		"http-only",		//protocol name 
-		callback_http,		// callback
-		0			        //per_session_data_size 
-	},
-	{ NULL, NULL, 0, 0 } // terminator
+  /* first protocol must always be HTTP handler */
+  {
+    "http-only",    //protocol name 
+    callback_http,    // callback
+    0             //per_session_data_size 
+  },
+  { NULL, NULL, 0, 0 } // terminator
 };
+/**
+ * @brief Constructor for the websocket
+ * @details Constructs a websocketserver, sets memory as needed.
+ * 
+ * @param port What port should we run it on?
+ * @param ssl Do we want SSL?
+ * @param options Do we want options on?
+ */
+Websocket::Websocket(int port, bool ssl) {
+  memset(&info, 0, sizeof info);
+  info.port = 7681;
+  info.gid = -1;
+  info.uid = -1;
+  info.options = 0;
+  info.protocols = protocols;
+}
+
+/**
+ * @brief Init the websocket
+ * @details Creates a websocket context using a libwebsocket function.
+ * If something goes wrong in example context == NULL after init the program will return -1
+ * @return Returns 1 if success, otherwise -1
+ */
+int Websocket::init() {
+  //Create the websocket context
+  context = libwebsocket_create_context(&info);
+
+  //If context is null something is wrong, then the program should exit.
+  if(context == NULL) {
+    lwsl_err("Websocket failed to init");
+    return -1;
+  }
+
+  return 1;
+}
+/**
+ * @brief Runs the websocket
+ * @details Runs the websocketserver until the user quits it by pressing
+ *  any button on the keyboard. Superugly solution.
+ */
+void Websocket::run() {
+  //Super ugly solution
+  std::string s = "";
+  while(!(std::cin >> s)) {
+   libwebsocket_service(context, 50);
+   
+  }
+}
+/**
+ * @brief Destroy function for the websocket
+ * @details Destroy the context which creates and runs the websocket.
+ */
+void Websocket::destroy() {
+    libwebsocket_context_destroy(context);
+}
+
+
 
 
 /**
  * @brief Main function
  * @details Loads and starts a websocketserver. Runs until stopped by user.
  *
- * @return -1 if context is null
+ * @return -1 if context is null returns 0 when progrma is done.
  */
-int main(int argc, char **argv) {
+int main() {
 
-	//Init variables needed
-	int n = 0;
-	struct libwebsocket_context *context;
-	struct lws_context_creation_info info;
-
-
-	memset(&info, 0, sizeof info);
-	
-	//Infostuff to be printed and set. Right now we are using port 7681.
-	//SSL is not activated.
-	info.port = 7681;
-	info.protocols = protocols;
-	info.extensions = libwebsocket_get_internal_extensions();
-	info.ssl_cert_filepath = NULL;
-	info.ssl_private_key_filepath = NULL;
-
-	info.gid = -1;
-	info.uid = -1;
-	info.options = 0;
-
-	//Create the websocket context
-	context = libwebsocket_create_context(&info);
-
-	//If context is null something is wrong, then the program should exit.
-	if(context == NULL) {
-		lwsl_err("Websocket failed to init");
-		return -1;
-	}
-
-
-	//Run the webserver, ping with 50ms delay.
-	while(true) {
-		n = libwebsocket_service(context, 50);
-	};
-
-	//When program is done destroy the websocket connection
-	libwebsocket_context_destroy(context);
-
-	//Notice that it exited correctly
-	lwsl_notice("Websocket exited correctly");
-
+	Websocket server(7681);
+	if(server.init())
+  {  
+    server.run();
+    server.destroy();
+  }
 	return 0;
 
 
