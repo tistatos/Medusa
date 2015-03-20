@@ -35,6 +35,11 @@
   
   });
   
+  continueButton.addEventListener("click", function()
+  {
+    //window.location = "../mainPage.html";
+  });
+  
   //Close the information menu when the close button is pushed
   [].slice.call(document.querySelectorAll(".closeButton")).forEach(function(el,i){
     el.addEventListener( "click", function(){

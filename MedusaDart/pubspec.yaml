@@ -1,6 +1,7 @@
 name: MedusaDart
 version: 0.0.1
 description: An absolute bare-bones web app.
+homepage: http://threedart.github.com/three.dart/
 environment:
   sdk: '>=1.0.0 <2.0.0'
 dependencies:
@@ -9,3 +10,7 @@ dependencies:
   http_server: any
   three:
     git: https://github.com/threeDart/three.dart.git
+  stats:
+    git: git://github.com/Dartist/stats.dart.git
+
+
