@@ -1,7 +1,7 @@
 /**
- * @File openni_grabber.cpp
+ * @file openni_grabber.cpp
  *    quick test with OpenNI and kinect
- * @autor Erik Sandrén
+ * @author Erik Sandrén
  * @date 2015-03-05
  */
 

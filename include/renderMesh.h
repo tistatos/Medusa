@@ -1,8 +1,8 @@
 /**
- * @File renderMesh.h
+ * @file renderMesh.h
  *    class to handle point cloud data and meshes
- * @autor Erik Sandrén
- * @date  2015-05-12
+ * @author Erik Sandrén
+ * @date 2015-05-12
  */
 #ifndef __RENDERMESH_H__
 #define __RENDERMESH_H__

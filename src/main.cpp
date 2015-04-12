@@ -1,7 +1,7 @@
 /**
- * @File Kinect.h
+ * @file Kinect.h
  *    description here
- * @autor Erik Sandrén
+ * @author Erik Sandrén
  * @date  DATE
  */
 

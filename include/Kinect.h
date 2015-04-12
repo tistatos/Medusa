@@ -1,7 +1,7 @@
 /**
- * @File kinect_depth.cpp
+ * @file kinect_depth.cpp
  *    test with async kinect
- * @autor Erik Sandrén
+ * @author Erik Sandrén
  * @date 2015-03-06
  */
 
@@ -18,48 +18,67 @@
 
 #include <pthread.h>
 
+/**
+ * @brief Mutex class for locking and unlocking
+ */
 
 class Mutex
 {
-public:
-    Mutex()
+ public:
+  /**
+  * @brief default constructor
+  */
+  Mutex()
+  {
+    pthread_mutex_init(&m_mutex, NULL);
+  }
+  /**
+   * @brief lock the mutex lock
+   */
+  void lock()
+  {
+    pthread_mutex_lock(&m_mutex);
+  }
+  /**
+   * @brief unlock the mutex lock
+   */
+  void unlock()
+  {
+    pthread_mutex_unlock(&m_mutex);
+  }
+
+  /**
+   * @brief Class to create mutex lock for the current scope
+   */
+  class ScopedLock
+  {
+  public:
+    /**
+     * @brief default constructor
+     */
+    ScopedLock(Mutex &mutex) : _mutex(mutex)
     {
-        pthread_mutex_init(&m_mutex, NULL);
+      _mutex.lock();
+    }
+    /**
+     * @brief default destructor
+     */
+    ~ScopedLock()
+    {
+      _mutex.unlock();
     }
 
-    void lock()
-    {
-        pthread_mutex_lock(&m_mutex);
-    }
-
-    void unlock()
-    {
-        pthread_mutex_unlock(&m_mutex);
-    }
-
-    class ScopedLock
-    {
-    public:
-        ScopedLock(Mutex &mutex) : _mutex(mutex)
-        {
-            _mutex.lock();
-        }
-
-        ~ScopedLock()
-        {
-            _mutex.unlock();
-        }
-
-    private:
-        Mutex &_mutex;
-    };
-
+  private:
+     Mutex &_mutex; ///variable for mutex status
+  };
 private:
-    pthread_mutex_t m_mutex;
+  pthread_mutex_t m_mutex; ///pthread mutex
 };
 
 
-
+/**
+ * @brief Kinect class handles ineraction and callback to one kinect
+ */
 class Kinect : public Freenect::FreenectDevice
 {
 public:
@@ -69,20 +88,21 @@ public:
   bool getVideoFrame(uint8_t **frame);
   bool getDepthFrame(uint16_t **frame);
 
-  void VideoCallback(void *video, uint32_t timestamp);
-  void DepthCallback(void *_depth, uint32_t timestamp);
+
 
   void savePointCloud(std::string filename);
   pcl::PointCloud<pcl::PointXYZ> getPointCloud();
-
+protected:
+  void VideoCallback(void *video, uint32_t timestamp);
+  void DepthCallback(void *_depth, uint32_t timestamp);
 private:
-  bool mNewRgbFrame;
-  bool mNewDepthFrame;
-  pcl::PointCloud<pcl::PointXYZ> mCloud;
-  uint16_t* mBufferDepth;
-  uint8_t* mBufferVideo;
-  Mutex mRgbMutex;
-  Mutex mDepthMutex;
+  bool mNewRgbFrame; ///true if new frame is present since last runt of getVideoFrame
+  bool mNewDepthFrame; ///true if new frame is present since last runt of getDepthFrame
+  pcl::PointCloud<pcl::PointXYZ> mCloud; ///internal cloud represntation from depth data
+  uint16_t* mBufferDepth; ///depth buffer
+  uint8_t* mBufferVideo; ///video buffer
+  Mutex mRgbMutex; //mutex lock for video data (write/read)
+  Mutex mDepthMutex; //mutex lock for depth data (write/read)
 };
 
 #endif

@@ -1,8 +1,8 @@
 /**
- * @File Kinect.cpp
+ * @file Kinect.cpp
  *    description here
- * @autor Erik Sandrén
- * @date  DATE
+ * @author Erik Sandrén
+ * @date  2015-05-12
  */
 
 #include <vector>
@@ -12,6 +12,12 @@
 #include <string.h>
 #include "Kinect.h"
 
+/**
+ * @brief Default constructor
+
+ * @param ctx the context for the kinect
+ * @param index index of kinect (not used yet)
+ */
 Kinect::Kinect(freenect_context* ctx, int index): Freenect::FreenectDevice(ctx,index),
   mNewRgbFrame(false), mNewDepthFrame(false)
 {
@@ -28,12 +34,20 @@ Kinect::Kinect(freenect_context* ctx, int index): Freenect::FreenectDevice(ctx,i
 
 }
 
+/**
+ * @brief default destructor
+ */
 Kinect::~Kinect()
 {
   delete[] mBufferDepth;
   delete[] mBufferVideo;
 }
 
+/**
+ * @brief Callback for video - DO NOT CALL EXPLICITLY!
+ * @param video video frame data
+ * @param timestamp when frame was taken
+ */
 void Kinect::VideoCallback(void *video, uint32_t timestamp)
 {
   Mutex::ScopedLock lock(mRgbMutex);
@@ -43,6 +57,11 @@ void Kinect::VideoCallback(void *video, uint32_t timestamp)
   mNewRgbFrame = true;
 }
 
+/**
+ * @brief Callback for depth - DO NOT CALL EXPLICITLY!
+ * @param _depth depth frame data
+ * @param timestamp when frame was taken
+ */
 void Kinect::DepthCallback(void *_depth, uint32_t timestamp)
 {
   Mutex::ScopedLock lock(mDepthMutex);
@@ -59,6 +78,11 @@ void Kinect::DepthCallback(void *_depth, uint32_t timestamp)
   mNewDepthFrame = true;
 }
 
+/**
+ * @brief get latest video frame
+ * @param frame pointer for returning data
+ * @return true if new data was found, else false
+ */
 bool Kinect::getVideoFrame(uint8_t **frame)
 {
   if(!mNewRgbFrame)
@@ -73,6 +97,11 @@ bool Kinect::getVideoFrame(uint8_t **frame)
   return true;
 }
 
+/**
+ * @brief get latest depth frame
+ * @param frame pointer for returning data
+ * @return true if new data was found, else false
+ */
 bool Kinect::getDepthFrame(uint16_t **frame)
 {
 
@@ -90,14 +119,23 @@ bool Kinect::getDepthFrame(uint16_t **frame)
 
 }
 
+/**
+ * @brief get point cloud from latest frame
+ * @return the latest pointcloud
+ */
 pcl::PointCloud<pcl::PointXYZ> Kinect::getPointCloud()
 {
+  Mutex::ScopedLock lock(mDepthMutex);
   return mCloud;
 }
 
+/**
+ * @brief save current point cloud to a file
+ * @param filename file name to save to
+ */
 void Kinect::savePointCloud(std::string filename)
 {
+  Mutex::ScopedLock lock(mDepthMutex);
   std::cout << mCloud.points.size() << std::endl;
   pcl::io::savePCDFileASCII (filename, mCloud);
-
 }
