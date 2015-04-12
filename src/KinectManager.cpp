@@ -7,30 +7,86 @@
 
 #include "KinectManager.h"
 
-
 KinectManager::KinectManager()
 {
-  int ret = freenect_init(&mCtx, NULL);
-  freenect_select_subdevices(mCtx, FREENECT_DEVICE_CAMERA);
+#ifdef DEBUG
+    printDebugMessage("Debugging on");
+    freenect_set_log_level(m_ctx, FREENECT_LOG_DEBUG);
+#else
+    freenect_set_log_level(m_ctx, FREENECT_LOG_ERROR);
+#endif
+    mInitialized = true;
 }
+
 
 int KinectManager::getDeviceCount()
 {
-  return freenect_num_devices(mCtx);
+  if(mInitialized)
+    return deviceCount();
+  else
+    return -1;
 }
 
-void KinectManager::connectToDevice(int index)
+void KinectManager::connectToDevices()
 {
-
-  if(index == -1)
+  for (int i = 0; i < deviceCount(); ++i)
   {
-    int deviceCount = getDeviceCount();
-    for(int i = 0; i < deviceCount; ++i)
-    {
-      freenect_device* dev = mDevices[i].getDevice();
-      int ret = freenect_open_device(mCtx, &dev, i);
-      mDevices[i].setIndex(i);
-    }
+    Kinect* device = &this->createDevice<Kinect>(i);
+    mDevices.push_back(device);
   }
 }
 
+int KinectManager::getConnectedDeviceCount()
+{
+  return mDevices.size();
+}
+
+KinectManager::~KinectManager()
+{
+  mDevices.clear();
+}
+
+void KinectManager::startDepth()
+{
+  for (int i = 0; i < deviceCount(); ++i)
+  {
+    mDevices[i]->startDepth();
+  }
+}
+void KinectManager::startVideo()
+{
+  for (int i = 0; i < deviceCount(); ++i)
+  {
+    mDevices[i]->startVideo();
+  }
+}
+void KinectManager::stopDepth()
+{
+  for (int i = 0; i < deviceCount(); ++i)
+  {
+    mDevices[i]->stopDepth();
+  }
+}
+void KinectManager::stopVideo()
+{
+  for (int i = 0; i < deviceCount(); ++i)
+  {
+    mDevices[i]->stopVideo();
+  }
+}
+
+bool KinectManager::getDepth(int index, uint16_t **frame)
+{
+  return mDevices[index]->getDepthFrame(frame);
+}
+
+bool KinectManager::getVideo(int index, uint8_t **frame)
+{
+  return mDevices[index]->getVideoFrame(frame);
+}
+
+
+Kinect* KinectManager::getDevice(int index)
+{
+  return mDevices[index];
+}

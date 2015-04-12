@@ -7,27 +7,40 @@
 #ifndef __KINECT_MANAGER_H__
 #define __KINECT_MANAGER_H__
 
-#include "libfreenect/libfreenect.h"
-#include "libfreenect/libfreenect_sync.h"
+#define DEBUG true
+
+#include <libfreenect/libfreenect.hpp>
+
 #include "Kinect.h"
+#include "debug_helpers.h"
 
 #include <stddef.h>
 #include <vector>
+#include <string.h>
 
-
-class KinectManager
+class KinectManager : Freenect::Freenect
 {
 public:
   KinectManager();
+  ~KinectManager();
   int getDeviceCount();
-  void connectToDevice(int index=-1);
+  void connectToDevices();
+  int getConnectedDeviceCount();
+
+  void startDepth();
+  void startVideo();
+
+  void stopDepth();
+  void stopVideo();
+
+  bool getDepth(int index, uint16_t **frame);
+  bool getVideo(int index, uint8_t **frame);
+
+  Kinect* getDevice(int index);
 
 private:
-  freenect_context* mCtx;
-  std::vector<Kinect> mDevices;
+  bool mInitialized;
+  std::vector<Kinect*> mDevices;
 };
-
-
-
 
 #endif
