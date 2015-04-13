@@ -15,6 +15,7 @@
 #include <libfreenect/libfreenect.hpp>
 #include <libfreenect/libfreenect.h>
 #include <string.h>
+#include <opencv2/core/core.hpp>
 
 #include <pthread.h>
 
@@ -93,6 +94,10 @@ public:
 
   void savePointCloud(std::string filename);
   pcl::PointCloud<pcl::PointXYZ> getPointCloud();
+
+  void setPosition(cv::Point3f newPosition);
+  cv::Point3f getPosition();
+
 protected:
   void VideoCallback(void *video, uint32_t timestamp);
   void DepthCallback(void *_depth, uint32_t timestamp);
@@ -104,6 +109,8 @@ private:
   uint8_t* mBufferVideo; ///video buffer
   Mutex mRgbMutex; //mutex lock for video data (write/read)
   Mutex mDepthMutex; //mutex lock for depth data (write/read)
+
+  cv::Point3f mPosition; //the kinect's position from the center
 };
 
 #endif
