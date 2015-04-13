@@ -1,66 +1,95 @@
-//! @file main.cpp
-//! Test file for medusa. Test so PCL, OpenCV and Freenect works
-//!
-//! @author Erik Sandrén
-//! @version 1.0
-//! @date 2015-02-26
-
-#include <iostream>
-#include <pcl/point_types.h>
-#include <pcl/point_cloud.h>
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <libfreenect/libfreenect.h>
-
-using namespace cv;
-
 /**
- * @brief Main test function
- * @details testing all functionality and dependencies needed for medusa
- *
- * @return -1 image is not found.
+ * @file Kinect.h
+ *    description here
+ * @author Erik Sandrén
+ * @date  DATE
  */
-int main()
+
+#include "KinectManager.h"
+#include "renderMesh.h"
+#include <iostream>
+
+FILE *open_dump(const char *filename)
+{
+  //open file
+  FILE* fp = fopen(filename, "w");
+  if (fp == NULL) {
+    fprintf(stderr, "Error: Cannot open file [%s]\n", filename);
+    exit(1);
+  }
+  printf("%s\n", filename);
+  return fp;
+}
+
+void dump_rgb(FILE *fp, void *data, unsigned int width, unsigned int height)
 {
 
-  pcl::PointCloud<pcl::PointXYZ> cloud;
+  //*3 = channel
+  fprintf(fp, "P6 %u %u 255\n", width, height);
+  //write to file
+  fwrite(data, width * height * 3, 1, fp);
+}
 
-  // Fill in the cloud data
-  cloud.width    = 10;
-  cloud.height   = 10;
-  cloud.is_dense = false;
-  cloud.points.resize (cloud.width * cloud.height);
+int main(int argc, char const *argv[])
+{
+  KinectManager km;
+  int devCount = km.getDeviceCount();
+  std::cout << "Number of discovered kinects " << devCount << std::endl;
 
-  for (size_t i = 0; i < cloud.points.size (); ++i)
+  if(devCount <= 0)
   {
-    cloud.points[i].x = 1024 * rand () / (RAND_MAX + 1.0f);
-    cloud.points[i].y = 1024 * rand () / (RAND_MAX + 1.0f);
-    cloud.points[i].z = 1024 * rand () / (RAND_MAX + 1.0f);
+    std::cout << "No kinects found!" << std::endl;
+    return 0;
   }
 
-  for (size_t i = 0; i < cloud.points.size (); ++i)
-    std::cerr << "    " << cloud.points[i].x << " " << cloud.points[i].y << " " << cloud.points[i].z << std::endl;
+  km.connectToDevices();
+  std::cout << "Connected to " << km.getConnectedDeviceCount() << " devices." << std::endl;
 
 
-  Mat image;
-  image = imread("dick.png");   // Read the file
+  km.startVideo();
+  km.startDepth();
 
-  if(! image.data )                              // Check for invalid input
+
+  //Save images from cameras
+  for (int i = 0; i < km.getConnectedDeviceCount(); ++i)
   {
-      std::cout <<  "Could not open or find the image" << std::endl ;
-      return -1;
+    uint8_t* frame;
+    uint16_t* dFrame;
+    FILE *fp;
+    while(!km.getVideo(i, &frame))
+    {
+      std::cout << "waiting for image" << std::endl;
+
+    }
+    char filename[128];
+    sprintf(filename, "%i_bild.ppm", i);
+    std::cout << "Saving image to: " << filename << std::endl;
+
+    fp = open_dump(filename);
+    dump_rgb(fp, frame, 640, 480);
+    fclose(fp);
+
+    while(!km.getDepth(i, &dFrame))
+    {
+      std::cout << "waiting for depth frame" << std::endl;
+    }
+
+    sprintf(filename, "%i_depth.pcd", i);
+    km.getDevice(i)->savePointCloud(filename);
+
+    delete[] frame;
+    delete[] dFrame;
   }
 
+  km.stopDepth();
+  km.stopVideo();
 
-  freenect_context* fn_ctx;
-  int ret = freenect_init(&fn_ctx, NULL);
-  std::cout << ret;
-  if (ret < 0)
-    return ret;
-
-  // Show debug messages and use camera only.
-  freenect_set_log_level(fn_ctx, FREENECT_LOG_DEBUG);
-  freenect_select_subdevices(fn_ctx, FREENECT_DEVICE_CAMERA);
+  renderMesh r;
+  for (int i = 0; i < km.getConnectedDeviceCount(); ++i)
+  {
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2(new pcl::PointCloud<pcl::PointXYZ>(km.getDevice(i)->getPointCloud()));
+    r.show(cloud2);
+  }
 
   return 0;
 }

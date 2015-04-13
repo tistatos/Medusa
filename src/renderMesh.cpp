@@ -1,44 +1,12 @@
-
-
-
-#include <pcl/point_types.h>
-#include <pcl/point_cloud.h>
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <libfreenect/libfreenect.h>
-#include <iostream>
-#include <pcl/io/vtk_io.h>
-#include <pcl/io/pcd_io.h>
-#include <pcl/io/obj_io.h>
-
-#include <pcl/kdtree/kdtree_flann.h>
-#include <pcl/features/normal_3d.h>
-#include <pcl/surface/gp3.h>
-#include <boost/thread/thread.hpp>
-#include <pcl/common/common_headers.h>
-#include <pcl/visualization/pcl_visualizer.h>
-#include <pcl/console/parse.h>
-#include <pcl/surface/marching_cubes.h>
-#include <pcl/surface/marching_cubes_hoppe.h>
-#include <pcl/surface/poisson.h>
-#include <pcl/features/integral_image_normal.h>
-#include <pcl/surface/grid_projection.h>
-#include <pcl/filters/filter.h>
-#include <pcl/filters/conditional_removal.h>
-#include <pcl/common/transforms.h>
-
-#include <pcl/compression/octree_pointcloud_compression.h>
-
 #include "renderMesh.h"
-
 
 using namespace cv;
 
-pcl::PointCloud<pcl::PointXYZ> renderMesh::loadData()
+pcl::PointCloud<pcl::PointXYZ> renderMesh::loadData(std::string filename)
 {
   pcl::PointCloud<pcl::PointXYZ> cloud;
 
-  if(pcl::io::loadPCDFile<pcl::PointXYZ> ("model.pcd", cloud) == -1)
+  if(pcl::io::loadPCDFile<pcl::PointXYZ> (filename, cloud) == -1)
   {
     std::cout << "failed to load file" << std::endl;
     return cloud;
@@ -51,11 +19,11 @@ void renderMesh::run(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
  /* pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2
       (new pcl::PointCloud<pcl::PointXYZ>(cloud));
 */
- // show(cloud); 
+ // show(cloud);
   cloud = mirrorCloud(cloud);
   std::cout << "cloud mirrord" << endl;
   cloud = reduceData(cloud);
-  std::cout << "cloud reduced" << endl; 
+  std::cout << "cloud reduced" << endl;
   cloud = setDelims(cloud);
   std::cout << "cloud gp3" << endl;
   runGp3(cloud);
@@ -96,7 +64,7 @@ pcl::PointCloud<pcl::PointNormal>::Ptr renderMesh::getNormals(pcl::PointCloud<pc
   pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
   pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>);
   tree->setInputCloud (cloud);
-  
+
   n.setInputCloud (cloud);
   n.setSearchMethod (tree);
   n.setKSearch (3);
@@ -104,7 +72,7 @@ pcl::PointCloud<pcl::PointNormal>::Ptr renderMesh::getNormals(pcl::PointCloud<pc
 
   pcl::PointCloud<pcl::PointNormal>::Ptr cloudWithNormals (new pcl::PointCloud<pcl::PointNormal>);
   pcl::concatenateFields(*cloud,*normals, *cloudWithNormals);
-  
+
   std::cout << "normaler klar" << std::endl;
   return cloudWithNormals;
 
@@ -112,7 +80,7 @@ pcl::PointCloud<pcl::PointNormal>::Ptr renderMesh::getNormals(pcl::PointCloud<pc
 
 void renderMesh::runGp3(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
-  
+
   //pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
   pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
   tree2->setInputCloud(getNormals(cloud));
@@ -130,7 +98,7 @@ void renderMesh::runGp3(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   gp3.setMaximumAngle(2*M_PI/3); // 120 degrees
   gp3.setNormalConsistency(false);
   gp3.setInputCloud (getNormals(cloud));
-  gp3.setSearchMethod (tree2);      
+  gp3.setSearchMethod (tree2);
 
   std::cout << "reconstruct mesh" << std::endl;
   gp3.reconstruct (triangle);
@@ -149,12 +117,12 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::setDelims(pcl::PointCloud<pcl::P
   range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::GT, -0.1)));
   range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::LT, 0.7)));
   range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::GT, -0.3)));
- 
+
   pcl::ConditionalRemoval<pcl::PointXYZ> condrem (range_cond);
   condrem.setInputCloud(cloud);
   condrem.setKeepOrganized(true);
   condrem.filter(*cloud);
-  
+
 
   return cloud;
 }
@@ -171,7 +139,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::reduceData(pcl::PointCloud<pcl::
   //Decompress the cloud
   octreeCompression.decodePointCloud(compressedData, decompressedCloud);
 
-  return decompressedCloud; 
+  return decompressedCloud;
 
 }
 
@@ -184,7 +152,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::mirrorCloud(pcl::PointCloud<pcl:
   // You can either apply transform_1 or transform_2; they are the same
   pcl::transformPointCloud (*cloud, *transformed_cloud, transform);
 
- 
+
   return transformed_cloud;
 }
 
