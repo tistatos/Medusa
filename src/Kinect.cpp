@@ -139,3 +139,13 @@ void Kinect::savePointCloud(std::string filename)
   std::cout << mCloud.points.size() << std::endl;
   pcl::io::savePCDFileASCII (filename, mCloud);
 }
+
+bool Kinect::getVideoStatus()
+{
+  return mNewRgbFrame;
+}
+
+bool Kinect::getDepthStatus()
+{
+  return mNewDepthFrame;
+}

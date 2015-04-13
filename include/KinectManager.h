@@ -39,6 +39,9 @@ public:
   bool getDepth(int index, uint16_t **frame);
   bool getVideo(int index, uint8_t **frame);
 
+
+  bool getVideoStatus();
+  bool getDepthStatus();
   Kinect* getDevice(int index);
 
 private:

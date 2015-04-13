@@ -88,7 +88,8 @@ public:
   bool getVideoFrame(uint8_t **frame);
   bool getDepthFrame(uint16_t **frame);
 
-
+  bool getVideoStatus();
+  bool getDepthStatus();
 
   void savePointCloud(std::string filename);
   pcl::PointCloud<pcl::PointXYZ> getPointCloud();

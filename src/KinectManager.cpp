@@ -122,6 +122,17 @@ bool KinectManager::getDepth(int index, uint16_t **frame)
   return mDevices[index]->getDepthFrame(frame);
 }
 
+bool KinectManager::getDepthStatus()
+{
+  for (int i = 0; i < getConnectedDeviceCount(); ++i)
+  {
+    if(!mDevices[i]->getDepthStatus())
+      return false;
+  }
+  return true;
+}
+
+
 /**
  * @brief get video data from kinects
  *
@@ -135,6 +146,17 @@ bool KinectManager::getVideo(int index, uint8_t **frame)
   return mDevices[index]->getVideoFrame(frame);
 }
 
+bool KinectManager::getVideoStatus()
+{
+  for (int i = 0; i < getConnectedDeviceCount(); ++i)
+  {
+    if(!mDevices[i]->getVideoStatus())
+      return false;
+  }
+  return true;
+}
+
+
 /**
  * @brief return instance of managed kinect
  *
@@ -145,3 +167,5 @@ Kinect* KinectManager::getDevice(int index)
 {
   return mDevices[index];
 }
+
+
