@@ -1,0 +1,119 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+
+html, body 
+{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+/*Custum start button*/
+.startButton
+{
+  background-color: LawnGreen;
+  display: block;
+  top: 40%;
+  left: 40%;
+  height: 10%;
+  width: 20%; 
+  border-style:none;
+  text-align: center;
+  font-size: 100%;
+  position: fixed; 
+  outline:none; 
+  -webkit-transition: all 0.5s !important;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s; 
+}
+
+body.startButton-open .startButton
+{
+  top: 100%;
+  overflow: hidden;
+}
+
+/*Info button*/
+.infoButton
+{
+}
+
+/*Custum information menu*/
+.infoMenu
+{
+  position: fixed;
+  z-index: 20;
+  background-color: #67b5d1;
+  overflow: hidden;
+  top: 0;
+  width: 300px;
+  height: 100%;
+  left: -300px;
+  -webkit-transition: all 0.3s !important;
+  -moz-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+
+body.menu-open .infoMenu
+{
+  left: 0px;
+}
+
+.infoMenu h3 
+{
+	color: #afdefa;
+	font-size: 1.9em;
+	padding: 20px;
+	margin: 0;
+	font-weight: 300;
+	background: #0d77b6;
+}
+.infoMenu p
+{
+	display: block;
+	color: #fff;
+	font-size: 1.1em;
+	font-weight: 300;
+	padding-left: 5px;
+}
+
+/*Custum close button in information menu*/
+closeButton 
+{
+  background-color: #3184a1;
+  color: #fff;
+  outline: none
+}
+
+
+
+/*Custum information text*/
+.instructions 
+{
+  text-align: center;
+  font-size: 100%;
+  font-family: Arial;
+  top: 100%;
+  position: fixed;  
+}
+
+body.instructions-open .instructions
+{
+  top: 40%;
+  left: 40%;
+  height: 10%;
+  width: 20%;
+  text-align: center;   
+  -webkit-transition: all 0.5s !important;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s; 
+  
+}

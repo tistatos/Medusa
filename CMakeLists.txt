@@ -52,6 +52,14 @@ ELSE()
 ENDIF()
 
 ##################
+# libwebsockets
+##################
+
+find_package(libwebsockets REQUIRED )
+include_directories(${libwebsockets_INCLUDE_DIRS})
+link_directories(${LIBWEBSOCKETS_LIBRARY_DIRS})
+
+##################
 # targets
 ##################
 include_directories(
@@ -59,13 +67,17 @@ include_directories(
 )
 
 
-set(ALL_LIBS ${PCL_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB})
+set(ALL_LIBS ${PCL_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB} ${LIBWEBSOCKETS_LIBRARIES})
 
 add_library(kinectmanager src/KinectManager.cpp src/Kinect.cpp)
 target_link_libraries(kinectmanager ${FREENECT_LIBRARIES})
 
 add_executable(medusa src/main.cpp)
 target_link_libraries(medusa kinectmanager ${ALL_LIBS})
+
+add_executable(server src/websocket.cpp)
+target_link_libraries(server
+ ${PCL_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES} ${LIBWEBSOCKETS_LIBRARIES})
 
 add_executable(calibration src/calibration.cpp)
 target_link_libraries(calibration ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB} ${OpenCV_LIBS})
