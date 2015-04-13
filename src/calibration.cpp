@@ -9,6 +9,8 @@
 #include <time.h>
 #include <stdio.h>
 
+#include <cmath>
+
 #include <unistd.h>
 
 #include <string>
@@ -201,6 +203,31 @@ string intToString(int number)
    return ss.str();
 }
 
+//create a matrix, 35x3
+Mat Matrix(vector<Point2f> v)
+{
+	Mat tmp(35,3, CV_64F);
+	for(int i = 0; i < 35; i++)
+	{
+		tmp.at<double>(i,0) = v.at(i).x;
+		tmp.at<double>(i,1) = v.at(i).y;
+		tmp.at<double>(i,2) = 1;
+	}
+	return tmp;
+}
+//converting of MATLAB-code for calibration
+//change name after
+vector<Point2f> MATLAB(vector<Point2f> RGB, vector<Point2f> IR)
+{
+	vector<Point2f> temp;
+
+	Mat rgb = Matrix(RGB);
+	Mat ir = Matrix(IR);
+	Mat x = rgb.inv() * ir;
+
+	return temp;
+}
+
 int main(int argc, char const *argv[])
 {
 	//text in the beginning about the file
@@ -234,6 +261,8 @@ int main(int argc, char const *argv[])
 		vector<Point2f> pointBuf_IR3;
 		vector<Point2f> pointBuf_IR;
 
+		vector<Point2f> point4;
+
 		bool found_rgb = findChessboardCorners(view_rgb, boardSize, pointBuf_RGB);
 		bool found_ir1 = findChessboardCorners(view_ir1, boardSize, pointBuf_IR1);
 		bool found_ir2 = findChessboardCorners(view_ir2, boardSize, pointBuf_IR2);
@@ -247,22 +276,19 @@ int main(int argc, char const *argv[])
 			//cout << endl << pointBuf_IR << endl;
 			//imwrite("testrgb.jpg", view_rgb);
 			//imwrite("testir.jpg", view_ir);
-
 			pointBuf_IR = calibration_ir_one_image(pointBuf_IR1, pointBuf_IR2, pointBuf_IR3);
+			point4 = MATLAB(pointBuf_RGB, pointBuf_IR);
 			//find chessboardcorners and draw lines in view_rgb and view_ir
-			drawChessboardCorners(view_rgb, boardSize, Mat(pointBuf_RGB), found_rgb);
+			drawChessboardCorners(view_rgb, boardSize, Mat(point4), found_rgb);
 			//drawChessboardCorners(view_ir1, boardSize, Mat(pointBuf_IR1), found_ir1);
 			//drawChessboardCorners(view_ir2, boardSize, Mat(pointBuf_IR2), found_ir2);
-			drawChessboardCorners(view_ir3, boardSize, Mat(pointBuf_IR), found_ir3);
+			drawChessboardCorners(view_ir3, boardSize, Mat(pointBuf_RGB), found_ir3);
 
 			//make a string for the filename
 			string RGB_name = "rgb_corners" + intToString(counter) + ".jpg";
 			//string IR_name1 = "ir_corners1" + intToString(counter) + ".jpg";
 			//string IR_name2 = "ir_corners2" + intToString(counter) + ".jpg";
 			string IR_name3 = "ir_corners3" + intToString(counter) + ".jpg";
-
-			pointBuf_IR = calibration_ir_one_image(pointBuf_IR1, pointBuf_IR2 ,pointBuf_IR3);
-			drawChessboardCorners(view_ir3, boardSize, Mat(pointBuf_IR), found_ir3);
 
 			//save image
 			imwrite(RGB_name, view_rgb);
