@@ -14,7 +14,7 @@ set(PROJECT_LIBS_DIR ${PROJECT_SOURCE_DIR}/libs)
 set(PROJECT_CXX_DIR ${PROJECT_SOURCE_DIR}/src)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
-  message(FATAL_ERROR "You must create a build folder and call cmake .. from there!")
+  message(FATAL_ERROR "You must create a build folder and call cmake .. from there!, Also remove CMakeCache.txt before trying to cmake again")
 endif()
 
 ###############
@@ -22,11 +22,13 @@ endif()
 ###############
 
 set(PCL_DIR "/path/to/PCLConfig.cmake")
-find_package(PCL REQUIRED COMPONENTS common)
+find_package(PCL 1.7 COMPONENTS )
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
+message(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 include_directories(${EIGEN_INCLUDE_DIRS})
+
 ##################
 # OpenCV Settings
 ##################
@@ -43,9 +45,11 @@ find_package(libfreenect REQUIRED )
 include_directories(${libfreenect_INCLUDE_DIRS})
 link_directories(${FREENECT_LIBRARY_DIRS})
 
-
-
-
+if(APPLE)
+  set(FREENECT_SYNC_LIB libfreenect_sync.dylib)
+ELSE()
+  set(FREENECT_SYNC_LIB libfreenect_sync.so)
+ENDIF()
 
 ##################
 # targets
@@ -55,18 +59,27 @@ include_directories(
 )
 
 
-add_executable(dependencies_test src/main.cpp)
-target_link_libraries(dependencies_test ${PCL_COMMON_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES})
+set(ALL_LIBS ${PCL_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB})
 
-add_library(kinect src/kinect.cpp)
+add_library(kinectmanager src/KinectManager.cpp src/Kinect.cpp)
+target_link_libraries(kinectmanager ${FREENECT_LIBRARIES})
 
-set(ALL_LIBS ${PCL_COMMON_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES} kinect)
+add_executable(medusa src/main.cpp)
+target_link_libraries(medusa kinectmanager ${ALL_LIBS})
 
+add_executable(calibration src/calibration.cpp)
+target_link_libraries(calibration ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB} ${OpenCV_LIBS})
+
+add_executable(write_xml_file src/write_xml_file.cpp)
+target_link_libraries(write_xml_file ${OpenCV_LIBS})
+
+add_executable (openni_grabber src/openni_grabber.cpp)
+target_link_libraries (openni_grabber ${PCL_LIBRARIES})
 
 ##################
 # testing
 ##################
-
+if(${BUILD_TESTS})
 add_subdirectory(
   ${PROJECT_SOURCE_DIR}/gtest
 )
@@ -88,5 +101,4 @@ target_link_libraries(${PROJECT_TEST_NAME}
     )
 target_link_libraries(${PROJECT_TEST_NAME} ${CMAKE_THREAD_LIBS_INIT})
 add_test(test ${PROJECT_TEST_NAME})
-
-message(${GTEST_LIBS_DIR})
+endif()
