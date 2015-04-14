@@ -9,11 +9,23 @@
 #define __MEDUSALOGIC_H__
 
 #include "KinectManager.h"
+#include "websocket.h"
+
+class Websocket;
 
 class Medusa
 {
 public:
-  Medusa();
+  Medusa(KinectManager* manager, Websocket* socket);
   ~Medusa();
+  void init();
+  void run();
+  void stop();
+  bool running();
+  void medusaCallback();
+private:
+  KinectManager* mManager;
+  Websocket* mSocket;
+  bool mRunning;
 };
 #endif

@@ -7,8 +7,7 @@
             $(function() {
                 window.WebSocket = window.WebSocket || window.MozWebSocket;
 
-                var websocket = new WebSocket('ws://127.0.0.1:7681',
-                                              'increment-protocol');
+                var websocket = new WebSocket('ws://127.0.0.1:7681');
 
                 websocket.onopen = function () {
                     $('h1').css('color', 'green');
@@ -17,27 +16,56 @@
                 websocket.onerror = function () {
                     $('h1').css('color', 'red');
                 };
-                
+
                 websocket.onmessage = function (message) {
-                    console.log(message.data);
-                    $('div').append($('<p>', { text: message.data }));
+                    if(message.data.indexOf("STARTCD") > -1)
+                    {
+                        var seconds = parseInt(message.data[message.data.length-1])
+                        countdown(seconds);
+                    }
+                    else
+                    {
+                        $('div').append($('<p>', { text: message.data }));
+                    }
                 };
-                
-                                                    
+
+
                 $('button').click(function(e) {
                     e.preventDefault();
                     websocket.send($('input').val());
                     $('input').val('');
                 });
+
+                $('#pic').click(function(e) {
+                    e.preventDefault();
+                    websocket.send("KINECTRGB");
+                });
+
+                var countdown = function(seconds)
+                {
+
+                    var siid = setInterval(function () {
+                        $("#cd").html(seconds);
+                        if(seconds <= 0)
+                        {
+                            clearInterval(siid);
+                        }
+                        seconds = seconds-1;
+                    }, 1000);
+                }
             });
         </script>
         </head>
     <body>
         <h1>WebSockets test</h1>
+        <h3>Count down:</h3>
+        <div id="cd"></div>
+
         <form>
             <input type="text" />
             <button>Send</button>
-        </form> 
+            <button id="pic">Take Pic</button>
+        </form>
         <div></div>
     </body>
 </html>

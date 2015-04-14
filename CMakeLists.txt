@@ -54,10 +54,19 @@ ENDIF()
 ##################
 # libwebsockets
 ##################
-
+if(APPLE)
 find_package(libwebsockets REQUIRED )
 include_directories(${libwebsockets_INCLUDE_DIRS})
 link_directories(${LIBWEBSOCKETS_LIBRARY_DIRS})
+ELSE()
+   FIND_PATH(LIBWEBSOCKETS_INCLUDES
+    libwebsockets.h
+    PATHS ${LIBWEBSOCKETS_INCLUDE_PATH} /usr/include)
+
+  FIND_LIBRARY(LIBWEBSOCKETS_LIBRARIES
+    NAMES libwebsockets websockets
+    PATHS ${LIBWEBSOCKETS_LIBRARIES} /usr/lib64 /usr/lib)
+ENDIF()
 
 ##################
 # targets
@@ -72,7 +81,7 @@ set(ALL_LIBS ${PCL_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES} ${CMAKE_THREA
 add_library(kinectmanager src/KinectManager.cpp src/Kinect.cpp)
 target_link_libraries(kinectmanager ${FREENECT_LIBRARIES})
 
-add_executable(medusa src/main.cpp)
+add_executable(medusa src/main.cpp src/Medusa.cpp src/websocket.cpp)
 target_link_libraries(medusa kinectmanager ${ALL_LIBS})
 
 add_executable(server src/websocket.cpp)
