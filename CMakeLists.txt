@@ -3,11 +3,12 @@ cmake_minimum_required(VERSION 2.8.7)
 set(PROJECT_NAME medusa)
 project(${PROJECT_NAME} C CXX)
 include(ExternalProject)
-
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 find_package(Threads REQUIRED)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/Modules)
 
 set(PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set(PROJECT_LIBS_DIR ${PROJECT_SOURCE_DIR}/libs)
@@ -36,6 +37,16 @@ include_directories(${EIGEN_INCLUDE_DIRS})
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 link_directories(${OpenCV_LIBRARY_DIRS})
+
+##################
+# MongoDB Settings
+##################
+
+include_directories(${BSONCXX_INCLUDE_DIRS})
+include_directories(${MONGOCXX_INCLUDE_DIRS})
+link_directories(${MONGOCXX_LIBRARY_DIRS})
+link_directories(${BSONCXX_LIBRARY_DIRS})
+message(${BSONCXX_INCLUDE_DIRS})
 
 ##################
 # freenect Settings
@@ -83,6 +94,9 @@ target_link_libraries(kinectmanager ${FREENECT_LIBRARIES})
 
 add_executable(medusa src/main.cpp src/Medusa.cpp src/websocket.cpp)
 target_link_libraries(medusa kinectmanager ${ALL_LIBS})
+
+add_executable(mongo src/mongo.cpp)
+target_link_libraries(mongo ${BSONCXX_LIBRARIES} ${MONGOCXX_LIBRARIES})
 
 #add_executable(calibration src/calibration.cpp)
 #target_link_libraries(calibration ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB} ${OpenCV_LIBS})
