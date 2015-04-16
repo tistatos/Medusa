@@ -70,6 +70,7 @@ void dump_depth(FILE *fp, void *data, unsigned int width, unsigned int height)
 	fwrite(data, width * height * 2, 1, fp);
 }
 
+//take ir and rgb-image, n==1 => RGB, n=2 => ir1, n=3 => ir2, else ir3
 Mat nextImage(int n)
 {
 	Mat result_rgb;
@@ -168,7 +169,7 @@ Mat nextImage_IR()
 
 	return result_ir;
 }
-
+//continue when the key a is pressed or quit with the key q
 int keyPressed()
 {
 	char key;
@@ -184,7 +185,7 @@ int keyPressed()
 		return -1;
 	}else return 1;
 }
-
+//trying to merge the three ir images together
 vector<Point2f> calibration_ir_one_image(vector<Point2f> ir1, vector<Point2f> ir2, vector<Point2f> ir3)
 {
 	vector<Point2f> temp;
@@ -195,7 +196,7 @@ vector<Point2f> calibration_ir_one_image(vector<Point2f> ir1, vector<Point2f> ir
 	//cout << ir1.at(1).x << " " << ir2.at(1).x << " " << ir3.at(1).x << endl;
 	return temp;
 }
-
+//convert int to string
 string intToString(int number)
 {
    stringstream ss;
@@ -263,6 +264,7 @@ int main(int argc, char const *argv[])
 
 		vector<Point2f> point4;
 
+		//trying to find chessboardcorners in rgb and ir-image
 		bool found_rgb = findChessboardCorners(view_rgb, boardSize, pointBuf_RGB);
 		bool found_ir1 = findChessboardCorners(view_ir1, boardSize, pointBuf_IR1);
 		bool found_ir2 = findChessboardCorners(view_ir2, boardSize, pointBuf_IR2);
