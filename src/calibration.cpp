@@ -70,6 +70,7 @@ void dump_depth(FILE *fp, void *data, unsigned int width, unsigned int height)
 	fwrite(data, width * height * 2, 1, fp);
 }
 
+//take ir and rgb-image, n==1 => RGB, n=2 => ir1, n=3 => ir2, else ir3
 Mat nextImage(int n)
 {
 	Mat result_rgb;
@@ -82,9 +83,9 @@ Mat nextImage(int n)
 	uint32_t ts;
 
 	FILE *fp;
-	
+
 	if(n == 1)
-	{ 
+	{
 		ret = freenect_sync_get_video((void**)&rgb, &ts, 0, FREENECT_VIDEO_RGB);
 		fp = open_dump("cali_rgb.jpg");
 		dump_rgb(fp, rgb, WIDTH, HEIGHT);
@@ -95,7 +96,7 @@ Mat nextImage(int n)
 	}
 
 	else if(n == 2)
-	{ 
+	{
 		ret = freenect_sync_get_video((void**)&rgb, &ts, 0, FREENECT_VIDEO_IR_8BIT);
 		fp = open_dump("cali_ir.jpg");
 		dump_ir(fp, rgb, WIDTH, HEIGHT);
@@ -146,7 +147,7 @@ Mat nextImage_RGB()
 	fclose(fp);
 	result_rgb = imread("cali_rgb.jpg");
 	resize(result_rgb, result_rgb, Size(WIDTH/3,HEIGHT/3));
-	
+
 	return result_rgb;
 }
 
@@ -168,7 +169,7 @@ Mat nextImage_IR()
 
 	return result_ir;
 }
-
+//continue when the key a is pressed or quit with the key q
 int keyPressed()
 {
 	char key;
@@ -184,18 +185,18 @@ int keyPressed()
 		return -1;
 	}else return 1;
 }
-
+//trying to merge the three ir images together
 vector<Point2f> calibration_ir_one_image(vector<Point2f> ir1, vector<Point2f> ir2, vector<Point2f> ir3)
 {
-	vector<Point2f> temp;	
+	vector<Point2f> temp;
 	for(int i = 0; i < ir1.size(); i++)
 	{
-		temp.push_back((ir1.at(i) + ir2.at(i) + ir3.at(i)) / 3 );
+		temp.push_back((ir1.at(i) + ir2.at(i) + ir3.at(i))* (1/ 3) );
 	}
 	//cout << ir1.at(1).x << " " << ir2.at(1).x << " " << ir3.at(1).x << endl;
 	return temp;
 }
-
+//convert int to string
 string intToString(int number)
 {
    stringstream ss;
@@ -234,7 +235,7 @@ int main(int argc, char const *argv[])
 	help();
 
 	//freenect_sync_set_tilt_degs(0, 0);
-	//freenect_raw_tilt_state *state = 0;	
+	//freenect_raw_tilt_state *state = 0;
 
 	Size boardSize(7,5); //how many corners that have to be found
 	int counter = 0;
@@ -263,6 +264,7 @@ int main(int argc, char const *argv[])
 
 		vector<Point2f> point4;
 
+		//trying to find chessboardcorners in rgb and ir-image
 		bool found_rgb = findChessboardCorners(view_rgb, boardSize, pointBuf_RGB);
 		bool found_ir1 = findChessboardCorners(view_ir1, boardSize, pointBuf_IR1);
 		bool found_ir2 = findChessboardCorners(view_ir2, boardSize, pointBuf_IR2);
@@ -296,7 +298,7 @@ int main(int argc, char const *argv[])
 			//imwrite(IR_name2, view_ir2);
 			imwrite(IR_name3, view_ir3);
 		}
-	}while(counter != 1); //stop loop when 10 images have been taken 
+	}while(counter != 1); //stop loop when 10 images have been taken
 
 	cout << "Calibration done!" << endl;
 
