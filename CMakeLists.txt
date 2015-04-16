@@ -84,8 +84,9 @@ target_link_libraries(kinectmanager ${FREENECT_LIBRARIES})
 add_executable(medusa src/main.cpp src/Medusa.cpp src/websocket.cpp)
 target_link_libraries(medusa kinectmanager ${ALL_LIBS})
 
-add_executable(calibration src/calibration.cpp)
-target_link_libraries(calibration ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB} ${OpenCV_LIBS})
+#add_executable(calibration src/calibration.cpp)
+#target_link_libraries(calibration ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB} ${OpenCV_LIBS})
+
 
 add_executable(write_xml_file src/write_xml_file.cpp)
 target_link_libraries(write_xml_file ${OpenCV_LIBS})
