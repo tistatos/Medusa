@@ -88,8 +88,8 @@ add_executable(server src/websocket.cpp)
 target_link_libraries(server
  ${PCL_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES} ${LIBWEBSOCKETS_LIBRARIES})
 
-add_executable(calibration src/calibration.cpp)
-target_link_libraries(calibration ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB} ${OpenCV_LIBS})
+#add_executable(calibration src/calibration.cpp)
+#target_link_libraries(calibration ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB} ${OpenCV_LIBS})
 
 add_executable(write_xml_file src/write_xml_file.cpp)
 target_link_libraries(write_xml_file ${OpenCV_LIBS})
