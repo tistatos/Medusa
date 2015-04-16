@@ -80,6 +80,9 @@ target_link_libraries(write_xml_file ${OpenCV_LIBS})
 add_executable (openni_grabber src/openni_grabber.cpp)
 target_link_libraries (openni_grabber ${PCL_LIBRARIES})
 
+add_executable (texture src/texture.cpp)
+target_link_libraries (texture ${PCL_LIBRARIES})
+
 ##################
 # testing
 ##################
