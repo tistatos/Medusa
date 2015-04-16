@@ -31,7 +31,6 @@ Kinect::Kinect(freenect_context* ctx, int index): Freenect::FreenectDevice(ctx,i
   mCloud.width = 640;
   mCloud.height = 480;
   mCloud.points.resize(640*480);
-
 }
 
 /**
@@ -148,4 +147,19 @@ bool Kinect::getVideoStatus()
 bool Kinect::getDepthStatus()
 {
   return mNewDepthFrame;
+}
+
+/**
+ * @brief Set position of kinect
+ *
+ * @param newPosition new position from calibration
+ */
+void Kinect::setPosition(cv::Point3f newPosition)
+{
+  mPosition = newPosition;
+}
+
+cv::Point3f Kinect::getPosition()
+{
+  return mPosition;
 }
