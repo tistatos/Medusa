@@ -1,0 +1,97 @@
+/**
+ * @file medusaLogic.cpp
+ *    The logic of medusa
+ * @author Erik Sandrén
+ * @date 2015-05-13
+ */
+
+#include "Medusa.h"
+
+FILE *open_dump(const char *filename)
+{
+  //open file
+  FILE* fp = fopen(filename, "w");
+  if (fp == NULL) {
+    fprintf(stderr, "Error: Cannot open file [%s]\n", filename);
+    exit(1);
+  }
+  printf("%s\n", filename);
+  return fp;
+}
+
+void dump_rgb(FILE *fp, void *data, unsigned int width, unsigned int height)
+{
+
+  //*3 = channel
+  fprintf(fp, "P6 %u %u 255\n", width, height);
+  //write to file
+  fwrite(data, width * height * 3, 1, fp);
+}
+
+Medusa::Medusa(KinectManager* manager, Websocket* socket)
+{
+  mManager = manager;
+  mSocket = socket;
+  mRunning = false;
+
+  socket->setMedusa(this);
+}
+
+Medusa::~Medusa()
+{
+}
+
+void Medusa::run()
+{
+  mRunning = true;
+  while(mRunning)
+  {
+    mSocket->RecieveData();
+
+    if(mSocket->newData())
+    {
+      std::string newData = mSocket->getData();
+      if(newData == "KINECTRGB")
+      {
+        mManager->startDepth();
+        mManager->startVideo();
+        //countdown
+        mSocket->startCountDown(5);
+        sleep(6);
+        std::cout << "Five seconds" << std::endl;
+        mManager->stopDepth();
+        mManager->stopVideo();
+
+        if(mManager->getDepthStatus() && mManager->getVideoStatus())
+        {
+          //Save images from cameras
+          for (int i = 0; i < mManager->getConnectedDeviceCount(); ++i)
+          {
+            uint8_t* frame;
+            FILE *fp;
+            mManager->getVideo(i, &frame);
+
+            char filename[128];
+            sprintf(filename, "%i_bild.ppm", i);
+            std::cout << "Saving image to: " << filename << std::endl;
+
+            fp = open_dump(filename);
+            dump_rgb(fp, frame, 640, 480);
+            fclose(fp);
+
+            delete[] frame;
+          }
+        }
+        else
+        {
+
+        }
+      }
+    }
+  }
+}
+
+void Medusa::medusaCallback()
+{
+  printf("Hello from medusa\n");
+}

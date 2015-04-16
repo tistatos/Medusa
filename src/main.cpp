@@ -6,86 +6,74 @@
  */
 
 #include "KinectManager.h"
+#include "Medusa.h"
 #include <iostream>
-
-FILE *open_dump(const char *filename)
-{
-  //open file
-  FILE* fp = fopen(filename, "w");
-  if (fp == NULL) {
-    fprintf(stderr, "Error: Cannot open file [%s]\n", filename);
-    exit(1);
-  }
-  printf("%s\n", filename);
-  return fp;
-}
-
-void dump_rgb(FILE *fp, void *data, unsigned int width, unsigned int height)
-{
-
-  //*3 = channel
-  fprintf(fp, "P6 %u %u 255\n", width, height);
-  //write to file
-  fwrite(data, width * height * 3, 1, fp);
-}
 
 int main(int argc, char const *argv[])
 {
   KinectManager km;
+
   int devCount = km.getDeviceCount();
   std::cout << "Number of discovered kinects " << devCount << std::endl;
 
   if(devCount <= 0)
   {
     std::cout << "No kinects found!" << std::endl;
-    return 0;
   }
-
-  km.connectToDevices();
-  std::cout << "Connected to " << km.getConnectedDeviceCount() << " devices." << std::endl;
-
-
-  km.startVideo();
-  km.startDepth();
-
-  while(!km.getDepthStatus() && !km.getVideoStatus())
+  else
   {
+    km.connectToDevices();
+    std::cout << "Connected to " << km.getConnectedDeviceCount() << " devices." << std::endl;
   }
 
-  km.stopDepth();
-  km.stopVideo();
+  Websocket ws(7681);
+  ws.init();
+  Medusa medusa(&km, &ws);
 
-  //Save images from cameras
-  for (int i = 0; i < km.getConnectedDeviceCount(); ++i)
-  {
-    uint8_t* frame;
-    uint16_t* dFrame;
-    FILE *fp;
-    if(!km.getVideo(i, &frame))
-    {
-      std::cout << "Failed to grab video" << std::endl;
-      return 1;
-    }
-    char filename[128];
-    sprintf(filename, "%i_bild.ppm", i);
-    std::cout << "Saving image to: " << filename << std::endl;
 
-    fp = open_dump(filename);
-    dump_rgb(fp, frame, 640, 480);
-    fclose(fp);
+  medusa.run();
 
-    while(!km.getDepth(i, &dFrame))
-    {
-      std::cout << "Failed to grab video" << std::endl;
-      return 1;
-    }
+  // km.startVideo();
+  // km.startDepth();
 
-    sprintf(filename, "%i_depth.pcd", i);
-    km.getDevice(i)->savePointCloud(filename);
+  // while(!km.getDepthStatus() && !km.getVideoStatus())
+  // {
+  // }
 
-    delete[] frame;
-    delete[] dFrame;
-  }
+  // km.stopDepth();
+  // km.stopVideo();
+
+  // //Save images from cameras
+  // for (int i = 0; i < km.getConnectedDeviceCount(); ++i)
+  // {
+  //   uint8_t* frame;
+  //   uint16_t* dFrame;
+  //   FILE *fp;
+  //   if(!km.getVideo(i, &frame))
+  //   {
+  //     std::cout << "Failed to grab video" << std::endl;
+  //     return 1;
+  //   }
+  //   char filename[128];
+  //   sprintf(filename, "%i_bild.ppm", i);
+  //   std::cout << "Saving image to: " << filename << std::endl;
+
+  //   fp = open_dump(filename);
+  //   dump_rgb(fp, frame, 640, 480);
+  //   fclose(fp);
+
+  //   while(!km.getDepth(i, &dFrame))
+  //   {
+  //     std::cout << "Failed to grab video" << std::endl;
+  //     return 1;
+  //   }
+
+  //   sprintf(filename, "%i_depth.pcd", i);
+  //   km.getDevice(i)->savePointCloud(filename);
+
+  //   delete[] frame;
+  //   delete[] dFrame;
+  // }
 
   // renderMesh r;
   // for (int i = 0; i < km.getConnectedDeviceCount(); ++i)
