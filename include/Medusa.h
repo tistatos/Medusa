@@ -24,8 +24,8 @@ public:
   bool running();
   void medusaCallback();
 private:
-  KinectManager* mManager;
-  Websocket* mSocket;
-  bool mRunning;
+  KinectManager* mManager; /// kinect manager
+  Websocket* mSocket; /// the socket
+  bool mRunning; /// running status of medusa
 };
 #endif

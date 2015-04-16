@@ -17,24 +17,24 @@ class Websocket {
   public:
     Websocket(int port, bool ssl = 0);
     bool init();
-    void test();
     int RecieveData();
     void destroy();
-    void sendData(std::string data);
+    void setData(char* buf, int len);
     void setInstance(struct libwebsocket* wsi);
     void setMedusa(Medusa* m);
-    void setData(char* buf, int len);
     bool newData();
     std::string getData();
     void startCountDown(int seconds);
   private:
-    int mPort;
-    bool mNewData;
-    struct libwebsocket *mWebsocketInstance;
-    std::string mSocketData;
-    struct libwebsocket_context *mContext;
-    struct lws_context_creation_info mInfo;
-    Medusa* mMedusa;
+    void sendData(std::string data);
+
+    int mPort; /// listening port
+    bool mNewData; /// status of socket, if new data has been recieved
+    struct libwebsocket *mWebsocketInstance; /// websocket instance
+    std::string mSocketData; /// newest sdata in socket
+    struct libwebsocket_context *mContext; /// the context of the socket
+    struct lws_context_creation_info mInfo; /// context creation info
+    Medusa* mMedusa; /// medusa instance
 };
 
 #endif

@@ -6,17 +6,10 @@
  */
 #include "websocket.h"
 
-//Apparently this is needed as a standard for the websocketlibrary.
-//Needs to be the first protocol
-static int callback_increment(struct libwebsocket_context *context,
-                              struct libwebsocket *wsi,
-                              enum libwebsocket_callback_reasons reason, void *user,
-                              void *in, size_t len)
-
-{
-  return 0;
-}
-
+/**
+ * @brief callback function for websocket
+ *
+ */
 static int callback_http (struct libwebsocket_context * context,
               struct libwebsocket * wsi,
               enum libwebsocket_callback_reasons reason,
@@ -49,6 +42,10 @@ static int callback_http (struct libwebsocket_context * context,
 
 //Infostuff to be printed and set. Right now we are using port 7681.
 //SSL is not activated.
+/**
+ * @brief static struct for callback function
+ *
+ */
 static struct libwebsocket_protocols protocols[] = {
 /* first protocol must always be HTTP handler */
 {
@@ -56,21 +53,25 @@ static struct libwebsocket_protocols protocols[] = {
   callback_http,    // callback
   0             //per_session_data_size
 },
-{
-  "increment-protocol",
-  callback_increment,
-  0
-},
 { NULL, NULL, 0, 0 } // terminator
 };
 
 
-
+/**
+ * @brief default contructor
+ *
+ * @param port listening port
+ * @param ssl is connection should be SSL
+ */
 Websocket::Websocket(int port, bool ssl)
 {
   mPort = port;
 }
 
+/**
+ * @brief initialize socket
+ * @return true if socket was initialized
+ */
 bool Websocket::init()
 {
   mNewData = false;
@@ -98,6 +99,9 @@ bool Websocket::init()
   return true;
 }
 
+/**
+ * @brief kill socket connection
+ */
 void Websocket::destroy()
 {
   //When program is done destroy the websocket connection
@@ -107,24 +111,43 @@ void Websocket::destroy()
   lwsl_notice("Websocket exited correctly");
 }
 
+/**
+ * @brief recieve data from socket
+ * @return number of bytes recieved
+ */
 int Websocket::RecieveData()
 {
   //Run the webserver, ping with 50ms delay.
   return libwebsocket_service(mContext, 50);
 }
 
+/**
+ * @brief has new data arrived?
+ * @return returns true if new data has been recieved
+ */
 bool Websocket::newData()
 {
   return mNewData;
 }
 
 
+/**
+ * @brief set socket data
+ *
+ * @param buf data
+ * @param len length of data
+ */
 void Websocket::setData(char* buf, int len)
 {
   mSocketData = buf;
   mNewData = true;
 }
 
+/**
+ * @brief Send data via socket
+ *
+ * @param data data to send
+ */
 void Websocket::sendData(std::string data)
 {
   unsigned char *buf = (unsigned char*) malloc(LWS_SEND_BUFFER_PRE_PADDING +
@@ -137,22 +160,43 @@ void Websocket::sendData(std::string data)
   free(buf);
 }
 
+/**
+ * @brief set socket instance
+ *
+ * @param libwebsocket the instance
+ */
 void Websocket::setInstance(struct libwebsocket* wsi)
 {
   mWebsocketInstance = wsi;
 }
 
+/**
+ * @brief set medusa instance
+ *
+ * @param m the instance of medusa
+ */
 void Websocket::setMedusa(Medusa* m)
 {
   mMedusa = m;
 }
 
+/**
+ * @brief get new data from socket
+ * @return new data
+ */
 std::string Websocket::getData()
 {
   mNewData = false;
   return mSocketData;
 }
 
+/**
+ * @brief send data via socket to start countdown
+ * @details [long description]
+ *
+ * @param seconds number of seconds
+ * @todo  countdown is always 5 seconds now
+ */
 void Websocket::startCountDown(int seconds)
 {
   sendData("STARTCD 5");

@@ -7,6 +7,12 @@
 
 #include "Medusa.h"
 
+/**
+ * @brief open file for writing
+ *
+ * @param filename name of file
+ * @return pointer to file
+ */
 FILE *open_dump(const char *filename)
 {
   //open file
@@ -19,6 +25,14 @@ FILE *open_dump(const char *filename)
   return fp;
 }
 
+/**
+ * @brief Save rgb image to file
+ *
+ * @param fp file
+ * @param data data
+ * @param int width of image
+ * @param int height
+ */
 void dump_rgb(FILE *fp, void *data, unsigned int width, unsigned int height)
 {
 
@@ -28,6 +42,12 @@ void dump_rgb(FILE *fp, void *data, unsigned int width, unsigned int height)
   fwrite(data, width * height * 3, 1, fp);
 }
 
+/**
+ * @brief Default constructor
+ *
+ * @param manager kinectmanager to use, should have connected to kinects already
+ * @param socket websocket to use
+ */
 Medusa::Medusa(KinectManager* manager, Websocket* socket)
 {
   mManager = manager;
@@ -41,6 +61,9 @@ Medusa::~Medusa()
 {
 }
 
+/**
+ * @brief running loop of medusa
+ */
 void Medusa::run()
 {
   mRunning = true;
