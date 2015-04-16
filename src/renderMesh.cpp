@@ -1,37 +1,4 @@
-
-
 #include "renderMesh.h"
-#include <iostream>
-
-#include <pcl/point_types.h>
-#include <pcl/point_cloud.h>
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <libfreenect/libfreenect.h>
-
-#include <pcl/io/vtk_io.h>
-#include <pcl/io/pcd_io.h>
-#include <pcl/io/obj_io.h>
-
-#include <pcl/kdtree/kdtree_flann.h>
-#include <pcl/features/normal_3d.h>
-#include <pcl/surface/gp3.h>
-#include <boost/thread/thread.hpp>
-#include <pcl/common/common_headers.h>
-#include <pcl/visualization/pcl_visualizer.h>
-#include <pcl/console/parse.h>
-#include <pcl/surface/marching_cubes.h>
-#include <pcl/surface/marching_cubes_hoppe.h>
-#include <pcl/surface/poisson.h>
-#include <pcl/features/integral_image_normal.h>
-#include <pcl/surface/grid_projection.h>
-#include <pcl/filters/filter.h>
-#include <pcl/filters/conditional_removal.h>
-#include <pcl/common/transforms.h>
-
-#include <pcl/filters/statistical_outlier_removal.h>
-#include <pcl/compression/octree_pointcloud_compression.h>
-#include <pcl/filters/voxel_grid.h>
 
 using namespace cv;
 
