@@ -38,34 +38,34 @@ using namespace cv;
   /**
    * @brief [Initiate renderMesh]
    * @details [long description]
-   * 
+   *
    * @param d [description]
    */
   void renderMesh::run(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
     cloud = removeNoise(cloud);
     cloud = reduceData(cloud);
-    cloud = setDelims(cloud);    
+    cloud = setDelims(cloud);
     //runPoisson(cloud);
     runGreedyProjectionTriangulation(cloud);
   }
   /**
    * @brief [Displays a pcl::PointCloud]
    * @details [long description]
-   * 
+   *
    * @param d [description]
    */
   //Visualize Cloud data
   void renderMesh::show (pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud)
   {
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
-    
+
     viewer->setBackgroundColor (0, 0, 0);
     viewer->addPointCloud<pcl::PointXYZ> (cloud, "sample cloud");
     viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "sample cloud");
     //viewer->addCoordinateSystem (1.0);
     viewer->initCameraParameters ();
-    
+
     while (!viewer->wasStopped())
     {
       viewer->spinOnce (100);
@@ -75,11 +75,11 @@ using namespace cv;
  /**
   * @brief [Displays a PolygoMesh]
   * @details [long description]
-  * 
+  *
   * @param mesh [description]
   */
   //Visualize Mesh data
-  void renderMesh::showMesh (pcl::PolygonMesh mesh) 
+  void renderMesh::showMesh (pcl::PolygonMesh mesh)
   {
     pcl::visualization::PCLVisualizer viewer ("surface fitting");
     viewer.addPolygonMesh (mesh, "sample mesh");
@@ -94,7 +94,7 @@ using namespace cv;
    /**
    * @brief [Remove Noise]
    * @details [long description0]
-   * 
+   *
    * @param d [description]
    * @return [description]
    */
@@ -116,7 +116,7 @@ using namespace cv;
   /**
    * @brief [Reduce A pointCloud]
    * @details [long description0]
-   * 
+   *
    * @param d [description]
    * @return [description]
    */
@@ -128,7 +128,7 @@ using namespace cv;
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_filtered(new pcl::PointCloud<pcl::PointXYZ>);
 
     //convert PointCloud to pointCloud2
-    pcl::toPCLPointCloud2(*cloud, *cloud2); 
+    pcl::toPCLPointCloud2(*cloud, *cloud2);
 
     // Create the VoxelGrid filtering object
     //Leaf size is set to 0.5 cm
@@ -147,7 +147,7 @@ using namespace cv;
   /**
    * @brief [Returns normals for a pcl::PointCloud]
    * @details [long description]
-   * 
+   *
    * @param d [description]
    * @return [description]
    */
@@ -161,37 +161,37 @@ using namespace cv;
     n.setSearchMethod (tree);
     n.setRadiusSearch (5);
     //n.setRadiusSearch (5);
-    
+
     pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
     n.compute (*normals);
 
     pcl::PointCloud<pcl::PointNormal>::Ptr cloudWithNormals (new pcl::PointCloud<pcl::PointNormal>);
     pcl::concatenateFields(*cloud,*normals, *cloudWithNormals);
-    
+
     std::cout << "normaler klar" << std::endl;
-    
+
     return cloudWithNormals;
   }
   /**
    * @brief [Build a surface using GPT]
    * @details [long description]
-   * 
+   *
    * @param  [description]
    */
   void renderMesh::runGreedyProjectionTriangulation (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
     pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>);
     tree->setInputCloud (cloud);
-   
+
     pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> n;
     n.setInputCloud (cloud);
     n.setSearchMethod (tree);
     n.setKSearch (200);
     //n.setRadiusSearch(0.03);
-    
+
     pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
     n.compute (*normals);
-   
+
     pcl::PointCloud<pcl::PointNormal>::Ptr cloudAndNormals (new pcl::PointCloud<pcl::PointNormal>);
     pcl::concatenateFields (*cloud,*normals, *cloudAndNormals);
     pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
@@ -222,7 +222,7 @@ using namespace cv;
   /**
    * @brief [Builds a surface using poisson]
    * @details [long description]
-   * 
+   *
    * @param d [description]
    */
   void renderMesh::runPoisson(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
@@ -235,13 +235,13 @@ using namespace cv;
     poisson.reconstruct (mesh);
 
     std::cout << "cloud Poisson" << endl;
-    
+
     showMesh (mesh);
   }
   /**
    * @brief [Reduce a cloud with set parameters]
    * @details [long description]
-   * 
+   *
    * @param  [description]
    * @return [description]
    */
@@ -252,18 +252,18 @@ using namespace cv;
     range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::GT, -2.1)));
     range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::LT, 0.5)));
     range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::GT, -0.5)));
-   
+
     pcl::ConditionalRemoval<pcl::PointXYZ> condrem (range_cond);
     condrem.setInputCloud(cloud);
     condrem.setKeepOrganized(true);
     condrem.filter(*cloud);
-    
+
     return cloud;
   }
   /**
    * @brief [Mirrors a cloud]
    * @details [long description]
-   * 
+   *
    * @param d [description]
    * @return [description]
    */
@@ -276,12 +276,12 @@ using namespace cv;
     //transform(0, 3) = 0.03; //x
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr transformed_cloud (new pcl::PointCloud<pcl::PointXYZ> ());
-    
+
     // You can either apply transform_1 or transform_2; they are the same
     pcl::transformPointCloud (*cloud, *transformed_cloud, transform);
 
     std::cout << "cloud mirrord" << endl;
-   
+
     return transformed_cloud;
   }
 
