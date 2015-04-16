@@ -23,4 +23,4 @@ go to the medusa folder
 § make
 ```
 
-Automated documentation with each build found at: http://bit.do/medusadoc
+Automated documentation with each build found at: http://bit.do/medusadoc2
