@@ -10,9 +10,6 @@
 #include <pcl/surface/texture_mapping.h>
 #include <pcl/io/vtk_lib_io.h>
 
-#include "renderMesh.h"
-
-
 
 using namespace pcl;
 
@@ -406,7 +403,7 @@ main (int argc, char** argv)
   PCL_INFO ("\nLoading textures and camera poses...\n");
   pcl::texture_mapping::CameraVector my_cams;
   
-  const boost::filesystem::path base_dir ("boll.");
+  const boost::filesystem::path base_dir (".");
   std::string extension (".txt");
   int cpt_cam = 0;
   for (boost::filesystem::directory_iterator it (base_dir); it != boost::filesystem::directory_iterator (); ++it)
