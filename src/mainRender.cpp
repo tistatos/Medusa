@@ -70,7 +70,7 @@ pcl::PointCloud<pcl::PointXYZ> runAllKinects(int kinectIndex)
 
   device->startDepth();
   device->startVideo();
- 
+
 
   while(!device->m_new_rgb_frame && !device->m_new_depth_frame)
   {
@@ -82,7 +82,7 @@ pcl::PointCloud<pcl::PointXYZ> runAllKinects(int kinectIndex)
   device->stopVideo();
 
   device->savePointCloud("first.pcd");
-  
+
   return device->cloud;
 }
 
@@ -91,10 +91,10 @@ int main(int argc, char const *argv[])
 {
 
   std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr > v;
-  
-  
+
+
   for(int i = 0; i<= nrKinects; i++)
-  { 
+  {
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>(runAllKinects(i)));
     v.push_back(cloud);
   }
@@ -103,16 +103,12 @@ int main(int argc, char const *argv[])
   //important to know index of all kinects to preform transforms
   // transforms goes here
 
-
-  //
-
   for(int i = 0; i<= nrKinects; i++)
   {
     *cloudAll = *cloudAll + *v[i];
   }
-  renderMesh* r;
- 
-  r->run(cloudAll);
+
+  renderMesh::run(cloudAll);
 
 
   return 0;

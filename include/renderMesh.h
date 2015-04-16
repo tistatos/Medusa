@@ -32,25 +32,25 @@
 class renderMesh
 {
 	public:
-		
-		void run(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
-		void show (pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
+		static void run(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
-		void showMesh(pcl::PolygonMesh mesh);
+		static void show (pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
 
-		void runPoisson(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+		static void showMesh(pcl::PolygonMesh mesh);
 
-		pcl::PointCloud<pcl::PointNormal>::Ptr getNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+		static void runPoisson(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
-		void runGreedyProjectionTriangulation(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+		static  pcl::PointCloud<pcl::PointNormal>::Ptr getNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
-		pcl::PointCloud<pcl::PointXYZ>::Ptr setDelims(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+		static  void runGreedyProjectionTriangulation(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
-		pcl::PointCloud<pcl::PointXYZ>::Ptr removeNoise (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+		static  pcl::PointCloud<pcl::PointXYZ>::Ptr setDelims(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
-		pcl::PointCloud<pcl::PointXYZ>::Ptr reduceData(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+		static  pcl::PointCloud<pcl::PointXYZ>::Ptr removeNoise (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
-		pcl::PointCloud<pcl::PointXYZ>::Ptr mirrorCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+		static  pcl::PointCloud<pcl::PointXYZ>::Ptr reduceData(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+
+		static  pcl::PointCloud<pcl::PointXYZ>::Ptr mirrorCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 };
 
