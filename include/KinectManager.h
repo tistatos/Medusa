@@ -39,7 +39,7 @@ public:
   bool getDepth(int index, uint16_t **frame);
   bool getVideo(int index, uint8_t **frame);
 
-  void KinectManager::calibratePosition();
+  void calibratePosition();
 
   bool getVideoStatus();
   bool getDepthStatus();
