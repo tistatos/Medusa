@@ -104,6 +104,10 @@ void Medusa::run()
 
             delete[] frame;
           }
+          for(int i = 0; i < mManager->getConnectedDeviceCount(); i++)
+          {
+            mManager->getDevice(i)->getPointCloud();
+          }
         }
         else
         {
@@ -112,9 +116,4 @@ void Medusa::run()
       }
     }
   }
-}
-
-void Medusa::medusaCallback()
-{
-  printf("Hello from medusa\n");
 }
