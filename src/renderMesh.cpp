@@ -12,6 +12,7 @@ using namespace cv;
   {
     cloud = removeNoise(cloud);
     cloud = reduceData(cloud);
+    cloud = smoothing(cloud);
     cloud = setDelims(cloud);
     //runPoisson(cloud);
     runGreedyProjectionTriangulation(cloud);
@@ -111,6 +112,37 @@ using namespace cv;
 
     return cloud_filtered;
   }
+
+    /**
+   * @brief [Suface smoothing]
+   * @details [long description0]
+   *
+   * @param d [description]
+   * @return [description]
+   */
+  pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::smoothing (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+  {
+    pcl::PointCloud<pcl::PointNormal>::Ptr smoothedNormalCloud (new pcl::PointCloud<pcl::PointNormal>);
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_smoothed (new pcl::PointCloud<pcl::PointXYZ>);
+
+
+    //Smoothing object
+    pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> filter;
+    filter.setInputCloud(cloud);
+    filter.setSearchRadius(0.03);
+    filter.setPolynomialFit(true);
+    filter.setComputeNormals(true);
+    pcl::search::KdTree<pcl::PointXYZ>::Ptr kdtree;
+    filter.setSearchMethod(kdtree);
+
+    filter.process(*smoothedNormalCloud);
+
+    //convert pointNormal to pointCloud
+    copyPointCloud(*smoothedNormalCloud, *cloud_smoothed);
+
+    return cloud_smoothed;
+  }
+
   /**
    * @brief [Returns normals for a pcl::PointCloud]
    * @details [long description]
