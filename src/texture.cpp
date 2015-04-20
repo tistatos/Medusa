@@ -309,66 +309,37 @@ void showCameras (pcl::texture_mapping::CameraVector cams, pcl::PointCloud<pcl::
   visu.spin ();
 }
 
-/** \brief Helper function that jump to a specific line of a text file */
-std::ifstream& GotoLine(std::ifstream& file, unsigned int num)
-{
-  file.seekg (std::ios::beg);
-  for(int i=0; i < num - 1; ++i)
-  {
-    file.ignore (std::numeric_limits<std::streamsize>::max (),'\n');
-  }
-  return (file);
-}
-
 /** \brief Helper function that reads a camera file outputed by Kinfu */
-bool readCamPoseFile(std::string filename, pcl::TextureMapping<pcl::PointXYZ>::Camera &cam)
+bool readCamPoseFile(pcl::TextureMapping<pcl::PointXYZ>::Camera &cam)
 {
-  ifstream myReadFile;
-  myReadFile.open(filename.c_str (), ios::in);
-  if(!myReadFile.is_open ())
-  {
-    PCL_ERROR ("Error opening file %d\n", filename.c_str ());
-    return false;
-  }
-  myReadFile.seekg(ios::beg);
+    
+  // camera position
+  cam.pose (0,3) = 0; //TX
+  cam.pose (1,3) = 3; //TY
+  cam.pose (2,3) = 2; //TZ
 
-  char current_line[1024];
-  double val;
-  
-  // go to line 2 to read translations
-  GotoLine(myReadFile, 2);
-  myReadFile >> val; cam.pose (0,3)=0; //TX
-  myReadFile >> val; cam.pose (1,3)=3; //TY
-  myReadFile >> val; cam.pose (2,3)=2; //TZ
+  // rotation coordinates
+  cam.pose (0,0) = 1;
+  cam.pose (0,1) = 0;
+  cam.pose (0,2) = 0;
 
-  // go to line 7 to read rotations
-  GotoLine(myReadFile, 7);
+  cam.pose (1,0) = 0;
+  cam.pose (1,1) = -1;
+  cam.pose (1,2) = 0;
 
-  myReadFile >> val; cam.pose (0,0)=1;
-  myReadFile >> val; cam.pose (0,1)=val;
-  myReadFile >> val; cam.pose (0,2)=val;
-
-  myReadFile >> val; cam.pose (1,0)=val;
-  myReadFile >> val; cam.pose (1,1)=-1;
-  myReadFile >> val; cam.pose (1,2)=val;
-
-  myReadFile >> val; cam.pose (2,0)=val;
-  myReadFile >> val; cam.pose (2,1)=val;
-  myReadFile >> val; cam.pose (2,2)=-1;
+  cam.pose (2,0) = 0;
+  cam.pose (2,1) = 0;
+  cam.pose (2,2) = -1;
 
   cam.pose (3,0) = 0.0;
   cam.pose (3,1) = 0.0;
   cam.pose (3,2) = 0.0;
   cam.pose (3,3) = 1.0; //Scale
   
-  // go to line 12 to read camera focal length and size
-  GotoLine (myReadFile, 12);
-  myReadFile >> val; cam.focal_length=462.7; 
-  myReadFile >> val; cam.height=480;
-  myReadFile >> val; cam.width=640;  
-  
-  // close file
-  myReadFile.close ();
+  // camera focal length and size
+ cam.focal_length=462.7; 
+  cam.height=480;
+  cam.width=640;  
 
   return true;
 
@@ -384,7 +355,7 @@ main (int argc, char** argv)
   pcl::io::loadPolygonFile(argv[1], triangles);
 
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
-  //pcl::fromROSMsg(triangles.cloud, *cloud);
+  
   fromPCLPointCloud2 (triangles.cloud, *cloud);
 
   // Create the texturemesh object that will contian our UV-mapped mesh
@@ -405,28 +376,24 @@ main (int argc, char** argv)
   // Load textures and cameras poses and intrinsics
   PCL_INFO ("\nLoading textures and camera poses...\n");
   pcl::texture_mapping::CameraVector my_cams;
-  
-  const boost::filesystem::path base_dir (".");
-  std::string extension (".txt");
+
   int cpt_cam = 0;
-  for (boost::filesystem::directory_iterator it (base_dir); it != boost::filesystem::directory_iterator (); ++it)
+  int numberOfCams = 1;
+  for (int i = 0; i < numberOfCams; i++)
   {
-    if(boost::filesystem::is_regular_file (it->status ()) && boost::filesystem::extension (it->path ()) == extension)
-    {
-      pcl::TextureMapping<pcl::PointXYZ>::Camera cam;
-      readCamPoseFile(it->path ().string (), cam);
-      cam.texture_file = boost::filesystem::basename (it->path ()) + ".png";
-      my_cams.push_back (cam);
-      cpt_cam++ ;
-    }
+    pcl::TextureMapping<pcl::PointXYZ>::Camera cam;
+    readCamPoseFile(cam);
+    cam.texture_file = "texture.png";
+    my_cams.push_back (cam);
+    cpt_cam++ ;
   }
+
   PCL_INFO ("\tLoaded %d textures.\n", my_cams.size ());
   PCL_INFO ("...Done.\n");
   
   // Display cameras to user
   PCL_INFO ("\nDisplaying cameras. Press \'q\' to continue texture mapping\n");
   showCameras(my_cams, cloud);
-
 
   // Create materials for each texture (and one extra for occluded faces)
   mesh.tex_materials.resize (my_cams.size () + 1);
@@ -461,7 +428,6 @@ main (int argc, char** argv)
     mesh.tex_materials[i] = mesh_material;
   }
 
-
   // Sort faces
   PCL_INFO ("\nSorting faces by cameras...\n");
   pcl::TextureMapping<pcl::PointXYZ> tm; // TextureMapping object that will perform the sort
@@ -473,7 +439,6 @@ main (int argc, char** argv)
   {
     PCL_INFO ("\tSub mesh %d contains %d faces and %d UV coordinates.\n", i, mesh.tex_polygons[i].size (), mesh.tex_coordinates[i].size ());
   }
-
 
   // compute normals for the mesh
   PCL_INFO ("\nEstimating normals...\n");
@@ -491,7 +456,6 @@ main (int argc, char** argv)
   pcl::concatenateFields (*cloud, *normals, *cloud_with_normals);
   PCL_INFO ("...Done.\n");
 
-  //pcl::toROSMsg (*cloud_with_normals, mesh.cloud);
   pcl::toPCLPointCloud2 (*cloud_with_normals, mesh.cloud);
 
   PCL_INFO ("\nSaving mesh to textured_mesh.obj\n");
