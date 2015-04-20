@@ -10,7 +10,7 @@
 # BSONCXX_LIBRARY_DIRS - The bsoncxx library directories - pass this to link_directories
 # BSONCXX_LIBRARIES - The libraries needed to use bsoncxx - pass this to target_link_libraries
 # BSONCXX_DEFINITIONS - The compiler switches required for using bsoncxx
-message("FITTA")
+
 find_package(PkgConfig)
 pkg_check_modules(BSONCXX QUIET libbsoncxx)
 
