@@ -1,7 +1,6 @@
 //Medusa 3D-reconstruction
 //This file handles the start up page
 //classie.js is used to easily add and remove classes
- 
 
 (function( window )
 {
@@ -10,21 +9,12 @@
       infoButton = document.querySelector( ".infoButton" ),
       startButton = document.querySelector( ".startButton" ),
       continueButton = document.querySelector( "#continueButton" ),
+      instructionsMenu = document.querySelector( "instructions"),
       body = document.body,
       mask = document.createElement("div"), 
       activeNav;
       
   mask.className = "mask";
-  
-  //Slide down the start button when it's pushed
-  //Slide in instruction about the scanning process after the start button has been pushed
-  startButton.addEventListener("click", function()
-  {
-    classie.add(body, "startButton-open");
-    classie.add(body, "instructions-open");
-    document.body.appendChild(mask);
-    activeNav="startButton-open";
-  });
   
   //Show information menu when the information button is pushed
   infoButton.addEventListener("click", function()
@@ -33,11 +23,6 @@
     document.body.appendChild(mask);
     activeNav="menu-open";
   
-  });
-  
-  continueButton.addEventListener("click", function()
-  {
-    //window.location = "../mainPage.html";
   });
   
   //Close the information menu when the close button is pushed
@@ -49,7 +34,25 @@
     } );
   });
 
+  //Slide down the start button when it's pushed
+  //Slide in instruction about the scanning process after the start button has been pushed
+  startButton.addEventListener("click", function()
+  {
+    classie.add(body, "startButton-open");
+    classie.add(body, "instructions-open");
+    document.body.appendChild(mask);
+    activeNav="startButton-open";
+  });
 
-
+  //Slide down the instructions menu when continueButton is pushed
+  //Slide in Progressbar when continueButton is pushed
+  continueButton.addEventListener("click", function()
+  {
+    //window.location = "../mainPage.html";
+    classie.add(body, "instructions-open2");
+    classie.add(body, "inProgress-open");
+    document.body.appendChild(mask);
+    activeNav="instructions-open2"; 
+  });
 
 })( window );

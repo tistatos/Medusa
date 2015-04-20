@@ -16,7 +16,7 @@
 <body>
 
   <!--buttons on the start screen -->
-  <button class="startButton">Starta scanning</button>
+  <button class="startButton">STARTA</button>
   <button class="infoButton">Info</button> 
   
   
@@ -31,13 +31,24 @@
   <div class="instructions">
      <h1>Instruktioner....</h1>
      <p>Bla bla bla....</p>
-     <button id="continueButton">Okej!</button>
+     <button id="continueButton">STARTA SKANNING!</button> 
+     <!--<a href="mainPage.html"><button id ="continueButton">STARTA SKANNING</button></a>-->
+  </div>
+
+
+  <div class="inProgress">
+     <p>Skanning Pågår...</p>
+     <progress id="progressbar" value="0" max="100" ></progress>
+
   </div>
 
 </body>
+
 <script type="application/dart" src="main.dart"></script>
 <script type="application/javascript" src="js/startPage.js"></script>
 <script type="application/javascript" src="js/classie.js"></script>
 <script data-pub-inline src="packages/browser/dart.js"></script>
+<script src="js/jquery.js" type="text/javascript" ></script>
+<script src="js/loading.js" type="text/javascript" ></script>
 
 </html>

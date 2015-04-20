@@ -92,7 +92,6 @@ closeButton
 }
 
 
-
 /*Custum information text*/
 .instructions 
 {
@@ -115,5 +114,48 @@ body.instructions-open .instructions
   -ms-transition: all 0.5s;
   -o-transition: all 0.5s;
   transition: all 0.5s; 
-  
 }
+
+body.instructions-open2 .instructions
+{
+    top: 100%;
+    overflow: hidden;
+}
+
+.inProgress 
+{
+  text-align: center;
+  font-size: 100%;
+  font-family: Arial;
+  top: 100%;
+  position: fixed;  
+}
+
+body.inProgress-open .inProgress
+{
+  top: 40%;
+  left: 40%;
+  height: 10%;
+  width: 20%;
+  text-align: center;   
+  -webkit-transition: all 0.5s !important;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s; 
+}
+
+/* 
+Progressbar 
+*/
+progress
+{
+  background-color: #f3f3f3;
+  border: 0;
+  height: 18px;
+  width: 70%;
+  border-radius: 9px;
+}
+
+
+
