@@ -1,6 +1,6 @@
 /**
- * @file kinect_depth.cpp
- *    test with async kinect
+ * @file kinect.h
+ *    class for kinect
  * @author Erik Sandrén
  * @date 2015-03-06
  */
