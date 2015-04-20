@@ -6,6 +6,7 @@
  */
 
 #include "Medusa.h"
+#include "renderMesh.h"
 
 /**
  * @brief open file for writing
@@ -103,6 +104,10 @@ void Medusa::run()
             fclose(fp);
 
             delete[] frame;
+            pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2(new pcl::PointCloud<pcl::PointXYZ>(mManager->getDevice(i)->getPointCloud()));
+            pcl::io::savePCDFile("file.obj", mManager->getDevice(i)->getPointCloud());
+            //renderMesh::show(cloud2);
+            renderMesh::run(cloud2);
           }
         }
         else

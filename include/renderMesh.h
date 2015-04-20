@@ -1,4 +1,12 @@
+#ifndef __RENDERMESH_H__
+#define __RENDERMESH_H__
+
 #include <iostream>
+
+#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/json.hpp>
+#include <mongocxx/instance.hpp>
+#include <mongocxx/client.hpp>
 
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
@@ -26,7 +34,9 @@
 #include <pcl/filters/conditional_removal.h>
 #include <pcl/common/transforms.h>
 
+#include <pcl/filters/statistical_outlier_removal.h>
 #include <pcl/compression/octree_pointcloud_compression.h>
+#include <pcl/filters/voxel_grid.h>
 
 
 class renderMesh
@@ -54,3 +64,4 @@ class renderMesh
 		static  pcl::PointCloud<pcl::PointXYZ>::Ptr mirrorCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 };
 
+#endif

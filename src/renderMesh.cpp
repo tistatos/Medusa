@@ -1,5 +1,6 @@
 #include "renderMesh.h"
 
+
 using namespace cv;
 
   /**
@@ -10,6 +11,18 @@ using namespace cv;
    */
   void renderMesh::run(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
+    std::cout << "Starting" << endl;
+
+    
+    mongocxx::client c;  
+    c.connect("localhost");   
+    std::cout << "connected ok" << std:.endl;  
+    string fileName= "temp/file.obj";
+    mongocxx::GridFS gfs = GridFS(c, "test");  
+    mongocxx::gfs.storeFile(fileName);  
+    cout << "file stored" << endl;  
+
+      return;
     cloud = removeNoise(cloud);
     cloud = reduceData(cloud);
     cloud = setDelims(cloud);
@@ -71,12 +84,13 @@ using namespace cv;
 
     //Removing outliers using a statisticalOutlierRemoval filter
     //Create the filtering object
+    
     pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor2;
     sor2.setInputCloud (cloud);
     sor2.setMeanK (50);
     sor2.setStddevMulThresh (1.0);
     sor2.filter (*cloud_filtered);
-
+    
     return cloud_filtered;
   }
 
@@ -183,7 +197,8 @@ using namespace cv;
     gp3.reconstruct(mesh);
 
     std::cout << "runGreedyProjectionTriangulation done!" << endl;
-
+    pcl::io::saveOBJFile("temp/file.obj", mesh);
+  
     showMesh(mesh);
   }
   /**
@@ -203,7 +218,6 @@ using namespace cv;
 
     std::cout << "cloud Poisson" << endl;
 
-    showMesh (mesh);
   }
   /**
    * @brief [Reduce a cloud with set parameters]

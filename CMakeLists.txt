@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 2.8.7)
 set(PROJECT_NAME medusa)
 project(${PROJECT_NAME} C CXX)
 include(ExternalProject)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
 
 find_package(Threads REQUIRED)
 
@@ -12,6 +14,8 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set(PROJECT_LIBS_DIR ${PROJECT_SOURCE_DIR}/libs)
 set(PROJECT_CXX_DIR ${PROJECT_SOURCE_DIR}/src)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/Modules)
+
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
   message(FATAL_ERROR "You must create a build folder and call cmake .. from there!, Also remove CMakeCache.txt before trying to cmake again")
@@ -28,6 +32,17 @@ link_directories(${PCL_LIBRARY_DIRS})
 message(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 include_directories(${EIGEN_INCLUDE_DIRS})
+
+
+##################
+# MongoDB Settings
+##################
+
+include_directories(${BSONCXX_INCLUDE_DIRS})
+include_directories(${MONGOCXX_INCLUDE_DIRS})
+link_directories(${MONGOCXX_LIBRARY_DIRS})
+link_directories(${BSONCXX_LIBRARY_DIRS})
+message(${BSONCXX_INCLUDE_DIRS})
 
 ##################
 # OpenCV Settings
@@ -76,12 +91,12 @@ include_directories(
 )
 
 
-set(ALL_LIBS ${PCL_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB} ${LIBWEBSOCKETS_LIBRARIES})
+set(ALL_LIBS ${PCL_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB} ${LIBWEBSOCKETS_LIBRARIES} ${BSONCXX_LIBRARIES} ${MONGOCXX_LIBRARIES})
 
 add_library(kinectmanager src/KinectManager.cpp src/Kinect.cpp)
 target_link_libraries(kinectmanager ${FREENECT_LIBRARIES})
 
-add_executable(medusa src/main.cpp src/Medusa.cpp src/websocket.cpp)
+add_executable(medusa src/main.cpp src/Medusa.cpp src/websocket.cpp src/renderMesh.cpp)
 target_link_libraries(medusa kinectmanager ${ALL_LIBS})
 
 #add_executable(calibration src/calibration.cpp)
