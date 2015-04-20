@@ -9,6 +9,8 @@
 #include <pcl/visualization/pcl_visualizer.h>
 #include <pcl/surface/texture_mapping.h>
 #include <pcl/io/vtk_lib_io.h>
+#include <pcl/conversions.h>
+#include <pcl/visualization/pcl_visualizer.h>
 
 
 using namespace pcl;
@@ -335,24 +337,24 @@ bool readCamPoseFile(std::string filename, pcl::TextureMapping<pcl::PointXYZ>::C
   
   // go to line 2 to read translations
   GotoLine(myReadFile, 2);
-  myReadFile >> val; cam.pose (0,3)=val; //TX
-  myReadFile >> val; cam.pose (1,3)=val; //TY
-  myReadFile >> val; cam.pose (2,3)=val; //TZ
+  myReadFile >> val; cam.pose (0,3)=0; //TX
+  myReadFile >> val; cam.pose (1,3)=3; //TY
+  myReadFile >> val; cam.pose (2,3)=2; //TZ
 
   // go to line 7 to read rotations
   GotoLine(myReadFile, 7);
 
-  myReadFile >> val; cam.pose (0,0)=val;
+  myReadFile >> val; cam.pose (0,0)=1;
   myReadFile >> val; cam.pose (0,1)=val;
   myReadFile >> val; cam.pose (0,2)=val;
 
   myReadFile >> val; cam.pose (1,0)=val;
-  myReadFile >> val; cam.pose (1,1)=val;
+  myReadFile >> val; cam.pose (1,1)=-1;
   myReadFile >> val; cam.pose (1,2)=val;
 
   myReadFile >> val; cam.pose (2,0)=val;
   myReadFile >> val; cam.pose (2,1)=val;
-  myReadFile >> val; cam.pose (2,2)=val;
+  myReadFile >> val; cam.pose (2,2)=-1;
 
   cam.pose (3,0) = 0.0;
   cam.pose (3,1) = 0.0;
@@ -361,9 +363,9 @@ bool readCamPoseFile(std::string filename, pcl::TextureMapping<pcl::PointXYZ>::C
   
   // go to line 12 to read camera focal length and size
   GotoLine (myReadFile, 12);
-  myReadFile >> val; cam.focal_length=val; 
-  myReadFile >> val; cam.height=val;
-  myReadFile >> val; cam.width=val;  
+  myReadFile >> val; cam.focal_length=462.7; 
+  myReadFile >> val; cam.height=480;
+  myReadFile >> val; cam.width=640;  
   
   // close file
   myReadFile.close ();
@@ -383,11 +385,12 @@ main (int argc, char** argv)
 
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
   //pcl::fromROSMsg(triangles.cloud, *cloud);
+  fromPCLPointCloud2 (triangles.cloud, *cloud);
 
   // Create the texturemesh object that will contian our UV-mapped mesh
   TextureMesh mesh;
   mesh.cloud = triangles.cloud;
-  std::vector< pcl::Vertices> polygon_1;
+  std::vector<pcl::Vertices> polygon_1;
   
   // push faces into the texturemesh object
   polygon_1.resize (triangles.polygons.size ());
@@ -489,10 +492,20 @@ main (int argc, char** argv)
   PCL_INFO ("...Done.\n");
 
   //pcl::toROSMsg (*cloud_with_normals, mesh.cloud);
+  pcl::toPCLPointCloud2 (*cloud_with_normals, mesh.cloud);
 
   PCL_INFO ("\nSaving mesh to textured_mesh.obj\n");
 
   saveOBJFile ("textured_mesh.obj", mesh, 5);
+
+  pcl::visualization::PCLVisualizer viewer ("surface fitting");
+    viewer.addTextureMesh (mesh, "sample mesh");
+
+    while (!viewer.wasStopped ())
+    {
+      //viewer.spinOnce (100);
+      boost::this_thread::sleep (boost::posix_time::microseconds (100000));
+    }
 
   return (0);
 }
