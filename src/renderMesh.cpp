@@ -12,16 +12,10 @@ using namespace cv;
   {
     std::cout << "Starting" << endl;
 
-    
-    mongocxx::client c;  
-    c.connect("localhost");   
-    std::cout << "connected ok" << std:.endl;  
-    string fileName= "temp/file.obj";
-    mongocxx::GridFS gfs = GridFS(c, "test");  
-    mongocxx::gfs.storeFile(fileName);  
-    cout << "file stored" << endl;  
+    mongo::DBClientConnection c;
+    c.connect("localhost");
 
-      return;
+    return;
     cloud = removeNoise(cloud);
     cloud = reduceData(cloud);
     cloud = smoothing(cloud);
@@ -84,13 +78,13 @@ using namespace cv;
 
     //Removing outliers using a statisticalOutlierRemoval filter
     //Create the filtering object
-    
+
     pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor2;
     sor2.setInputCloud (cloud);
     sor2.setMeanK (50);
     sor2.setStddevMulThresh (1.0);
     sor2.filter (*cloud_filtered);
-    
+
     return cloud_filtered;
   }
 
@@ -229,7 +223,7 @@ using namespace cv;
 
     std::cout << "runGreedyProjectionTriangulation done!" << endl;
     pcl::io::saveOBJFile("temp/file.obj", mesh);
-  
+
     showMesh(mesh);
   }
   /**

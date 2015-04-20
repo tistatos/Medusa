@@ -2,12 +2,7 @@
 #define __RENDERMESH_H__
 
 #include <iostream>
-
-#include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/json.hpp>
-#include <mongocxx/instance.hpp>
-#include <mongocxx/client.hpp>
-
+#include <mongo/client/dbclient.h>
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
 #include <opencv2/core/core.hpp>
@@ -37,7 +32,7 @@
 #include <pcl/filters/statistical_outlier_removal.h>
 #include <pcl/compression/octree_pointcloud_compression.h>
 #include <pcl/filters/voxel_grid.h>
-
+#include <pcl/surface/mls.h>
 
 class renderMesh
 {
