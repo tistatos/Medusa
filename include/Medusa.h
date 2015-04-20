@@ -10,6 +10,7 @@
 
 #include "KinectManager.h"
 #include "websocket.h"
+#include "renderMesh.h"
 
 class Websocket;
 

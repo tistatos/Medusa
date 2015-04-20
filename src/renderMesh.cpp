@@ -4,10 +4,9 @@
 using namespace cv;
 
   /**
-   * @brief [Initiate renderMesh]
-   * @details [long description]
+   * @brief Initiate renderMesh
    *
-   * @param d [description]
+   * @param d description
    */
   void renderMesh::run(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
@@ -25,15 +24,16 @@ using namespace cv;
       return;
     cloud = removeNoise(cloud);
     cloud = reduceData(cloud);
+    cloud = smoothing(cloud);
     cloud = setDelims(cloud);
     //runPoisson(cloud);
     runGreedyProjectionTriangulation(cloud);
   }
+
   /**
-   * @brief [Displays a pcl::PointCloud]
-   * @details [long description]
+   * @brief Displays a pcl::PointCloud
    *
-   * @param d [description]
+   * @param d description
    */
   //Visualize Cloud data
   void renderMesh::show (pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud)
@@ -53,10 +53,10 @@ using namespace cv;
     }
   }
  /**
-  * @brief [Displays a PolygoMesh]
-  * @details [long description]
+  * @brief Displays a PolygoMesh
+  * @details long description
   *
-  * @param mesh [description]
+  * @param mesh description
   */
   //Visualize Mesh data
   void renderMesh::showMesh (pcl::PolygonMesh mesh)
@@ -72,11 +72,11 @@ using namespace cv;
   }
 
    /**
-   * @brief [Remove Noise]
-   * @details [long description0]
+   * @brief Remove Noise
+   * @details long description0
    *
-   * @param d [description]
-   * @return [description]
+   * @param d description
+   * @return description
    */
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::removeNoise (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
@@ -95,11 +95,11 @@ using namespace cv;
   }
 
   /**
-   * @brief [Reduce A pointCloud]
-   * @details [long description0]
+   * @brief Reduce A pointCloud
+   * @details long description0
    *
-   * @param d [description]
-   * @return [description]
+   * @param d description
+   * @return description
    */
   //Downsampling pointCloud using VoxelGrid filter
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::reduceData (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
@@ -125,12 +125,43 @@ using namespace cv;
 
     return cloud_filtered;
   }
-  /**
-   * @brief [Returns normals for a pcl::PointCloud]
-   * @details [long description]
+
+    /**
+   * @brief Suface smoothing
+   * @details long description0
    *
-   * @param d [description]
-   * @return [description]
+   * @param d description
+   * @return description
+   */
+  pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::smoothing (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+  {
+    pcl::PointCloud<pcl::PointNormal>::Ptr smoothedNormalCloud (new pcl::PointCloud<pcl::PointNormal>);
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_smoothed (new pcl::PointCloud<pcl::PointXYZ>);
+
+
+    //Smoothing object
+    pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> filter;
+    filter.setInputCloud(cloud);
+    filter.setSearchRadius(0.03);
+    filter.setPolynomialFit(true);
+    filter.setComputeNormals(true);
+    pcl::search::KdTree<pcl::PointXYZ>::Ptr kdtree;
+    filter.setSearchMethod(kdtree);
+
+    filter.process(*smoothedNormalCloud);
+
+    //convert pointNormal to pointCloud
+    copyPointCloud(*smoothedNormalCloud, *cloud_smoothed);
+
+    return cloud_smoothed;
+  }
+
+  /**
+   * @brief Returns normals for a pcl::PointCloud
+   * @details long description
+   *
+   * @param d description
+   * @return description
    */
   pcl::PointCloud<pcl::PointNormal>::Ptr renderMesh::getNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
@@ -154,10 +185,10 @@ using namespace cv;
     return cloudWithNormals;
   }
   /**
-   * @brief [Build a surface using GPT]
-   * @details [long description]
+   * @brief Build a surface using GPT
+   * @details long description
    *
-   * @param  [description]
+   * @param  description
    */
   void renderMesh::runGreedyProjectionTriangulation (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
@@ -202,10 +233,10 @@ using namespace cv;
     showMesh(mesh);
   }
   /**
-   * @brief [Builds a surface using poisson]
-   * @details [long description]
+   * @brief Builds a surface using poisson
+   * @details long description
    *
-   * @param d [description]
+   * @param d description
    */
   void renderMesh::runPoisson(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
@@ -220,11 +251,11 @@ using namespace cv;
 
   }
   /**
-   * @brief [Reduce a cloud with set parameters]
-   * @details [long description]
+   * @brief Reduce a cloud with set parameters
+   * @details long description
    *
-   * @param  [description]
-   * @return [description]
+   * @param  description
+   * @return description
    */
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::setDelims(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
@@ -242,11 +273,11 @@ using namespace cv;
     return cloud;
   }
   /**
-   * @brief [Mirrors a cloud]
-   * @details [long description]
+   * @brief Mirrors a cloud
+   * @details long description
    *
-   * @param d [description]
-   * @return [description]
+   * @param d description
+   * @return description
    */
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::mirrorCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {

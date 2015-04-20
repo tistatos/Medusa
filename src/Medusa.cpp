@@ -109,6 +109,10 @@ void Medusa::run()
             //renderMesh::show(cloud2);
             renderMesh::run(cloud2);
           }
+          for(int i = 0; i < mManager->getConnectedDeviceCount(); i++)
+          {
+            mManager->getDevice(i)->getPointCloud();
+          }
         }
         else
         {
@@ -117,9 +121,4 @@ void Medusa::run()
       }
     }
   }
-}
-
-void Medusa::medusaCallback()
-{
-  printf("Hello from medusa\n");
 }
