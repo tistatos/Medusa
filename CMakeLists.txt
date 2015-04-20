@@ -5,7 +5,6 @@ project(${PROJECT_NAME} C CXX)
 include(ExternalProject)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-
 find_package(Threads REQUIRED)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
@@ -14,8 +13,7 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set(PROJECT_LIBS_DIR ${PROJECT_SOURCE_DIR}/libs)
 set(PROJECT_CXX_DIR ${PROJECT_SOURCE_DIR}/src)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/Modules)
-
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/Modules/)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
   message(FATAL_ERROR "You must create a build folder and call cmake .. from there!, Also remove CMakeCache.txt before trying to cmake again")
@@ -29,7 +27,6 @@ set(PCL_DIR "/path/to/PCLConfig.cmake")
 find_package(PCL 1.7 COMPONENTS )
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
-message(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 include_directories(${EIGEN_INCLUDE_DIRS})
 
@@ -38,6 +35,8 @@ include_directories(${EIGEN_INCLUDE_DIRS})
 # MongoDB Settings
 ##################
 
+find_package(bsoncxx REQUIRED)
+find_package(mongocxx REQUIRED)
 include_directories(${BSONCXX_INCLUDE_DIRS})
 include_directories(${MONGOCXX_INCLUDE_DIRS})
 link_directories(${MONGOCXX_LIBRARY_DIRS})
