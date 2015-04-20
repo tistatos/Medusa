@@ -8,7 +8,7 @@ find_package(Threads REQUIRED)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/Modules)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/modules)
 
 set(PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set(PROJECT_LIBS_DIR ${PROJECT_SOURCE_DIR}/libs)
@@ -41,6 +41,9 @@ link_directories(${OpenCV_LIBRARY_DIRS})
 ##################
 # MongoDB Settings
 ##################
+
+find_package(BSONCXX REQUIRED)
+find_package(MONGOCXX REQUIRED)
 
 include_directories(${BSONCXX_INCLUDE_DIRS})
 include_directories(${MONGOCXX_INCLUDE_DIRS})
