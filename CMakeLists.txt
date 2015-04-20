@@ -22,7 +22,7 @@ endif()
 ###############
 
 set(PCL_DIR "/path/to/PCLConfig.cmake")
-find_package(PCL 1.7 COMPONENTS )
+find_package(PCL 1.7 REQUIRED)
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 message(${PCL_LIBRARY_DIRS})
