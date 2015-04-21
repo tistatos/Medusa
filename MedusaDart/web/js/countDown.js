@@ -10,11 +10,6 @@ function updateTime()
 	{
 		$("#seconds").text(seconds);
 	}
-	else if(seconds > -3 && seconds < 0)
-	{
-		$("#countdown").hide();
-		$("#msg").show();
-	}
 	else
 	{
 		$("#countdown").hide();
