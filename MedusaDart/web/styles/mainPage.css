@@ -21,6 +21,7 @@ html, body
 #left
 {
   background: black;
+  color: #fff;
   width: 80%;
   height: 100%;
   display: inline-block;
@@ -35,8 +36,8 @@ html, body
 {
   top:20%;
   position: absolute;
-  
-  background-color: LawnGreen;
+  border-radius: 5px;
+  background-color: rgba(54, 25, 25, .1);
   display: block;
   height: 7%;
   width: 95%; 
@@ -52,7 +53,8 @@ html, body
 {
   top:40%;
   position: absolute;
-  background-color: LawnGreen;
+  border-radius: 5px;
+  background-color: rgba(54, 25, 25, .1);
   display: block;
   height: 7%;
   width: 95%; 
@@ -68,7 +70,8 @@ html, body
 {
   top:60%;
   position: absolute;
-  background-color: LawnGreen;
+  border-radius: 5px;
+  background-color: rgba(54, 25, 25, .1);
   display: block;
   height: 7%;
   width: 95%; 

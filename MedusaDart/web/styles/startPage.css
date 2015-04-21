@@ -7,18 +7,23 @@ html, body
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
+    /*background-image: url("../img/medusa.png");*/
+    background-repeat: no-repeat;
+    background-size: 100%;
 }
 
 /*Custum start button*/
 .startButton
 {
-  background-color: LawnGreen;
+  background-color: rgba(54, 25, 25, .1);
   display: block;
   top: 40%;
   left: 40%;
   height: 10%;
-  width: 20%; 
-  border-style:none;
+  width: 20%;
+  border-radius: 20px;
+  border-style:solid;
+  border-color: black;
   text-align: center;
   font-size: 100%;
   position: fixed; 
@@ -104,10 +109,10 @@ closeButton
 
 body.instructions-open .instructions
 {
-  top: 40%;
-  left: 40%;
+  top: 30%;
+  left: 30%;
   height: 10%;
-  width: 20%;
+  width: 40%;
   text-align: center;   
   -webkit-transition: all 0.5s !important;
   -moz-transition: all 0.5s;
@@ -145,17 +150,32 @@ body.inProgress-open .inProgress
   transition: all 0.5s; 
 }
 
-/* 
-Progressbar 
-*/
-progress
+.count
 {
-  background-color: #f3f3f3;
-  border: 0;
-  height: 18px;
-  width: 70%;
-  border-radius: 9px;
+  display: block;
+  top: 40%;
+  left: 40%;
+  height: 10%;
+  width: 20%; 
+  border-style:none;
+  text-align: center;
+  font-size: 70px;
+  color: #fff;
+  text-shadow: 0 0 10px #fff,
+               0 0 20px #fff,
+               0 0 30px #fff,
+               0 0 40px #ff00de,
+               0 0 70px #ff00de,
+               0 0 80px #ff00de,
+               0 0 100px #ff00de,
+               0 0 150px #ff00de;
+  position: fixed; 
+  outline:none; 
+  -webkit-transition: all 0.5s !important;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s; 
 }
-
 
 
