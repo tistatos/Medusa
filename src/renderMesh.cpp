@@ -1,4 +1,5 @@
 #include "renderMesh.h"
+#include <mongo/client/gridfs.h>  
 
 
 using namespace cv;
@@ -11,17 +12,23 @@ using namespace cv;
   void renderMesh::run(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
     std::cout << "Starting" << endl;
-
-    mongo::DBClientConnection c;
-    c.connect("localhost");
-
-    return;
-    cloud = removeNoise(cloud);
-    cloud = reduceData(cloud);
-    cloud = smoothing(cloud);
+   
     cloud = setDelims(cloud);
+    std::cout << "Delims set" << std::endl;
+    cloud = removeNoise(cloud);
+    std::cout << "Noise removed" << endl;
+    cloud = reduceData(cloud);
+    std::cout << "Data reduced" << std::endl;
+    //cloud = smoothing(cloud);
+    
     //runPoisson(cloud);
     runGreedyProjectionTriangulation(cloud);
+
+    std::cout << "GP3 done." << endl;
+
+    storeFile("file.obj");
+    std::cout << "Finished" << endl;
+
   }
 
   /**
@@ -79,13 +86,13 @@ using namespace cv;
     //Removing outliers using a statisticalOutlierRemoval filter
     //Create the filtering object
 
-    pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor2;
+    /*pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor2;
     sor2.setInputCloud (cloud);
     sor2.setMeanK (50);
     sor2.setStddevMulThresh (1.0);
-    sor2.filter (*cloud_filtered);
+    sor2.filter (*cloud_filtered);*/
 
-    return cloud_filtered;
+    return cloud;
   }
 
   /**
@@ -141,14 +148,15 @@ using namespace cv;
     filter.setComputeNormals(true);
     pcl::search::KdTree<pcl::PointXYZ>::Ptr kdtree;
     filter.setSearchMethod(kdtree);
-
+ 
     filter.process(*smoothedNormalCloud);
 
-    //convert pointNormal to pointCloud
+    //convert pointNormal to pointCloud 
     copyPointCloud(*smoothedNormalCloud, *cloud_smoothed);
 
     return cloud_smoothed;
   }
+
 
   /**
    * @brief Returns normals for a pcl::PointCloud
@@ -222,9 +230,9 @@ using namespace cv;
     gp3.reconstruct(mesh);
 
     std::cout << "runGreedyProjectionTriangulation done!" << endl;
-    pcl::io::saveOBJFile("temp/file.obj", mesh);
+    pcl::io::saveOBJFile("file.obj", mesh);
 
-    showMesh(mesh);
+    //showMesh(mesh);
   }
   /**
    * @brief Builds a surface using poisson
@@ -286,8 +294,26 @@ using namespace cv;
     // You can either apply transform_1 or transform_2; they are the same
     pcl::transformPointCloud (*cloud, *transformed_cloud, transform);
 
-    std::cout << "cloud mirrord" << endl;
+    std::cout << "cloud mirrored" << endl;
 
     return transformed_cloud;
   }
+  /**
+   * @brief Inserts file into Mongo
+   * @details long description
+   *
+   * @param d description
+   * @return description
+   */
+  void renderMesh::storeFile(string fileName)
+  {
+    mongo::client::initialize();
+    mongo::DBClientConnection c;
+    c.connect("localhost");
 
+    mongo::GridFS gfs = mongo::GridFS(c, "testet");  
+    gfs.storeFile(fileName);  
+
+
+    //I think it calls the destructor for the connection when it leaves the function. /Carl
+  }
