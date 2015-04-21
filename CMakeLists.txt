@@ -112,7 +112,7 @@ target_link_libraries(texture ${PCL_LIBRARIES})
 add_library(kinectmanager src/KinectManager.cpp src/Kinect.cpp)
 target_link_libraries(kinectmanager ${FREENECT_LIBRARIES})
 
-add_executable(medusa src/main.cpp src/Medusa.cpp src/websocket.cpp)
+add_executable(medusa RUINsrc/main.cpp src/Medusa.cpp src/websocket.cpp)
 target_link_libraries(medusa texture kinectmanager rendermesh ${ALL_LIBS})
 
 add_executable(calibration src/calibration.cpp)
