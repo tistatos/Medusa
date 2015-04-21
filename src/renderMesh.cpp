@@ -26,15 +26,7 @@ using namespace cv;
 
     std::cout << "GP3 done." << endl;
 
-    string fileName = "file.obj";
-    mongo::DBClientConnection c;
-    //std::string errorstring;
-    //TODO: kolla mongo boost
-    c.connect("127.0.0.1:27017");
-    //std::cout << errorstring << std::endl;
-    mongo::GridFS gfs = mongo::GridFS(c, "test");
-    gfs.storeFile(fileName);
-
+    storeFile("file.obj");
     std::cout << "Finished" << endl;
 
   }
@@ -210,7 +202,6 @@ using namespace cv;
     n.setSearchMethod (tree);
     n.setKSearch (200);
     //n.setRadiusSearch(0.03);
-    std::cout << "Kom hit1" << endl;
 
     pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
     n.compute (*normals);
@@ -235,7 +226,6 @@ using namespace cv;
     gp3.setInputCloud (cloudAndNormals);
     gp3.setSearchMethod (tree2);
     //gp.setResolution(1);
-        std::cout << "Kom hit5" << endl;
 
     gp3.reconstruct(mesh);
 
@@ -304,8 +294,26 @@ using namespace cv;
     // You can either apply transform_1 or transform_2; they are the same
     pcl::transformPointCloud (*cloud, *transformed_cloud, transform);
 
-    std::cout << "cloud mirrord" << endl;
+    std::cout << "cloud mirrored" << endl;
 
     return transformed_cloud;
   }
+  /**
+   * @brief Inserts file into Mongo
+   * @details long description
+   *
+   * @param d description
+   * @return description
+   */
+  void renderMesh::storeFile(string fileName)
+  {
+    mongo::client::initialize();
+    mongo::DBClientConnection c;
+    c.connect("localhost");
 
+    mongo::GridFS gfs = mongo::GridFS(c, "testet");
+    gfs.storeFile(fileName);
+
+
+    //I think it calls the destructor for the connection when it leaves the function. /Carl
+  }

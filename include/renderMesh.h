@@ -61,6 +61,9 @@ class renderMesh
 
 		static pcl::PointCloud<pcl::PointXYZ>::Ptr smoothing (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
+		static void storeFile(string fileName);
+
+
 };
 
 #endif
