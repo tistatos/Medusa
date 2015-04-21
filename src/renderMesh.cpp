@@ -1,4 +1,5 @@
 #include "renderMesh.h"
+#include <mongo/client/gridfs.h>  
 
 
 using namespace cv;
@@ -11,17 +12,31 @@ using namespace cv;
   void renderMesh::run(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
     std::cout << "Starting" << endl;
-
-    mongo::DBClientConnection c;
-    c.connect("localhost");
-
-    return;
-    cloud = removeNoise(cloud);
-    cloud = reduceData(cloud);
-    cloud = smoothing(cloud);
+   
     cloud = setDelims(cloud);
+    std::cout << "Delims set" << std::endl;
+    cloud = removeNoise(cloud);
+    std::cout << "Noise removed" << endl;
+    cloud = reduceData(cloud);
+    std::cout << "Data reduced" << std::endl;
+    //cloud = smoothing(cloud);
+    
     //runPoisson(cloud);
     runGreedyProjectionTriangulation(cloud);
+
+    std::cout << "GP3 done." << endl;
+
+    string fileName = "file.obj";
+    mongo::DBClientConnection c;
+    //std::string errorstring;
+    //TODO: kolla mongo boost
+    c.connect("127.0.0.1:27017");
+    //std::cout << errorstring << std::endl;
+    mongo::GridFS gfs = mongo::GridFS(c, "test");  
+    gfs.storeFile(fileName);  
+
+    std::cout << "Finished" << endl;
+
   }
 
   /**
@@ -79,13 +94,13 @@ using namespace cv;
     //Removing outliers using a statisticalOutlierRemoval filter
     //Create the filtering object
 
-    pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor2;
+    /*pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor2;
     sor2.setInputCloud (cloud);
     sor2.setMeanK (50);
     sor2.setStddevMulThresh (1.0);
-    sor2.filter (*cloud_filtered);
+    sor2.filter (*cloud_filtered);*/
 
-    return cloud_filtered;
+    return cloud;
   }
 
   /**
@@ -141,14 +156,15 @@ using namespace cv;
     filter.setComputeNormals(true);
     pcl::search::KdTree<pcl::PointXYZ>::Ptr kdtree;
     filter.setSearchMethod(kdtree);
-
+ 
     filter.process(*smoothedNormalCloud);
 
-    //convert pointNormal to pointCloud
+    //convert pointNormal to pointCloud 
     copyPointCloud(*smoothedNormalCloud, *cloud_smoothed);
 
     return cloud_smoothed;
   }
+
 
   /**
    * @brief Returns normals for a pcl::PointCloud
@@ -194,6 +210,7 @@ using namespace cv;
     n.setSearchMethod (tree);
     n.setKSearch (200);
     //n.setRadiusSearch(0.03);
+    std::cout << "Kom hit1" << endl;
 
     pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
     n.compute (*normals);
@@ -218,13 +235,14 @@ using namespace cv;
     gp3.setInputCloud (cloudAndNormals);
     gp3.setSearchMethod (tree2);
     //gp.setResolution(1);
+        std::cout << "Kom hit5" << endl;
 
     gp3.reconstruct(mesh);
 
     std::cout << "runGreedyProjectionTriangulation done!" << endl;
-    pcl::io::saveOBJFile("temp/file.obj", mesh);
+    pcl::io::saveOBJFile("file.obj", mesh);
 
-    showMesh(mesh);
+    //showMesh(mesh);
   }
   /**
    * @brief Builds a surface using poisson
