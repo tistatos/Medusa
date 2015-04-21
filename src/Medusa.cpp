@@ -7,6 +7,7 @@
 
 #include "Medusa.h"
 #include "renderMesh.h"
+#include "texture.h"
 
 /**
  * @brief open file for writing
@@ -85,6 +86,7 @@ void Medusa::run()
         std::cout << "Five seconds" << std::endl;
         mManager->stopDepth();
         mManager->stopVideo();
+        pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2(new pcl::PointCloud<pcl::PointXYZ>());
 
         if(mManager->getDepthStatus() && mManager->getVideoStatus())
         {
@@ -104,15 +106,19 @@ void Medusa::run()
             fclose(fp);
 
             delete[] frame;
-            pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2(new pcl::PointCloud<pcl::PointXYZ>(mManager->getDevice(i)->getPointCloud()));
-            pcl::io::savePCDFile("file.obj", mManager->getDevice(i)->getPointCloud());
+            *cloud2 = *cloud2 + mManager->getDevice(i)->getPointCloud();
+            //pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2(new pcl::PointCloud<pcl::PointXYZ>(mManager->getDevice(i)->getPointCloud()));
+            //pcl::io::savePCDFile("file.obj", mManager->getDevice(i)->getPointCloud());
             //renderMesh::show(cloud2);
-            renderMesh::run(cloud2);
           }
           for(int i = 0; i < mManager->getConnectedDeviceCount(); i++)
           {
             mManager->getDevice(i)->getPointCloud();
           }
+          
+          //Saves cloud2 to temp/file.obj in renderMesh::run
+          renderMesh::run(cloud2);
+          texture::applyTexture();
         }
         else
         {
