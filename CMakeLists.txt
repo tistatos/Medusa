@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8.7)
 set(PROJECT_NAME medusa)
 project(${PROJECT_NAME} C CXX)
 include(ExternalProject)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 find_package(Threads REQUIRED)
 
@@ -101,7 +101,7 @@ include_directories(
 )
 
 message(${Boost_LIBRARIES})
-set(ALL_LIBS ${PCL_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB} ${LIBWEBSOCKETS_LIBRARIES} ${BSONCXX_LIBRARIES} ${MONGOCXX_LIBRARIES} ${Boost_LIBRARIES} mongoclient)
+set(ALL_LIBS ${PCL_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB} ${LIBWEBSOCKETS_LIBRARIES} ${BSONCXX_LIBRARIES} ${MONGOCXX_LIBRARIES} ${Boost_LIBRARIES} mongoclient bson)
 
 add_library(rendermesh src/renderMesh.cpp)
 target_link_libraries(rendermesh ${ALL_LIBS})
@@ -113,8 +113,8 @@ target_link_libraries(kinectmanager ${FREENECT_LIBRARIES})
 add_executable(medusa src/main.cpp src/Medusa.cpp src/websocket.cpp)
 target_link_libraries(medusa kinectmanager rendermesh ${ALL_LIBS})
 
-#add_executable(calibration src/calibration.cpp)
-#target_link_libraries(calibration ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB} ${OpenCV_LIBS})
+add_executable(calibration src/calibration.cpp)
+target_link_libraries(calibration ${FREENECT_LIBRARIES} ${FREENECT_SYNC_LIB} ${OpenCV_LIBS})
 
 add_executable(write_xml_file src/write_xml_file.cpp)
 target_link_libraries(write_xml_file ${OpenCV_LIBS})

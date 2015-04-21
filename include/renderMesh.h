@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <mongo/client/dbclient.h>
+#include <mongo/bson/bson.h>
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
 #include <opencv2/core/core.hpp>

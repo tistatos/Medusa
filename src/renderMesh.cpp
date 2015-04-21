@@ -1,5 +1,5 @@
 #include "renderMesh.h"
-#include <mongo/client/gridfs.h>  
+#include <mongo/client/gridfs.h>
 
 
 using namespace cv;
@@ -12,7 +12,7 @@ using namespace cv;
   void renderMesh::run(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
     std::cout << "Starting" << endl;
-   
+
     cloud = setDelims(cloud);
     std::cout << "Delims set" << std::endl;
     cloud = removeNoise(cloud);
@@ -20,7 +20,7 @@ using namespace cv;
     cloud = reduceData(cloud);
     std::cout << "Data reduced" << std::endl;
     //cloud = smoothing(cloud);
-    
+
     //runPoisson(cloud);
     runGreedyProjectionTriangulation(cloud);
 
@@ -32,8 +32,8 @@ using namespace cv;
     //TODO: kolla mongo boost
     c.connect("127.0.0.1:27017");
     //std::cout << errorstring << std::endl;
-    mongo::GridFS gfs = mongo::GridFS(c, "test");  
-    gfs.storeFile(fileName);  
+    mongo::GridFS gfs = mongo::GridFS(c, "test");
+    gfs.storeFile(fileName);
 
     std::cout << "Finished" << endl;
 
@@ -156,10 +156,10 @@ using namespace cv;
     filter.setComputeNormals(true);
     pcl::search::KdTree<pcl::PointXYZ>::Ptr kdtree;
     filter.setSearchMethod(kdtree);
- 
+
     filter.process(*smoothedNormalCloud);
 
-    //convert pointNormal to pointCloud 
+    //convert pointNormal to pointCloud
     copyPointCloud(*smoothedNormalCloud, *cloud_smoothed);
 
     return cloud_smoothed;
