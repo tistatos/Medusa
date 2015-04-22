@@ -28,6 +28,21 @@ html, body
   position: fixed;
 }
 
+#box
+{
+  width: 30%;
+  top:20%;
+  left: 20%;
+  height: 10%;
+  position: fixed;
+  outline:none; 
+  -webkit-transition: all 0.5s !important;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s; 
+}
+
 
 /*Buttons in right div*/
 

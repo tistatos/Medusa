@@ -15,8 +15,10 @@ html, body
 /*Custum start button*/
 .startButton
 {
-  background-color: rgba(54, 25, 25, .1);
+  background-color: #fff;
+  /*rgba(200, 200, 200, 0.3);*/
   display: block;
+  /*box-shadow: 3px 3px 10px #888888;*/
   top: 40%;
   left: 40%;
   height: 10%;
@@ -24,6 +26,7 @@ html, body
   border-radius: 20px;
   border-style:solid;
   border-color: black;
+  border-width: 1px;
   text-align: center;
   font-size: 100%;
   position: fixed; 
@@ -51,7 +54,7 @@ body.startButton-open .startButton
 {
   position: fixed;
   z-index: 20;
-  background-color: #67b5d1;
+  background-color: #000;
   overflow: hidden;
   top: 0;
   width: 300px;
@@ -79,6 +82,10 @@ body.menu-open .infoMenu
 	font-weight: 300;
 	background: #0d77b6;
 }
+.infoMenu h1
+{
+  color: #fff;
+}
 .infoMenu p
 {
 	display: block;
@@ -86,6 +93,7 @@ body.menu-open .infoMenu
 	font-size: 1.1em;
 	font-weight: 300;
 	padding-left: 5px;
+  padding-right: 5px;
 }
 
 /*Custum close button in information menu*/
@@ -160,15 +168,6 @@ body.inProgress-open .inProgress
   border-style:none;
   text-align: center;
   font-size: 70px;
-  color: #fff;
-  text-shadow: 0 0 10px #fff,
-               0 0 20px #fff,
-               0 0 30px #fff,
-               0 0 40px #ff00de,
-               0 0 70px #ff00de,
-               0 0 80px #ff00de,
-               0 0 100px #ff00de,
-               0 0 150px #ff00de;
   position: fixed; 
   outline:none; 
   -webkit-transition: all 0.5s !important;
