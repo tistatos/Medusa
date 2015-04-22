@@ -1,5 +1,5 @@
 var sTime = new Date().getTime();
-var countDown = 10;
+var countDown = 3;
 
 function updateTime()
 {
@@ -13,7 +13,7 @@ function updateTime()
 	else
 	{
 		$("#countdown").hide();
-		window.location.replace("mainPage.html");
+		window.location.replace("loadingPage.html");
 		clearInterval(counter)
 	}
 }
