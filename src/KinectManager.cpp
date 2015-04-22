@@ -124,6 +124,8 @@ bool KinectManager::getDepth(int index, uint16_t **frame)
 
 bool KinectManager::getDepthStatus()
 {
+  if(getConnectedDeviceCount() == 0)
+    return false;
   for (int i = 0; i < getConnectedDeviceCount(); ++i)
   {
     if(!mDevices[i]->getDepthStatus())
@@ -148,6 +150,9 @@ bool KinectManager::getVideo(int index, uint8_t **frame)
 
 bool KinectManager::getVideoStatus()
 {
+  if(getConnectedDeviceCount() == 0)
+    return false;
+
   for (int i = 0; i < getConnectedDeviceCount(); ++i)
   {
     if(!mDevices[i]->getVideoStatus())
