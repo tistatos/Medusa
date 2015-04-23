@@ -9,11 +9,12 @@
       mask = document.createElement("div"), 
       activeNav,
       quit = document.querySelector("#quit");
+      confirm = document.querySelector(".confirm");
   var clicked = false;
       
   mask.className = "mask";
 
-    save.addEventListener("click", function()
+  save.addEventListener("click", function()
   {
    // sweetAlert('Congratulations!', 'Your message has been successfully sent', 'success');
     swal({  title: "Maila mig min 3D-modell!",   
@@ -30,36 +31,30 @@
 
   quit.addEventListener("click", function()
   {
-    swal({
+    swal(
+    {
       title: "Är du säker?",
       text: "Din modell kommer nu att kastas!",
-      type: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#DD6B55",
+      confirmButtonColor: "#91C8D4",
       confirmButtonText: "Ja, kasta den!",
       cancelButtonText: "Avbryt",
       closeOnConfirm: false
     },
-    function(){
-      swal("Kastad!", "Din modell är nu borta.. för alltid!", "success");
+    function()
+    {
+      swal(
+      {
+        title: "Din modell har nu kastats!",
+        type: "success",
+        confirmButtonText: "OK!"
+      },
+        function()
+        {
+          window.location.replace("index.html");
+        });
     });
   });
-  
- /* quit.addEventListener("click", function()
-  {
-      swal({
-        title: "Är du säker på att du vill avsluta?",
-        text: "Den nuvarande modellen kommer att kastas!",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Avsluta",
-        cancelButtonText: "Avbryt",
-        closeOnConfirm: false
-      },
-      function(){
-        window.location.replace("index.html");
-      });
-   });*/
 
   redo.addEventListener("click", function()
   {
@@ -67,7 +62,7 @@
         title: "Är du säker på att du vill göra om modellen?",
         text: "Den nuvarande modellen kommer att kastas!",
         showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
+        confirmButtonColor: "##91C8D4",
         confirmButtonText: "Gör om!",
         cancelButtonText: "Avbryt",
         closeOnConfirm: false

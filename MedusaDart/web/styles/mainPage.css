@@ -32,7 +32,7 @@ html, body
 {
   width: 30%;
   top:20%;
-  left: 20%;
+  left: 25%;
   height: 10%;
   position: fixed;
   outline:none; 
@@ -100,22 +100,20 @@ html, body
 /*Button: Quit program*/
 #quit
 {
+  display: inline-block;
+  background-color: #8BC0CC;
+  box-shadow: 0px 0px 2px, 0px 0px 0px 1px rgba(0, 0, 0, 0.05) inset;
+  color: #FFF;
+  border: medium none;
+  box-shadow: none;
+  font-size: 17px;
+  font-weight: 500;
+  border-radius: 5px;
+  padding: 10px 32px;
+  margin: 26px 5px 0px;
+  cursor: pointer;
   top:60%;
   position: absolute;
-  background-image: -moz-linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%);
-  background: -o-linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); /* For Firefox 3.6 to 15 */
-  background-image: -webkit-linear-gradient(top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); 
-  background-color: #759AE9;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #1F58CC #1B4DB3 #174299;
-  border-radius: 4px;
-  box-shadow: 0px 0px 2px 0px rgba(57, 140, 255, 0.8) inset;
-  color: #FFF;
-  padding: 7px 0px;
-  text-shadow: 0px -1px 1px #1D3668; 
-  display: block;
   height: 7%;
   width: 95%; 
   left:2.5%;
