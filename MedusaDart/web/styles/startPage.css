@@ -15,18 +15,22 @@ html, body
 /*Custum start button*/
 .startButton
 {
-  background-color: #fff;
-  /*rgba(200, 200, 200, 0.3);*/
-  display: block;
-  /*box-shadow: 3px 3px 10px #888888;*/
-  top: 40%;
-  left: 40%;
-  height: 10%;
-  width: 20%;
-  border-radius: 20px;
-  border-style:solid;
-  border-color: black;
+  background-color: #759AE9;
+  background-image: -moz-linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%);
   border-width: 1px;
+  border-style: solid;
+  border-color: #1F58CC #1B4DB3 #174299;
+  border-radius: 4px;
+  box-shadow: 0px 0px 2px 0px rgba(57, 140, 255, 0.8) inset;
+  color: #FFF;
+  padding: 7px 0px;
+  text-shadow: 0px -1px 1px #1D3668;
+  display: block;
+  /*box-shadow: 1px 1px 10px #000000;*/
+  top: 40%;
+  left: 35%;
+  height: 10%;
+  width: 30%;
   text-align: center;
   font-size: 100%;
   position: fixed; 
@@ -38,6 +42,33 @@ html, body
   transition: all 0.5s; 
 }
 
+.startButton:active
+{
+  background-image: -moz-linear-gradient(center top , #6384CB 0%, #1F448F 50%, #0E3072 50%, #0D2759 100%);
+}
+
+.startButton:target
+{
+  background-image: -moz-linear-gradient(center top , #6384CB 0%, #1F448F 50%, #0E3072 50%, #0D2759 100%);
+}
+
+#continueButton {
+  background-image: -moz-linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%);
+  background-color: #759AE9;
+  width: 152px;
+  height: 50px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #1F58CC #1B4DB3 #174299;
+  border-radius: 4px;
+  box-shadow: 0px 0px 2px 0px rgba(57, 140, 255, 0.8) inset;
+  color: #FFF;
+  padding: 7px 0px;
+  text-shadow: 0px -1px 1px #1D3668; 
+  margin-top: 5%;
+  font-size: 14px;
+}
+
 body.startButton-open .startButton
 {
   top: 100%;
@@ -47,14 +78,28 @@ body.startButton-open .startButton
 /*Info button*/
 .infoButton
 {
+  background-image: -moz-linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%);
+  background-color: #759AE9;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #1F58CC #1B4DB3 #174299;
+  border-radius: 4px;
+  box-shadow: 0px 0px 2px 0px rgba(57, 140, 255, 0.8) inset;
+  color: #FFF;
+  padding: 7px 0px;
+  text-shadow: 0px -1px 1px #1D3668; 
+  width: 50px;
+  margin-left: 2%;
+  margin-top: 2%;
 }
 
 /*Custum information menu*/
 .infoMenu
 {
   position: fixed;
+  color: #323232;
   z-index: 20;
-  background-color: #000;
+  background-color: #F5F5F5;
   overflow: hidden;
   top: 0;
   width: 300px;
@@ -84,24 +129,33 @@ body.menu-open .infoMenu
 }
 .infoMenu h1
 {
-  color: #fff;
+  padding-left: 5%;
 }
 .infoMenu p
 {
 	display: block;
-	color: #fff;
-	font-size: 1.1em;
+	font-size: 0.9em;
 	font-weight: 300;
-	padding-left: 5px;
-  padding-right: 5px;
+	padding-left: 5%;
+  padding-right: 5%;
 }
 
 /*Custum close button in information menu*/
-closeButton 
+.closeButton 
 {
-  background-color: #3184a1;
-  color: #fff;
-  outline: none
+  background-image: -moz-linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%);
+  background-color: #759AE9;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #1F58CC #1B4DB3 #174299;
+  border-radius: 4px;
+  box-shadow: 0px 0px 2px 0px rgba(57, 140, 255, 0.8) inset;
+  color: #FFF;
+  padding: 7px 0px;
+  text-shadow: 0px -1px 1px #1D3668; 
+  width: 50px;
+  margin-left: 5%;
+  margin-top: 10px;
 }
 
 
@@ -112,7 +166,8 @@ closeButton
   font-size: 100%;
   font-family: Arial;
   top: 100%;
-  position: fixed;  
+  position: fixed;
+  color: #323232;
 }
 
 body.instructions-open .instructions
@@ -167,7 +222,7 @@ body.inProgress-open .inProgress
     border-style:none;
     text-align: center;
     font-size: 25px;
-    color: #000000; 
+    color: #323232; 
 
     position: fixed; 
     outline:none; 
@@ -191,6 +246,7 @@ body.inProgress-open .inProgress
   color: #000000;
   position: fixed; 
   outline:none; 
+  color: #323232;
   -webkit-transition: all 0.5s !important;
   -moz-transition: all 0.5s;
   -ms-transition: all 0.5s;

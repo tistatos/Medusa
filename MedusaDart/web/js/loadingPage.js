@@ -7,36 +7,36 @@
   
   window.onload = function onLoad() {
     var circle = new ProgressBar.Circle('#progress', {
-      color: '#777',
-      trailColor: '#eee',
+      color: '#376FE0',
+      trailColor: '#759AE9',
       strokeWidth: 9,
       duration: 2500,
       easing: 'easeInOut'
     });
 
-    circle.set(0.05);
+    circle.set(0);
 
-    setTimeout(function() {
+    /*setTimeout(function() {
       circle.animate(0.3);
-    }, 1000);
+    }, 1000);*/
 
-    setTimeout(function() {
+    /*setTimeout(function() {
       circle.animate(0.4);
-    }, 3500);
+    }, 2000);
 
     setTimeout(function() {
       circle.animate(0.8);
-    }, 5500);
+    }, 7000);*/
 
     setTimeout(function() {
-      circle.animate(0.9);
-    }, 8000); 
+      circle.animate(1);
+    }, 0); 
 
      setTimeout(function() {
       circle.animate(1);
       //fix, switch to mainPage to soon
       window.location.replace("mainPage.html"); 
-    }, 8000);
+    },4000);
   }; 
 
 })( window );

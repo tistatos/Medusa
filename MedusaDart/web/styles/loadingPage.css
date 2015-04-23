@@ -18,7 +18,7 @@ h1 {
   	border-style:none;
   	text-align: center;
   	font-size: 25px;
-  	color: #000000;
+  	color: #323232;
   
   	position: fixed; 
   	outline:none; 
@@ -33,7 +33,7 @@ h1 {
 
 	display: block;
   	top: 42%;
-  	left: 45%;
+  	left: 40%;
   	height: 150px;
   	width: 150px; 
   	border-style:none;
@@ -70,10 +70,3 @@ h1 {
 		-o-transform: rotate(360deg);
 	}
 }
-
-
-
-
-
-
-

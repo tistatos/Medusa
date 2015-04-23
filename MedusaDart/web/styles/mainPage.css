@@ -21,7 +21,7 @@ html, body
 #left
 {
   background: black;
-  color: #fff;
+  background-color: #F5F5F5;
   width: 80%;
   height: 100%;
   display: inline-block;
@@ -52,12 +52,20 @@ html, body
   top:20%;
   position: absolute;
   border-radius: 5px;
-  background-color: rgba(54, 25, 25, .1);
+  background-image: -moz-linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%);
+  background-color: #759AE9;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #1F58CC #1B4DB3 #174299;
+  border-radius: 4px;
+  box-shadow: 0px 0px 2px 0px rgba(57, 140, 255, 0.8) inset;
+  color: #FFF;
+  padding: 7px 0px;
+  text-shadow: 0px -1px 1px #1D3668; 
   display: block;
   height: 7%;
   width: 95%; 
   left:2.5%;
-  border-style:none;
   text-align: center;
   font-size: 100%; 
   outline:none; 
@@ -66,15 +74,22 @@ html, body
 /*Button: redo scanning process*/
 #reDo
 {
+  background-image: -moz-linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%);
+  background-color: #759AE9;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #1F58CC #1B4DB3 #174299;
+  border-radius: 4px;
+  box-shadow: 0px 0px 2px 0px rgba(57, 140, 255, 0.8) inset;
+  color: #FFF;
+  padding: 7px 0px;
+  text-shadow: 0px -1px 1px #1D3668; 
   top:40%;
   position: absolute;
-  border-radius: 5px;
-  background-color: rgba(54, 25, 25, .1);
   display: block;
   height: 7%;
   width: 95%; 
   left:2.5%;
-  border-style:none;
   text-align: center;
   font-size: 100%; 
   outline:none; 
@@ -85,13 +100,20 @@ html, body
 {
   top:60%;
   position: absolute;
-  border-radius: 5px;
-  background-color: rgba(54, 25, 25, .1);
+  background-image: -moz-linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%);
+  background-color: #759AE9;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #1F58CC #1B4DB3 #174299;
+  border-radius: 4px;
+  box-shadow: 0px 0px 2px 0px rgba(57, 140, 255, 0.8) inset;
+  color: #FFF;
+  padding: 7px 0px;
+  text-shadow: 0px -1px 1px #1D3668; 
   display: block;
   height: 7%;
   width: 95%; 
   left:2.5%;
-  border-style:none;
   text-align: center;
   font-size: 100%; 
   outline:none; 
