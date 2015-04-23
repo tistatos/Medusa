@@ -101,6 +101,9 @@ html, body
   top:60%;
   position: absolute;
   background-image: -moz-linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%);
+  background: -o-linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); 
   background-color: #759AE9;
   border-width: 1px;
   border-style: solid;
@@ -122,7 +125,7 @@ html, body
 /*Extended menu for saving object*/
 
 /*Button: QR*/
-.qr 
+/*.qr 
 {
   text-align: center;
   font-size: 100%;
@@ -143,7 +146,7 @@ html, body
   -ms-transition: all 0.5s;
   -o-transition: all 0.5s;
   transition: all 0.5s; 
-}
+}*/
 
 /*Button: Mail object*/
 .mail 
@@ -154,9 +157,9 @@ html, body
   background-color: #67b5d1; 
   position: relative;
   top: 20%;
-  width: 30%;
+  width: 95%;
   height: 5%;
-  left: 35%;
+  left: 2.5%;
   border-style:none;
   outline:none; 
   z-index: -1;
@@ -180,7 +183,6 @@ html, body
 .mail-open .mail
 {
   top:28%;
-  left: 18%;
   opacity: 1;
 }
 
@@ -194,7 +196,6 @@ html, body
 .mail-close .mail
 {
   top:20%;
-  left: 35%;
   opacity: 1;
 }
 
