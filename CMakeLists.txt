@@ -5,7 +5,7 @@ project(${PROJECT_NAME} C CXX)
 include(ExternalProject)
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-find_package(Threads REQUIRED)
+find_spackage(Threads REQUIRED)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
