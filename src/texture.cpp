@@ -269,7 +269,7 @@ void Texture::showCameras (pcl::texture_mapping::CameraVector cams, pcl::PointCl
     p3=pcl::transformPoint (p3, cam.pose);
     p4=pcl::transformPoint (p4, cam.pose);
     p5=pcl::transformPoint (p5, cam.pose);
-    /*std::stringstream ss;
+    std::stringstream ss;
     ss << "Cam #" << i+1;
     visu.addText3D(ss.str (), p1, 0.1, 1.0, 1.0, 1.0, ss.str ());
 
@@ -296,7 +296,7 @@ void Texture::showCameras (pcl::texture_mapping::CameraVector cams, pcl::PointCl
     visu.addLine (p4, p3,ss.str ());
     ss.str ("");
     ss << "camera_" << i << "line8";
-    visu.addLine (p3, p2,ss.str ());*/
+    visu.addLine (p3, p2,ss.str ());
   }
 
   // KAN TA BORT SEN?
@@ -327,8 +327,8 @@ void Texture::readCamPoseFile(pcl::TextureMapping<pcl::PointXYZ>::Camera &cam)
 
   // camera position
   cam.pose (0,3) = 0; //TX
-  cam.pose (1,3) = 3; //TY
-  cam.pose (2,3) = 2; //TZ
+  cam.pose (1,3) = 0; //TY
+  cam.pose (2,3) = 0; //TZ
 
   // rotation coordinates
   cam.pose (0,0) = 1;
@@ -336,12 +336,12 @@ void Texture::readCamPoseFile(pcl::TextureMapping<pcl::PointXYZ>::Camera &cam)
   cam.pose (0,2) = 0;
 
   cam.pose (1,0) = 0;
-  cam.pose (1,1) = -1;
+  cam.pose (1,1) = 1;
   cam.pose (1,2) = 0;
 
   cam.pose (2,0) = 0;
   cam.pose (2,1) = 0;
-  cam.pose (2,2) = -1;
+  cam.pose (2,2) = 1;
 
   cam.pose (3,0) = 0.0;
   cam.pose (3,1) = 0.0;
@@ -349,7 +349,7 @@ void Texture::readCamPoseFile(pcl::TextureMapping<pcl::PointXYZ>::Camera &cam)
   cam.pose (3,3) = 1.0; //Scale
 
   // camera focal length and size
-  cam.focal_length=462.7;
+  cam.focal_length=525;
   cam.height=480;
   cam.width=640;
 }
@@ -361,9 +361,9 @@ void Texture::readCamPoseFile(pcl::TextureMapping<pcl::PointXYZ>::Camera &cam)
 void Texture::applyTexture()
 {
   // read mesh from plyfile
-  PCL_INFO ("\nLoading mesh from file %s...\n", "temp/file.obj");
+  PCL_INFO ("\nLoading mesh from file %s...\n", "file.obj");
   pcl::PolygonMesh triangles;
-  pcl::io::loadPolygonFile("temp/file.obj", triangles);
+  pcl::io::loadPolygonFile("file.obj", triangles);
 
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
 
@@ -394,7 +394,7 @@ void Texture::applyTexture()
   {
     pcl::TextureMapping<pcl::PointXYZ>::Camera cam;
     readCamPoseFile(cam);
-    cam.texture_file = "1_bild.ppm";
+    cam.texture_file = "0_bild.png";
     my_cams.push_back (cam);
     cpt_cam++ ;
   }

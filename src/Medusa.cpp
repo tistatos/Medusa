@@ -8,6 +8,7 @@
 #include "Medusa.h"
 #include "renderMesh.h"
 #include "texture.h"
+#include "png++/png.hpp"
 
 /**
  * @brief open file for writing
@@ -98,11 +99,28 @@ void Medusa::run()
             mManager->getVideo(i, &frame);
 
             char filename[128];
-            sprintf(filename, "%i_bild.ppm", i);
+            sprintf(filename, "%i_bild.png", i);
+           
             std::cout << "Saving image to: " << filename << std::endl;
 
             fp = open_dump(filename);
-            dump_rgb(fp, frame, 640, 480);
+           // dump_rgb(fp, frame, 640, 480);
+           
+            std::cout << "skapar image" << std::endl; 
+            png::image< png::rgb_pixel > image(640,480); 
+            //png::image<png::index_pixel> image;
+            std::cout << "skapar bild"<< std::endl;
+            for(int h = 0; h < 640*480*3; h+=3)
+            {
+                int y = h/(640*3);
+                int x = (h/3)%640;
+                image[y][x] = png::rgb_pixel(frame[h], frame[h+1], frame[h+2]);
+            }
+
+            std::cout<<"skriver till bildd"<< std::endl;
+            image.write(filename);
+            
+
             fclose(fp);
 
             delete[] frame;
