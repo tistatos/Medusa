@@ -15,38 +15,37 @@ html, body
 /*Custum start button*/
 .startButton
 {
-  background-color: #759AE9;
-  background-image: -moz-linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%);
-  background-image: -webkit-linear-gradient(top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); 
-  border-width: 1px;
-  border-style: solid;
-  border-color: #1F58CC #1B4DB3 #174299;
-  border-radius: 4px;
-  box-shadow: 0px 0px 2px 0px rgba(57, 140, 255, 0.8) inset;
+  display: inline-block;
+  background-color: #7EC0EA;
+  box-shadow: 0px 0px 2px, 0px 0px 0px 1px rgba(0, 0, 0, 0.05) inset;
   color: #FFF;
+  border: medium none;
+  box-shadow: none;
+  font-size: 17px;
+  font-weight: 500;
+  border-radius: 5px;
   padding: 7px 0px;
-  text-shadow: 0px -1px 1px #1D3668;
-  display: block;
-  /*box-shadow: 1px 1px 10px #000000;*/
-  top: 40%;
-  left: 35%;
+  cursor: pointer;
+  top:40%;
+  position: absolute;
   height: 10%;
-  width: 30%;
+  width: 30%; 
+  left:35%;
   text-align: center;
-  font-size: 100%;
-  position: fixed; 
-  outline:none; 
+  font-size: 100%; 
+  outline:none;
   -webkit-transition: all 0.5s !important;
   -moz-transition: all 0.5s;
   -ms-transition: all 0.5s;
   -o-transition: all 0.5s;
-  transition: all 0.5s; 
+  transition: all 0.5s;
 }
 
 .startButton:active
 {
-  background-image: -moz-linear-gradient(center top , #6384CB 0%, #1F448F 50%, #0E3072 50%, #0D2759 100%);
-  background-image: -webkit-linear-gradient(top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); 
+  /*background-color: 4B686E;*/
+  /*background-image: -moz-linear-gradient(center top , #6384CB 0%, #1F448F 50%, #0E3072 50%, #0D2759 100%);*/
+  /*background-image: -webkit-linear-gradient(top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); */
 }
 
 .startButton:target
@@ -56,21 +55,31 @@ html, body
 }
 
 #continueButton {
-  background-image: -moz-linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%);
-  background-image: -webkit-linear-gradient(top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); 
-  background-color: #759AE9;
-  width: 152px;
-  height: 50px;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #1F58CC #1B4DB3 #174299;
-  border-radius: 4px;
-  box-shadow: 0px 0px 2px 0px rgba(57, 140, 255, 0.8) inset;
+  display: inline-block;
+  background-color: #7EC0EA;
+  box-shadow: 0px 0px 2px, 0px 0px 0px 1px rgba(0, 0, 0, 0.05) inset;
   color: #FFF;
+  border: medium none;
+  box-shadow: none;
+  font-size: 17px;
+  font-weight: 500;
+  border-radius: 5px;
   padding: 7px 0px;
-  text-shadow: 0px -1px 1px #1D3668; 
-  margin-top: 5%;
-  font-size: 14px;
+  /*margin: 26px 5px 0px;*/
+  cursor: pointer;
+  top:170%;
+  position: absolute;
+  height: 65px;
+  width: 152px; 
+  left:36%;
+  text-align: center;
+  font-size: 100%; 
+  outline:none;
+  -webkit-transition: all 0.5s !important;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
 }
 
 body.startButton-open .startButton
@@ -82,20 +91,29 @@ body.startButton-open .startButton
 /*Info button*/
 .infoButton
 {
-  background-image: -moz-linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%);
-  background-image: -webkit-linear-gradient(top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); 
-  background-color: #759AE9;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #1F58CC #1B4DB3 #174299;
-  border-radius: 4px;
-  box-shadow: 0px 0px 2px 0px rgba(57, 140, 255, 0.8) inset;
+  display: inline-block;
+  background-color: #7EC0EA;
+  box-shadow: 0px 0px 2px, 0px 0px 0px 1px rgba(0, 0, 0, 0.05) inset;
   color: #FFF;
+  border: medium none;
+  box-shadow: none;
+  font-size: 17px;
+  font-weight: 500;
+  border-radius: 5px;
   padding: 7px 0px;
-  text-shadow: 0px -1px 1px #1D3668; 
-  width: 50px;
+  cursor: pointer;
+  position: absolute;
+  width: 60px; 
   margin-left: 2%;
   margin-top: 2%;
+  text-align: center;
+  font-size: 100%; 
+  outline:none;
+  -webkit-transition: all 0.5s !important;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
 }
 
 /*Custum information menu*/
@@ -148,20 +166,29 @@ body.menu-open .infoMenu
 /*Custum close button in information menu*/
 .closeButton 
 {
-  background-image: -moz-linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%);
-  background-image: -webkit-linear-gradient(top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); 
-  background-color: #759AE9;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #1F58CC #1B4DB3 #174299;
-  border-radius: 4px;
-  box-shadow: 0px 0px 2px 0px rgba(57, 140, 255, 0.8) inset;
+  display: inline-block;
+  background-color: #7EC0EA;
+  box-shadow: 0px 0px 2px, 0px 0px 0px 1px rgba(0, 0, 0, 0.05) inset;
   color: #FFF;
+  border: medium none;
+  box-shadow: none;
+  font-size: 17px;
+  font-weight: 500;
+  border-radius: 5px;
   padding: 7px 0px;
-  text-shadow: 0px -1px 1px #1D3668; 
-  width: 50px;
-  margin-left: 5%;
-  margin-top: 10px;
+  cursor: pointer;
+  position: absolute;
+  width: 60px; 
+  margin-left: 71%;
+  margin-top: 15px;
+  text-align: center;
+  font-size: 100%; 
+  outline:none;
+  -webkit-transition: all 0.5s !important;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
 }
 
 

@@ -21,6 +21,7 @@
             text: "Skriv in din mailadress:",   
             type: "input",   showCancelButton: true,   
             closeOnConfirm: false,
+            confirmButtonColor: "#7EC0EA",
             confirmButtonText: "Skicka",
             cancelButtonText: "Avbryt",  
             inputPlaceholder: "Din mail" }, 
@@ -36,7 +37,7 @@
       title: "Är du säker?",
       text: "Din modell kommer nu att kastas!",
       showCancelButton: true,
-      confirmButtonColor: "#91C8D4",
+      confirmButtonColor: "#7EC0EA",
       confirmButtonText: "Ja, kasta den!",
       cancelButtonText: "Avbryt",
       closeOnConfirm: false
@@ -47,6 +48,7 @@
       {
         title: "Din modell har nu kastats!",
         type: "success",
+        confirmButtonColor: "#7EC0EA",
         confirmButtonText: "OK!"
       },
         function()
@@ -62,7 +64,7 @@
         title: "Är du säker på att du vill göra om modellen?",
         text: "Den nuvarande modellen kommer att kastas!",
         showCancelButton: true,
-        confirmButtonColor: "##91C8D4",
+        confirmButtonColor: "#7EC0EA",
         confirmButtonText: "Gör om!",
         cancelButtonText: "Avbryt",
         closeOnConfirm: false
