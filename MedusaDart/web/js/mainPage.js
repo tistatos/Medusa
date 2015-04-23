@@ -27,7 +27,7 @@
         closeOnConfirm: false
       },
       function(){
-        //swal("Deleted!", "Your imaginary file has been deleted.", "success");
+        window.location.replace("index.html");
       });
      }
    });
