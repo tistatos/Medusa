@@ -5,11 +5,11 @@
   	<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/mainPage.css">
+    <link rel="stylesheet" type="text/css" href="styles/sweetalert.css">
     <title>mainPage</title>
   </head>
  
-  <body> 
-    
+  <body>     
     <!--<div id ="container"> -->
       <div id ="left">
         <div id="box">Här kommer modellen att visas!</div>
@@ -18,29 +18,14 @@
         <button class ="save">Spara</button>
         <button class ="qr">QR-kod</button>
         <button class ="mail">Maila</button>
-        <a href="countDown.html"><button id ="reDo">Gör om</button>
-        <a href="index.html"><button id ="quit">Avsluta</button></a>
-      </div> 
-      <!--
-      <div class="popupMail" role="alert">
-        <div class="popupContainer">
-          <p>Skicka min modell via mail</p>
-          <a href="#0" class="closePopup">Stäng</a>
-        </div>
-      </div> 
-      
-      <div class="popupQR" role="alert">
-        <div class="popupContainer">
-          <p>Scanna QR-kod</p>
-          <a href="#0" class="closePopup">Stäng</a>
-        </div>
-      </div> -->
-      
-    <!--</div>-->
-    
-    <script type="application/dart" src="loadObject.dart"></script>
-    <script type="application/javascript" src="js/mainPage.js"></script>
-    <script type="application/javascript" src="js/classie.js"></script>
-    <script src="packages/browser/dart.js"></script>
+        <button class="redo" id="reDo">Gör om</button>
+        <button class="quit" id="quit" >Avsluta</button>
+      </div>
+
+      <script type="application/dart" src="loadObject.dart"></script>
+      <script type="application/javascript" src="js/mainPage.js"></script>
+      <script type="application/javascript" src="js/classie.js"></script>
+      <script src="js/sweetalert.min.js"></script>
+      <script src="packages/browser/dart.js"></script>
   </body>
 </html>
