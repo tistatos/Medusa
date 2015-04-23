@@ -17,6 +17,7 @@ html, body
 {
   background-color: #759AE9;
   background-image: -moz-linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%);
+  background-image: -webkit-linear-gradient(top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); 
   border-width: 1px;
   border-style: solid;
   border-color: #1F58CC #1B4DB3 #174299;
@@ -45,15 +46,18 @@ html, body
 .startButton:active
 {
   background-image: -moz-linear-gradient(center top , #6384CB 0%, #1F448F 50%, #0E3072 50%, #0D2759 100%);
+  background-image: -webkit-linear-gradient(top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); 
 }
 
 .startButton:target
 {
   background-image: -moz-linear-gradient(center top , #6384CB 0%, #1F448F 50%, #0E3072 50%, #0D2759 100%);
+  background-image: -webkit-linear-gradient(top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); 
 }
 
 #continueButton {
   background-image: -moz-linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%);
+  background-image: -webkit-linear-gradient(top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); 
   background-color: #759AE9;
   width: 152px;
   height: 50px;
@@ -79,6 +83,7 @@ body.startButton-open .startButton
 .infoButton
 {
   background-image: -moz-linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%);
+  background-image: -webkit-linear-gradient(top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); 
   background-color: #759AE9;
   border-width: 1px;
   border-style: solid;
@@ -144,6 +149,7 @@ body.menu-open .infoMenu
 .closeButton 
 {
   background-image: -moz-linear-gradient(center top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%);
+  background-image: -webkit-linear-gradient(top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); 
   background-color: #759AE9;
   border-width: 1px;
   border-style: solid;
@@ -176,7 +182,6 @@ body.instructions-open .instructions
   top: 30%;
   left: 30%;
   height: 10%;
-  width: 40%;
   text-align: center;   
   -webkit-transition: all 0.5s !important;
   -moz-transition: all 0.5s;
