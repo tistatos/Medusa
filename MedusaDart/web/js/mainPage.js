@@ -35,7 +35,7 @@
     swal(
     {
       title: "Är du säker?",
-      text: "Din modell kommer nu att kastas!",
+      text: "Din modell kommer nu att kastas om du inte har sparat den!",
       showCancelButton: true,
       confirmButtonColor: "#7EC0EA",
       confirmButtonText: "Ja, kasta den!",

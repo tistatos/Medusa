@@ -15,14 +15,16 @@ html, body
 .count h1 {
     display: block;
     top: 30%;
-    left: 40%;
-    height: 10%;
-    width: 20%; 
+    left: 47%;
+    margin-left: -100px;
+    /*height: 10%;
+    width: 20%; */
+    heigt: 70px;
+    width: 250px;
     border-style:none;
     text-align: center;
     font-size: 25px;
     color: #323232; 
-
     position: fixed; 
     outline:none; 
     -webkit-transition: all 0.5s !important;
@@ -35,8 +37,9 @@ html, body
 .count
 {
   display: block;
-  top: 40%;
-  left: 40%;
+  top: 44%;
+  left: 42%;
+  margin-left: -20px;
   height: 10%;
   width: 20%; 
   border-style:none;

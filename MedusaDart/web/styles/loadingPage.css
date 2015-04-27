@@ -11,16 +11,18 @@ html, body
 
 h1 {
   	display: block;
-  	top: 30%;
-  	left: 40%;
-  	height: 10%;
-  	width: 20%; 
+    position: fixed; 
+  	top: 44%;
+  	left: 50%;
+    height: 100px;
+    width: 250px;
   	border-style:none;
   	text-align: center;
   	font-size: 25px;
   	color: #323232;
+    margin-left: -115px;
+    margin-top: -75px;
   
-  	position: fixed; 
   	outline:none; 
   	-webkit-transition: all 0.5s !important;
   	-moz-transition: all 0.5s;
@@ -31,26 +33,28 @@ h1 {
 
 .progress {
 
-	display: block;
-  	top: 42%;
-  	left: 40%;
-  	height: 150px;
-  	width: 40%; 
-  	border-style:none;
-  	text-align: center;
-  
-  	position: fixed; 
-  	outline:none; 
-  	-webkit-transition: all 0.5s !important;
-  	-moz-transition: all 0.5s;
-  	-ms-transition: all 0.5s;
-  	-o-transition: all 0.5s;
-  	transition: all 0.5s; 
+    display: block;
+    position: fixed; 
+    top: 55%;
+    left: 50%;
+    height: 150px;
+    width: 150px;
+    border-style:none;
+    text-align: center;
+    margin-left: -70px;
+    margin-top: -75px;
+
+    outline:none; 
+    -webkit-transition: all 0.5s !important;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s; 
 }
 
 .progress > svg {
-    height: 100%;
-    display: block;
+    /*height: 100%;
+    display: block;*/
 }
 
 
