@@ -2,50 +2,78 @@
 {
 
   var save = document.querySelector( ".save" ),
-      popupQR = document.querySelector( ".qr" ),
+      //popupQR = document.querySelector( ".qr" ),
       popupMail = document.querySelector( ".mail" ),
+      redo = document.querySelector("#reDo"),
       body = document.body,
       mask = document.createElement("div"), 
-      activeNav;
+      activeNav,
+      quit = document.querySelector("#quit");
+      confirm = document.querySelector(".confirm");
   var clicked = false;
       
   mask.className = "mask";
-  
+
   save.addEventListener("click", function()
   {
-  
-    if(!clicked)
-    {
-      clicked = true;
-      classie.add(body, "qr-open");
-      classie.add(body, "mail-open");
-      document.body.appendChild(mask);
-      classie.remove(body, "qr-close");
-      classie.remove(body, "mail-close");
-      activeNav="save-open";  
-    }
-    
-    else
-    {
-      clicked = false;
-      classie.add(body, "qr-close");
-      classie.add(body, "mail-close");
-      classie.remove(body, "qr-open");
-      classie.remove(body, "mail-open");
-      
-      document.body.appendChild(mask);
-      activeNav="save-open";    
-    }
-  });
-  /*
-  popupQR.addEventListener("click", function()
+   // sweetAlert('Congratulations!', 'Your message has been successfully sent', 'success');
+    swal({  title: "Maila mig min 3D-modell!",   
+            text: "Skriv in din mailadress:",   
+            type: "input",   showCancelButton: true,   
+            closeOnConfirm: false,
+            confirmButtonColor: "#7EC0EA",
+            confirmButtonText: "Skicka",
+            cancelButtonText: "Avbryt",  
+            inputPlaceholder: "Din mail" }, 
+            function(inputValue){   if (inputValue === false) return false;      
+                                    if (inputValue === "") {     swal.showInputError("Du har inte fyllt i någon mailadress!");     
+                                    return false   }      swal("Modellen är skickad till", inputValue); });
+    });
+
+  quit.addEventListener("click", function()
   {
-    classie.add(body, ".popupMail.is-visible ");
-    document.body.appendChild(mask);
-  });*/
-  
-  
-  
+    swal(
+    {
+      title: "Är du säker?",
+      text: "Din modell kommer nu att kastas om du inte har sparat den!",
+      showCancelButton: true,
+      confirmButtonColor: "#7EC0EA",
+      confirmButtonText: "Ja, kasta den!",
+      cancelButtonText: "Avbryt",
+      closeOnConfirm: false
+    },
+    function()
+    {
+      swal(
+      {
+        title: "Din modell har nu kastats!",
+        type: "success",
+        confirmButtonColor: "#7EC0EA",
+        confirmButtonText: "OK!"
+      },
+        function()
+        {
+          window.location.replace("index.html");
+        });
+    });
+  });
+
+  redo.addEventListener("click", function()
+  {
+      swal({
+        title: "Är du säker på att du vill göra om modellen?",
+        text: "Den nuvarande modellen kommer att kastas!",
+        showCancelButton: true,
+        confirmButtonColor: "#7EC0EA",
+        confirmButtonText: "Gör om!",
+        cancelButtonText: "Avbryt",
+        closeOnConfirm: false
+      },
+      function(){
+        window.location.replace("countDown.html"); 
+      });
+  });
+
  
 })( window );
 
