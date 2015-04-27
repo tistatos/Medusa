@@ -19,13 +19,11 @@ class Texture
 {
 	public:
 
-		//static int saveOBJFile (const std::string &file_name, const pcl::TextureMesh &tex_mesh, unsigned precision);
-
 		static void showCameras (pcl::texture_mapping::CameraVector cams, pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud);
 
 		static void readCamPoseFile(pcl::TextureMapping<pcl::PointXYZ>::Camera &cam);
 
-		static void applyTexture();
+		static void applyTexture(pcl::PolygonMesh &triangles, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 };
 
 #endif
