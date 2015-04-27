@@ -203,7 +203,8 @@ body.menu-open .infoMenu
   top: 100%;
   position: fixed;
   color: #323232;
-  left: 35%;
+  left: 50%;
+  margin-left: -130px;
 }
 
 body.instructions-open .instructions
