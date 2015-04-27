@@ -14,7 +14,7 @@ using namespace pcl;
  * @return [None.]
  */
 /** \brief Save a textureMesh object to obj file */
-int Texture::saveOBJFile (const std::string &file_name, const pcl::TextureMesh &tex_mesh, unsigned precision)
+/*int Texture::saveOBJFile (const std::string &file_name, const pcl::TextureMesh &tex_mesh, unsigned precision)
 {
   if (tex_mesh.cloud.data.empty ())
   {
@@ -33,7 +33,7 @@ int Texture::saveOBJFile (const std::string &file_name, const pcl::TextureMesh &
   std::string mtl_file_name_nopath = mtl_file_name;
   mtl_file_name_nopath.erase (0, mtl_file_name.find_last_of ('/') + 1);
 
-  /* Write 3D information */
+  // Write 3D information 
   // number of points
   int nr_points  = tex_mesh.cloud.width * tex_mesh.cloud.height;
   int point_size = tex_mesh.cloud.data.size () / nr_points;
@@ -192,7 +192,7 @@ int Texture::saveOBJFile (const std::string &file_name, const pcl::TextureMesh &
   PCL_INFO ("Closing obj file\n");
   fs.close ();
 
-  /* Write material defination for OBJ file*/
+  // Write material defination for OBJ file
   // Open file
   PCL_INFO ("Writing material files\n");
   //dont do it if no material to write
@@ -224,6 +224,7 @@ int Texture::saveOBJFile (const std::string &file_name, const pcl::TextureMesh &
   m_fs.close ();
   return (0);
 }
+*/
 
 // KOMMER INTE ATT BEHÖVA showCameras I SENARE SKEDE
 /**
@@ -299,11 +300,9 @@ void Texture::showCameras (pcl::texture_mapping::CameraVector cams, pcl::PointCl
     visu.addLine (p3, p2,ss.str ());
   }
 
-  // KAN TA BORT SEN?
   // add a coordinate system
   visu.addCoordinateSystem (1.0);
 
-  // KAN TA BORT SEN?
   // add the mesh's cloud (colored on Z axis)
   pcl::visualization::PointCloudColorHandlerGenericField<pcl::PointXYZ> color_handler (cloud, "z");
   visu.addPointCloud (cloud, color_handler, "cloud");
@@ -358,7 +357,7 @@ void Texture::readCamPoseFile(pcl::TextureMapping<pcl::PointXYZ>::Camera &cam)
  * @brief [The run function for texturing]
  * @details [Where everything happens!]
  */
-void Texture::applyTexture()
+void Texture::applyTexture() // Att skicka med: PolygonMesh, pcl::PointCloud<pcl::PointNormal>
 {
   // read mesh from plyfile
   PCL_INFO ("\nLoading mesh from file %s...\n", "file.obj");
@@ -471,7 +470,8 @@ void Texture::applyTexture()
 
   PCL_INFO ("\nSaving mesh to textured_mesh.obj\n");
 
-  saveOBJFile ("textured_mesh.obj", mesh, 5);
+  pcl::io::saveOBJFile("file.obj", mesh);
+  //saveOBJFile ("textured_mesh.obj", mesh, 5);
 
   pcl::visualization::PCLVisualizer viewer ("surface fitting");
     viewer.addTextureMesh (mesh, "sample mesh");

@@ -11,6 +11,7 @@
 #include <pcl/visualization/pcl_visualizer.h>
 #include <pcl/surface/texture_mapping.h>
 #include <pcl/io/vtk_lib_io.h>
+#include <pcl/io/obj_io.h>
 #include <pcl/conversions.h>
 #include <pcl/visualization/pcl_visualizer.h>
 
@@ -18,7 +19,7 @@ class Texture
 {
 	public:
 
-		static int saveOBJFile (const std::string &file_name, const pcl::TextureMesh &tex_mesh, unsigned precision);
+		//static int saveOBJFile (const std::string &file_name, const pcl::TextureMesh &tex_mesh, unsigned precision);
 
 		static void showCameras (pcl::texture_mapping::CameraVector cams, pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud);
 
