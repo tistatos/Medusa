@@ -132,7 +132,8 @@ pcl::PointCloud<pcl::PointXYZ> Kinect::getPointCloud()
   transform(0,3) = mPosition.x;
   transform(1,3) = mPosition.y;
   transform(2,3) = mPosition.z;
-
+  if(mMirror)
+    transform(2,2) = -1;
   pcl::PointCloud<pcl::PointXYZ>::Ptr transformed_cloud (new pcl::PointCloud<pcl::PointXYZ> ());
   pcl::transformPointCloud(mCloud, *transformed_cloud, transform);
   return *transformed_cloud;
@@ -164,9 +165,10 @@ bool Kinect::getDepthStatus()
  * @todo should include orientation
  * @param newPosition new position from calibration
  */
-void Kinect::setPosition(cv::Point3f newPosition)
+void Kinect::setPosition(cv::Point3f newPosition, bool mirror)
 {
   mPosition = newPosition;
+  mMirror = mirror;
 }
 
 cv::Point3f Kinect::getPosition()
