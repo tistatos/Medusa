@@ -11,6 +11,7 @@
 #include <iostream>
 #include <string.h>
 #include "Kinect.h"
+#include <pcl/common/transforms.h>
 
 /**
  * @brief Default constructor
@@ -119,13 +120,22 @@ bool Kinect::getDepthFrame(uint16_t **frame)
 }
 
 /**
- * @brief get point cloud from latest frame
+ * @brief get point cloud from latest frame, will also apply transformation on cloud
+ * @todo only position at the moment, no orientation
  * @return the latest pointcloud
  */
 pcl::PointCloud<pcl::PointXYZ> Kinect::getPointCloud()
 {
   Mutex::ScopedLock lock(mDepthMutex);
-  return mCloud;
+  Eigen::Matrix4f transform = Eigen::Matrix4f::Identity();
+
+  transform(0,3) = mPosition.x;
+  transform(1,3) = mPosition.y;
+  transform(2,3) = mPosition.z;
+
+  pcl::PointCloud<pcl::PointXYZ>::Ptr transformed_cloud (new pcl::PointCloud<pcl::PointXYZ> ());
+  pcl::transformPointCloud(mCloud, *transformed_cloud, transform);
+  return *transformed_cloud;
 }
 
 /**
@@ -151,7 +161,7 @@ bool Kinect::getDepthStatus()
 
 /**
  * @brief Set position of kinect
- *
+ * @todo should include orientation
  * @param newPosition new position from calibration
  */
 void Kinect::setPosition(cv::Point3f newPosition)

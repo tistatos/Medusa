@@ -5,13 +5,13 @@ using namespace pcl;
 
 
 /**
- * @brief [Save file_name to .obj file]
- * @details [long description]
+ * @brief Save file_name to .obj file
+ * @details long description
  *
- * @param file_name [The desired file name.]
- * @param tex_mesh [The mesh that you want to save.]
- * @param precision [Sets the number of decimals allowed.]
- * @return [None.]
+ * @param file_name The desired file name.
+ * @param tex_mesh The mesh that you want to save.
+ * @param precision Sets the number of decimals allowed.
+ * @return None.
  */
 /** \brief Save a textureMesh object to obj file */
 int Texture::saveOBJFile (const std::string &file_name, const pcl::TextureMesh &tex_mesh, unsigned precision)
@@ -227,11 +227,11 @@ int Texture::saveOBJFile (const std::string &file_name, const pcl::TextureMesh &
 
 // KOMMER INTE ATT BEHÖVA showCameras I SENARE SKEDE
 /**
- * @brief [Visualize cameras.]
- * @details [Visualize cameras in window.]
+ * @brief Visualize cameras.
+ * @details Visualize cameras in window.
  *
- * @param cams [The camera vectors representing the camera position.]
- * @param d [The mesh which we want to apply our texture to.]
+ * @param cams The camera vectors representing the camera position.
+ * @param d The mesh which we want to apply our texture to.
  */
 /** \brief Display a 3D representation showing the a cloud and a list of camera with their 6DOf poses */
 void Texture::showCameras (pcl::texture_mapping::CameraVector cams, pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud)
@@ -316,10 +316,10 @@ void Texture::showCameras (pcl::texture_mapping::CameraVector cams, pcl::PointCl
 }
 
 /**
- * @brief [Get camera positions]
- * @details [Supposed to read from calibration file later on.]
+ * @brief Get camera positions
+ * @details Supposed to read from calibration file later on.
  *
- * @param g [The camera]
+ * @param g The camera
  */
 /** \brief Helper function that reads a camera file outputed by Kinfu */
 void Texture::readCamPoseFile(pcl::TextureMapping<pcl::PointXYZ>::Camera &cam)
@@ -355,8 +355,8 @@ void Texture::readCamPoseFile(pcl::TextureMapping<pcl::PointXYZ>::Camera &cam)
 }
 
 /**
- * @brief [The run function for texturing]
- * @details [Where everything happens!]
+ * @brief The run function for texturing
+ * @details Where everything happens!
  */
 void Texture::applyTexture()
 {
