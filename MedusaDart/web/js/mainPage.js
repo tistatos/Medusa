@@ -41,7 +41,7 @@
     swal(
     {
       title: "Är du säker?",
-      text: "Din modell kommer nu att kastas om du inte har sparat den!",
+      text: "Din modell kommer att kastas om du inte har sparat den!",
       showCancelButton: true,
       confirmButtonColor: "#7EC0EA",
       confirmButtonText: "OK",
@@ -58,7 +58,7 @@
   {
       swal({
         title: "Är du säker på att du vill göra om modellen?",
-        text: "Den nuvarande modellen kommer att kastas!",
+        text: "Den nuvarande modellen kommer att kastas om du har sparat den!",
         showCancelButton: true,
         confirmButtonColor: "#7EC0EA",
         confirmButtonText: "Gör om",
@@ -66,7 +66,7 @@
         closeOnConfirm: false
       },
       function(){
-        window.location.replace("countDown.html"); 
+        window.location.replace("instructionPage.html"); 
       });
   });
 
