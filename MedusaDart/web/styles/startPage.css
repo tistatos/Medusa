@@ -10,6 +10,7 @@ html, body
     /*background-image: url("../img/medusa.png");*/
     background-repeat: no-repeat;
     background-size: 100%;
+    position: fixed;
 }
 
 /*Custum start button*/
@@ -67,7 +68,7 @@ html, body
   /*padding: 7px 0px;*/
   /*margin: 26px 5px 0px;*/
   cursor: pointer;
-  top:200%;
+  top:240%;
   position: absolute;
   height: 65px;
   width: 200px; 

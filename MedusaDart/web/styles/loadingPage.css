@@ -12,15 +12,17 @@ html, body
 h1 {
   	display: block;
     position: fixed; 
-  	top: 44%;
+  	top: 42%;
   	left: 50%;
     height: 100px;
-    width: 250px;
+    /*width: 250px;*/
+    width: 100%;
   	border-style:none;
   	text-align: center;
   	font-size: 25px;
   	color: #323232;
-    margin-left: -115px;
+    /*margin-left: -115px;*/
+    margin-left: -50%;
     margin-top: -75px;
   
   	outline:none; 
@@ -39,9 +41,11 @@ h1 {
     left: 50%;
     height: 150px;
     width: 150px;
+    /*width: 10%;*/
     border-style:none;
     text-align: center;
-    margin-left: -70px;
+    /*margin-left: -70px;*/
+    margin-left: -72px;
     margin-top: -75px;
 
     outline:none; 

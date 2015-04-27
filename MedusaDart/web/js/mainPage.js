@@ -27,7 +27,13 @@
             inputPlaceholder: "Din mail" }, 
             function(inputValue){   if (inputValue === false) return false;      
                                     if (inputValue === "") {     swal.showInputError("Du har inte fyllt i någon mailadress!");     
-                                    return false   }      swal("Modellen är skickad till", inputValue); });
+                                    return false   } 
+                                      swal({
+                                        title: "Modellen är skickad till", 
+                                        text: inputValue,
+                                        confirmButtonColor: "#7EC0EA", 
+                                      }); 
+                                    });
     });
 
   quit.addEventListener("click", function()
@@ -38,24 +44,14 @@
       text: "Din modell kommer nu att kastas om du inte har sparat den!",
       showCancelButton: true,
       confirmButtonColor: "#7EC0EA",
-      confirmButtonText: "Ja, kasta den!",
+      confirmButtonText: "OK",
       cancelButtonText: "Avbryt",
       closeOnConfirm: false
     },
-    function()
-    {
-      swal(
+      function()
       {
-        title: "Din modell har nu kastats!",
-        type: "success",
-        confirmButtonColor: "#7EC0EA",
-        confirmButtonText: "OK!"
-      },
-        function()
-        {
-          window.location.replace("index.html");
-        });
-    });
+        window.location.replace("index.html");
+      });
   });
 
   redo.addEventListener("click", function()
@@ -65,7 +61,7 @@
         text: "Den nuvarande modellen kommer att kastas!",
         showCancelButton: true,
         confirmButtonColor: "#7EC0EA",
-        confirmButtonText: "Gör om!",
+        confirmButtonText: "Gör om",
         cancelButtonText: "Avbryt",
         closeOnConfirm: false
       },

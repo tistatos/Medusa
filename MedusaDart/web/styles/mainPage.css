@@ -3,7 +3,6 @@ html, body
     
     margin: 0;
     padding: 0;
-
 }
 
 /*Right div: buttons...*/
@@ -163,6 +162,7 @@ html, body
 }*/
 
 /*Button: Mail object*/
+
 .mail 
 {
   text-align: center;

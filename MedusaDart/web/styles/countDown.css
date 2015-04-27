@@ -15,12 +15,12 @@ html, body
 .count h1 {
     display: block;
     top: 30%;
-    left: 47%;
-    margin-left: -100px;
+    left: 50%;
+    margin-left: -50%;
     /*height: 10%;
     width: 20%; */
-    heigt: 70px;
-    width: 250px;
+    height: 70px;
+    width: 100%;
     border-style:none;
     text-align: center;
     font-size: 25px;
@@ -37,11 +37,11 @@ html, body
 .count
 {
   display: block;
-  top: 44%;
-  left: 42%;
-  margin-left: -20px;
+  top: 43%;
+  left: 50%;
+  margin-left: -50%;
   height: 10%;
-  width: 20%; 
+  width: 100%; 
   border-style:none;
   text-align: center;
   font-size: 70px;
