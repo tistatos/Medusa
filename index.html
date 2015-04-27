@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<!--
+  Copyright (c) 2015, <your name>. All rights reserved. Use of this source code
+  is governed by a BSD-style license that can be found in the LICENSE file.
+-->
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medusa</title>
+    <link rel="stylesheet" href="styles/startPage.css">
+</head>
+
+<body>
+
+  <!--buttons on the start screen -->
+  <button class="startButton">STARTA</button>
+  <button class="infoButton">Info</button> 
+  
+  
+  <!-- Info "menu" -->
+  <nav class="infoMenu">
+    <button class="closeButton">Stäng</button>
+    <h1>Om oss</h1>
+    <p>Detta är projekt skapat i kursen TNM094, Medietekniskt kandidatprojekt. Ett projekt som har gått ut på att få en bättre förståelse för systemutveckling och samla all kunskap som studenterna har fått på de tre åren vid Linköpings univeristet i ett projekt.</p>
+  </nav>
+  
+  
+  <div class="instructions">
+     <h1>Instruktioner</h1>
+     <p>Tryckpå knappen och ställ dig på markerat område och stå still tills scanningen är klar.</p>
+     <!-- <button id="continueButton">STARTA SKANNING!</button> -->
+     <a href="countDown.html"><button id ="continueButton">STARTA SCANNING</button></a>
+  </div>
+
+</body>
+
+<script type="application/dart" src="main.dart"></script>
+<script type="application/javascript" src="js/startPage.js"></script>
+<script type="application/javascript" src="js/classie.js"></script>
+<script data-pub-inline src="packages/browser/dart.js"></script>
+
+</html>

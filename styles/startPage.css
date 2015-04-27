@@ -1,0 +1,222 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+
+html, body 
+{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    /*background-image: url("../img/medusa.png");*/
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+
+/*Custum start button*/
+.startButton
+{
+  display: inline-block;
+  background-color: #7EC0EA;
+  box-shadow: 0px 0px 2px, 0px 0px 0px 1px rgba(0, 0, 0, 0.05) inset;
+  color: #FFF;
+  border: medium none;
+  box-shadow: none;
+  font-size: 17px;
+  font-weight: 500;
+  border-radius: 5px;
+  padding: 7px 0px;
+  cursor: pointer;
+  top:40%;
+  position: absolute;
+  height: 10%;
+  width: 30%; 
+  left:35%;
+  text-align: center;
+  font-size: 100%; 
+  outline:none;
+  -webkit-transition: all 0.5s !important;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
+}
+
+.startButton:active
+{
+  /*background-color: 4B686E;*/
+  /*background-image: -moz-linear-gradient(center top , #6384CB 0%, #1F448F 50%, #0E3072 50%, #0D2759 100%);*/
+  /*background-image: -webkit-linear-gradient(top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); */
+}
+
+.startButton:target
+{
+  background-image: -moz-linear-gradient(center top , #6384CB 0%, #1F448F 50%, #0E3072 50%, #0D2759 100%);
+  background-image: -webkit-linear-gradient(top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); 
+}
+
+#continueButton {
+  display: inline-block;
+  background-color: #7EC0EA;
+  box-shadow: 0px 0px 2px, 0px 0px 0px 1px rgba(0, 0, 0, 0.05) inset;
+  color: #FFF;
+  border: medium none;
+  box-shadow: none;
+  font-size: 17px;
+  font-weight: 500;
+  border-radius: 5px;
+  /*padding: 7px 0px;*/
+  /*margin: 26px 5px 0px;*/
+  cursor: pointer;
+  top:200%;
+  position: absolute;
+  height: 65px;
+  width: 200px; 
+  margin-left: -185px;  
+  left: 85%;
+  text-align: center;
+  font-size: 100%; 
+  outline:none;
+  -webkit-transition: all 0.5s !important;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
+}
+
+body.startButton-open .startButton
+{
+  top: 100%;
+  overflow: hidden;
+}
+
+/*Info button*/
+.infoButton
+{
+  display: inline-block;
+  background-color: #7EC0EA;
+  box-shadow: 0px 0px 2px, 0px 0px 0px 1px rgba(0, 0, 0, 0.05) inset;
+  color: #FFF;
+  border: medium none;
+  box-shadow: none;
+  font-size: 17px;
+  font-weight: 500;
+  border-radius: 5px;
+  padding: 7px 0px;
+  cursor: pointer;
+  position: absolute;
+  width: 60px; 
+  margin-left: 2%;
+  margin-top: 2%;
+  text-align: center;
+  font-size: 100%; 
+  outline:none;
+  -webkit-transition: all 0.5s !important;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
+}
+
+/*Custum information menu*/
+.infoMenu
+{
+  position: fixed;
+  color: #323232;
+  z-index: 20;
+  background-color: #F5F5F5;
+  overflow: hidden;
+  top: 0;
+  width: 300px;
+  height: 100%;
+  left: -300px;
+  -webkit-transition: all 0.3s !important;
+  -moz-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+
+body.menu-open .infoMenu
+{
+  left: 0px;
+}
+
+.infoMenu h3 
+{
+  color: #afdefa;
+  font-size: 1.9em;
+  padding: 20px;
+  margin: 0;
+  font-weight: 300;
+  background: #0d77b6;
+}
+.infoMenu h1
+{
+  padding-left: 5%;
+}
+.infoMenu p
+{
+  display: block;
+  font-size: 0.9em;
+  font-weight: 300;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+/*Custum close button in information menu*/
+.closeButton 
+{
+  display: inline-block;
+  background-color: #7EC0EA;
+  box-shadow: 0px 0px 2px, 0px 0px 0px 1px rgba(0, 0, 0, 0.05) inset;
+  color: #FFF;
+  border: medium none;
+  box-shadow: none;
+  font-size: 17px;
+  font-weight: 500;
+  border-radius: 5px;
+  padding: 7px 0px;
+  cursor: pointer;
+  position: absolute;
+  width: 60px; 
+  margin-left: 71%;
+  margin-top: 15px;
+  text-align: center;
+  font-size: 100%; 
+  outline:none;
+  -webkit-transition: all 0.5s !important;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
+}
+
+
+/*Custum information text*/
+.instructions 
+{
+  text-align: center;
+  width: 250px;
+  font-size: 100%;
+  font-family: Arial;
+  top: 100%;
+  position: fixed;
+  color: #323232;
+  left: 50%;
+  margin-left: -130px;
+}
+
+body.instructions-open .instructions
+{
+  top: 30%;
+  left: 50%;
+  margin-left: -130px;
+  height: 10%;
+  text-align: center;   
+  -webkit-transition: all 0.5s !important;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s; 
+}
