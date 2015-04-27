@@ -75,6 +75,11 @@ html, body
   transition: all 0.5s;
 }
 
+.save:active
+{
+  background-color: #32587B;
+}
+
 /*Button: redo scanning process*/
 #reDo
 {
@@ -105,6 +110,11 @@ html, body
   transition: all 0.5s;
 }
 
+#reDo:active
+{
+  background-color: #32587B;
+}
+
 /*Button: Quit program*/
 #quit
 {
@@ -133,6 +143,11 @@ html, body
   -ms-transition: all 0.5s;
   -o-transition: all 0.5s;
   transition: all 0.5s;
+}
+
+#quit:active
+{
+  background-color: #32587B;
 }
 
 /*Extended menu for saving object*/
