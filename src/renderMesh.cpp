@@ -9,7 +9,7 @@ using namespace cv;
    *
    * @param d description
    */
-  void renderMesh::run(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+  pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::run(pcl::PolygonMesh &mesh, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
     std::cout << "Starting" << endl;
 
@@ -22,13 +22,14 @@ using namespace cv;
     //cloud = smoothing(cloud);
 
     //runPoisson(cloud);
-    runGreedyProjectionTriangulation(cloud);
+    runGreedyProjectionTriangulation(mesh, cloud);
 
     std::cout << "GP3 done." << endl;
 
-    storeFile("file.obj");
+    //storeFile("file.obj");
     std::cout << "Finished" << endl;
 
+    return cloud;
   }
 
   /**
@@ -192,7 +193,7 @@ using namespace cv;
    *
    * @param  description
    */
-  void renderMesh::runGreedyProjectionTriangulation (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+  void renderMesh::runGreedyProjectionTriangulation (pcl::PolygonMesh &mesh, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
     pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>);
     tree->setInputCloud (cloud);
@@ -211,7 +212,7 @@ using namespace cv;
     pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
     tree2->setInputCloud (cloudAndNormals);
 
-    pcl::PolygonMesh mesh;
+    //pcl::PolygonMesh mesh;
 
     pcl::GreedyProjectionTriangulation<pcl::PointNormal> gp3;
 
@@ -230,7 +231,7 @@ using namespace cv;
     gp3.reconstruct(mesh);
 
     std::cout << "runGreedyProjectionTriangulation done!" << endl;
-    pcl::io::saveOBJFile("file.obj", mesh);
+    //pcl::io::saveOBJFile("file.obj", mesh);
 
     //showMesh(mesh);
   }

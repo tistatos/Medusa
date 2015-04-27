@@ -117,7 +117,7 @@ void Medusa::run()
                 image[y][x] = png::rgb_pixel(frame[h], frame[h+1], frame[h+2]);
             }
 
-            std::cout<<"skriver till bildd"<< std::endl;
+            std::cout<<"skriver till bild"<< std::endl;
             image.write(filename);
 
 
@@ -135,8 +135,9 @@ void Medusa::run()
           }
 
           //Saves cloud2 to temp/file.obj in renderMesh::run
-          renderMesh::run(cloud2);
-          Texture::applyTexture();
+          pcl::PolygonMesh mesh;
+          cloud2 = renderMesh::run(mesh, cloud2);
+          Texture::applyTexture(mesh, cloud2);
         }
         else
         {

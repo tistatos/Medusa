@@ -11,6 +11,7 @@
 #include "KinectManager.h"
 #include "websocket.h"
 #include "renderMesh.h"
+#include "texture.h"
 
 class Websocket;
 

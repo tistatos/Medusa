@@ -21,10 +21,26 @@ html, body
 #left
 {
   background: black;
+  background-color: #F5F5F5;
   width: 80%;
   height: 100%;
   display: inline-block;
   position: fixed;
+}
+
+#box
+{
+  width: 30%;
+  top:20%;
+  left: 25%;
+  height: 10%;
+  position: fixed;
+  outline:none; 
+  -webkit-transition: all 0.5s !important;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s; 
 }
 
 
@@ -33,56 +49,97 @@ html, body
 /*Button: Save object*/
 .save
 {
+  display: inline-block;
+  background-color: #7EC0EA;
+  box-shadow: 0px 0px 2px, 0px 0px 0px 1px rgba(0, 0, 0, 0.05) inset;
+  color: #FFF;
+  border: medium none;
+  box-shadow: none;
+  font-size: 17px;
+  font-weight: 500;
+  border-radius: 5px;
+  /*padding: 10px 32px;
+  margin: 26px 5px 0px;*/
+  cursor: pointer;
   top:20%;
   position: absolute;
-  
-  background-color: LawnGreen;
-  display: block;
   height: 7%;
   width: 95%; 
   left:2.5%;
-  border-style:none;
   text-align: center;
   font-size: 100%; 
   outline:none; 
+  -webkit-transition: all 0.5s !important;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
 }
 
 /*Button: redo scanning process*/
 #reDo
 {
+  display: inline-block;
+  background-color: #7EC0EA;
+  box-shadow: 0px 0px 2px, 0px 0px 0px 1px rgba(0, 0, 0, 0.05) inset;
+  color: #FFF;
+  border: medium none;
+  box-shadow: none;
+  font-size: 17px;
+  font-weight: 500;
+  border-radius: 5px;
+  /*padding: 10px 32px;
+  margin: 26px 5px 0px;*/
+  cursor: pointer;
   top:40%;
   position: absolute;
-  background-color: LawnGreen;
-  display: block;
   height: 7%;
   width: 95%; 
   left:2.5%;
-  border-style:none;
   text-align: center;
   font-size: 100%; 
   outline:none; 
+  -webkit-transition: all 0.5s !important;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
 }
 
 /*Button: Quit program*/
 #quit
 {
+  display: inline-block;
+  background-color: #7EC0EA;
+  box-shadow: 0px 0px 2px, 0px 0px 0px 1px rgba(0, 0, 0, 0.05) inset;
+  color: #FFF;
+  border: medium none;
+  box-shadow: none;
+  font-size: 17px;
+  font-weight: 500;
+  border-radius: 5px;
+  /*padding: 10px 32px;
+  margin: 26px 5px 0px;*/
+  cursor: pointer;
   top:60%;
   position: absolute;
-  background-color: LawnGreen;
-  display: block;
   height: 7%;
   width: 95%; 
   left:2.5%;
-  border-style:none;
   text-align: center;
   font-size: 100%; 
   outline:none; 
+  -webkit-transition: all 0.5s !important;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
 }
 
 /*Extended menu for saving object*/
 
 /*Button: QR*/
-.qr 
+/*.qr 
 {
   text-align: center;
   font-size: 100%;
@@ -103,7 +160,7 @@ html, body
   -ms-transition: all 0.5s;
   -o-transition: all 0.5s;
   transition: all 0.5s; 
-}
+}*/
 
 /*Button: Mail object*/
 .mail 
@@ -114,9 +171,9 @@ html, body
   background-color: #67b5d1; 
   position: relative;
   top: 20%;
-  width: 30%;
+  width: 95%;
   height: 5%;
-  left: 35%;
+  left: 2.5%;
   border-style:none;
   outline:none; 
   z-index: -1;
@@ -130,32 +187,32 @@ html, body
 }
 
 /*show qr/mail button when save button is pushed*/
+/*
 .qr-open .qr 
 {
   top:28%;
   right:18%;
   opacity: 1;
-}
+}*/
 
 .mail-open .mail
 {
   top:28%;
-  left: 18%;
   opacity: 1;
 }
 
+/*
 .qr-close .qr 
 {
   top:20%;
   right:35%;
   opacity: 1;
 }
-
+*/
 .mail-close .mail
 {
   top:20%;
-  left: 35%;
-  opacity: 1;
+  opacity: 0;
 }
 
 /*Popups*/
@@ -167,12 +224,13 @@ html, body
   transition: opacity 0.3s 0s, visibility 0s 0.3s;
 }
 
+/*
 .popupQR 
 {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s 0s, visibility 0s 0.3s;
-}
+}*/
 
 .popupMail.is-visible 
 {
