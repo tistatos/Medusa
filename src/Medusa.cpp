@@ -64,7 +64,7 @@ Medusa::~Medusa()
 {
 }
 
-/**
+/**s
  * @brief running loop of medusa
  */
 void Medusa::run()

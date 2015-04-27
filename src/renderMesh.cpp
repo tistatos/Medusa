@@ -12,17 +12,18 @@ using namespace cv;
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::run(pcl::PolygonMesh &mesh, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
     std::cout << "Starting" << endl;
-
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2 = cloud;
     cloud = setDelims(cloud);
     std::cout << "Delims set" << std::endl;
     cloud = removeNoise(cloud);
     std::cout << "Noise removed" << endl;
     cloud = reduceData(cloud);
     std::cout << "Data reduced" << std::endl;
-    //cloud = smoothing(cloud);
+    cloud = smoothing(cloud);
 
-    //runPoisson(cloud);
-    runGreedyProjectionTriangulation(mesh, cloud);
+
+    runPoisson(cloud, cloud2);
+    //runGreedyProjectionTriangulation(cloud,cloud2);
 
     std::cout << "GP3 done." << endl;
 
@@ -87,13 +88,13 @@ using namespace cv;
     //Removing outliers using a statisticalOutlierRemoval filter
     //Create the filtering object
 
-    /*pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor2;
+    pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor2;
     sor2.setInputCloud (cloud);
     sor2.setMeanK (50);
     sor2.setStddevMulThresh (1.0);
-    sor2.filter (*cloud_filtered);*/
+    sor2.filter (*cloud_filtered);
 
-    return cloud;
+    return cloud_filtered;
   }
 
   /**
@@ -166,51 +167,61 @@ using namespace cv;
    * @param d description
    * @return description
    */
-  pcl::PointCloud<pcl::PointNormal>::Ptr renderMesh::getNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+  pcl::PointCloud<pcl::PointNormal>::Ptr renderMesh::getNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2)
   {
     pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> n;
-
-    pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>);
-    tree->setInputCloud (cloud);
     n.setInputCloud (cloud);
+
+    // Pass the original data (before downsampling) as the search surface
+    n.setSearchSurface (cloud2);
+
+    // Create an empty kdtree representation, and pass it to the normal estimation object.
+    // Its content will be filled inside the object, based on the given surface dataset.
+    pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ> ());
     n.setSearchMethod (tree);
-    n.setRadiusSearch (5);
-    //n.setRadiusSearch (5);
 
-    pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
-    n.compute (*normals);
+    // Output datasets
+    pcl::PointCloud<pcl::Normal>::Ptr cloud_normals (new pcl::PointCloud<pcl::Normal>);
 
-    pcl::PointCloud<pcl::PointNormal>::Ptr cloudWithNormals (new pcl::PointCloud<pcl::PointNormal>);
-    pcl::concatenateFields(*cloud,*normals, *cloudWithNormals);
+    // Use all neighbors in a sphere of radius 3cm
+    n.setRadiusSearch (0.03);
+
+    // Compute the features
+    n.compute (*cloud_normals);
+   
+  
+     pcl::PointCloud<pcl::PointNormal>::Ptr cloudWithNormals (new pcl::PointCloud<pcl::PointNormal>);
+    pcl::concatenateFields(*cloud,*cloud_normals, *cloudWithNormals);
 
     std::cout << "normaler klar" << std::endl;
-
+    for(int i = 0; i < cloud_normals->size(); i++){
+       // Estimate the XYZ centroid
+   //pcl::flipNormalTowardsViewpoint(cloud_with_normals->points[i],0,0,1,cloud_with_normals->points[i].normal_x,cloud_with_normals->points[i].normal_y,cloud_with_normals->points[i].normal_z); 
+      pcl::flipNormalTowardsViewpoint(
+        cloud->points[i],
+        0,
+        0,
+        0,
+        cloudWithNormals->points[i].normal_x,
+        cloudWithNormals->points[i].normal_y,
+        cloudWithNormals->points[i].normal_z
+        );
+    }
     return cloudWithNormals;
   }
   /**
    * @brief Build a surface using GPT
    * @details long description
    *
-   * @param  description
+   * @param  descriptionpcl::PointCloud<pcl::PointXYZ>::Ptr cloud
    */
-  void renderMesh::runGreedyProjectionTriangulation (pcl::PolygonMesh &mesh, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+
+  void renderMesh::runGreedyProjectionTriangulation (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2)
+
   {
-    pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>);
-    tree->setInputCloud (cloud);
-
-    pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> n;
-    n.setInputCloud (cloud);
-    n.setSearchMethod (tree);
-    n.setKSearch (200);
-    //n.setRadiusSearch(0.03);
-
-    pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
-    n.compute (*normals);
-
-    pcl::PointCloud<pcl::PointNormal>::Ptr cloudAndNormals (new pcl::PointCloud<pcl::PointNormal>);
-    pcl::concatenateFields (*cloud,*normals, *cloudAndNormals);
     pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
-    tree2->setInputCloud (cloudAndNormals);
+    
+    tree2->setInputCloud (getNormals(cloud,cloud2));
 
     //pcl::PolygonMesh mesh;
 
@@ -224,11 +235,11 @@ using namespace cv;
     gp3.setMaximumAngle (2 * M_PI / 3);
     gp3.setNormalConsistency (false);
 
-    gp3.setInputCloud (cloudAndNormals);
+    gp3.setInputCloud (getNormals(cloud,cloud2));
     gp3.setSearchMethod (tree2);
     //gp.setResolution(1);
 
-    gp3.reconstruct(mesh);
+  //  gp3.reconstruct(mesh);
 
     std::cout << "runGreedyProjectionTriangulation done!" << endl;
     //pcl::io::saveOBJFile("file.obj", mesh);
@@ -241,15 +252,18 @@ using namespace cv;
    *
    * @param d description
    */
-  void renderMesh::runPoisson(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+  void renderMesh::runPoisson(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2)
   {
     pcl::Poisson<pcl::PointNormal> poisson;
 
     //poisson.setSearchMethod(tree2);
-    poisson.setInputCloud (getNormals (cloud));
+    poisson.setInputCloud (getNormals (cloud, cloud2));
     pcl::PolygonMesh mesh;
-    poisson.reconstruct (mesh);
+    //poisson.setScale(0.03);
+    poisson.setDepth(9);
 
+    poisson.reconstruct (mesh);
+    pcl::io::saveOBJFile("file.obj", mesh);
     std::cout << "cloud Poisson" << endl;
 
   }
@@ -264,10 +278,10 @@ using namespace cv;
   {
     pcl::ConditionAnd<pcl::PointXYZ>::Ptr range_cond ( new pcl::ConditionAnd<pcl::PointXYZ>);
     range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::LT, 2)));
-    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::GT, -2.1)));
+    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::GT, -5)));
     range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::LT, 0.5)));
     range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::GT, -0.5)));
-
+    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("y", pcl::ComparisonOps::LT, 1.5)));
     pcl::ConditionalRemoval<pcl::PointXYZ> condrem (range_cond);
     condrem.setInputCloud(cloud);
     condrem.setKeepOrganized(true);
