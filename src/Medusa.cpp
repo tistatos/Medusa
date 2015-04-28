@@ -101,14 +101,14 @@ void Medusa::run()
 
             char filename[128];
             sprintf(filename, "%i_bild.png", i);
-           
+
             std::cout << "Saving image to: " << filename << std::endl;
 
             fp = open_dump(filename);
            // dump_rgb(fp, frame, 640, 480);
-           
-            std::cout << "skapar image" << std::endl; 
-            png::image< png::rgb_pixel > image(640,480); 
+
+            std::cout << "skapar image" << std::endl;
+            png::image< png::rgb_pixel > image(640,480);
             //png::image<png::index_pixel> image;
             std::cout << "skapar bild"<< std::endl;
             for(int h = 0; h < 640*480*3; h+=3)
@@ -120,7 +120,7 @@ void Medusa::run()
 
             std::cout<<"skriver till bild"<< std::endl;
             image.write(filename);
-            
+
 
             fclose(fp);
 

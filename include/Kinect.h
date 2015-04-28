@@ -95,7 +95,7 @@ public:
   void savePointCloud(std::string filename);
   pcl::PointCloud<pcl::PointXYZ> getPointCloud();
 
-  void setPosition(cv::Point3f newPosition);
+  void setPosition(cv::Point3f newPosition, bool mirror = false);
   cv::Point3f getPosition();
 
 protected:
@@ -109,7 +109,7 @@ private:
   uint8_t* mBufferVideo; ///video buffer
   Mutex mRgbMutex; //mutex lock for video data (write/read)
   Mutex mDepthMutex; //mutex lock for depth data (write/read)
-
+  bool mMirror;
   cv::Point3f mPosition; //the kinect's position from the center
 };
 
