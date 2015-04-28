@@ -13,10 +13,15 @@ using namespace cv;
   {
     std::cout << "Starting" << endl;
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2 = cloud;
+    show(cloud);
     cloud = setDelims(cloud);
     std::cout << "Delims set" << std::endl;
+    show(cloud);
+
     cloud = removeNoise(cloud);
     std::cout << "Noise removed" << endl;
+    show(cloud);
+    
     cloud = reduceData(cloud);
     std::cout << "Data reduced" << std::endl;
     cloud = smoothing(cloud);
@@ -46,9 +51,8 @@ using namespace cv;
     viewer->setBackgroundColor (0, 0, 0);
     viewer->addPointCloud<pcl::PointXYZ> (cloud, "sample cloud");
     viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "sample cloud");
-    //viewer->addCoordinateSystem (1.0);
+    viewer->addCoordinateSystem (1.0);
     viewer->initCameraParameters ();
-
     while (!viewer->wasStopped())
     {
       viewer->spinOnce (100);
@@ -90,7 +94,7 @@ using namespace cv;
 
     pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor2;
     sor2.setInputCloud (cloud);
-    sor2.setMeanK (50);
+    sor2.setMeanK (20);
     sor2.setStddevMulThresh (1.0);
     sor2.filter (*cloud_filtered);
 
@@ -277,11 +281,11 @@ using namespace cv;
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::setDelims(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
     pcl::ConditionAnd<pcl::PointXYZ>::Ptr range_cond ( new pcl::ConditionAnd<pcl::PointXYZ>);
-    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::LT, 2)));
-    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::GT, -5)));
-    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::LT, 0.5)));
-    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::GT, -0.5)));
-    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("y", pcl::ComparisonOps::LT, 1.5)));
+    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::LT, 1)));
+    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::GT, -1)));
+    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::LT, 1)));
+    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::GT, -1)));
+    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("y", pcl::ComparisonOps::LT, 0.5)));
     pcl::ConditionalRemoval<pcl::PointXYZ> condrem (range_cond);
     condrem.setInputCloud(cloud);
     condrem.setKeepOrganized(true);
