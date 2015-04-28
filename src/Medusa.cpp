@@ -8,6 +8,7 @@
 #include "Medusa.h"
 #include "renderMesh.h"
 #include "texture.h"
+#include "mongo.h"
 #include "png++/png.hpp"
 
 /**
@@ -138,6 +139,7 @@ void Medusa::run()
           pcl::PolygonMesh mesh;
           cloud2 = renderMesh::run(mesh, cloud2);
           Texture::applyTexture(mesh, cloud2);
+          //mongo::storeFile("file.obj");
         }
         else
         {
