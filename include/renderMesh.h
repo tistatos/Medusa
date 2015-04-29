@@ -63,6 +63,10 @@ class renderMesh
 
 		static void storeFile(string fileName);
 
+		static std::string currentDateTime();
+
+		static int hash( const string &key, int tableSize);
+
 
 };
 

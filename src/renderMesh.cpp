@@ -1,6 +1,6 @@
 #include "renderMesh.h"
 #include <mongo/client/gridfs.h>
-
+#include "MD5.h"
 
 using namespace cv;
 
@@ -16,19 +16,20 @@ using namespace cv;
     show(cloud);
     cloud = setDelims(cloud);
     std::cout << "Delims set" << std::endl;
-    show(cloud);
-
-    cloud = removeNoise(cloud);
-    std::cout << "Noise removed" << endl;
-    show(cloud);
-    
     cloud = reduceData(cloud);
     std::cout << "Data reduced" << std::endl;
-    cloud = smoothing(cloud);
+    cloud = removeNoise(cloud);
+    std::cout << "Noise removed" << endl;
+   
+    //cloud = smoothing(cloud);
 
-
-    runPoisson(cloud, cloud2);
-    //runGreedyProjectionTriangulation(cloud,cloud2);
+    //skapar en md5 hash att använda i id-et.
+    string timeHash = string(currentDateTime())+"banan";
+    std::cout << timeHash << std::endl;
+    std:: string hash = md5(timeHash);
+    std::cout << hash << std::endl;
+    runPoisson(cloud);
+    //runGreedyProjectionTriangulation(cloud);
 
     std::cout << "GP3 done." << endl;
 
@@ -184,18 +185,30 @@ using namespace cv;
     pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ> ());
     n.setSearchMethod (tree);
 
+    n.setRadiusSearch (0.03);
+    //n.setRadiusSearch (5);
+    std::cout << "alla sets klara"<<std::endl;
+
     // Output datasets
     pcl::PointCloud<pcl::Normal>::Ptr cloud_normals (new pcl::PointCloud<pcl::Normal>);
 
-    // Use all neighbors in a sphere of radius 3cm
-    n.setRadiusSearch (0.03);
-
-    // Compute the features
-    n.compute (*cloud_normals);
+    pcl::PointCloud<pcl::PointNormal>::Ptr cloudWithNormals (new pcl::PointCloud<pcl::PointNormal>);
+    pcl::concatenateFields(*cloud,*normals, *cloudWithNormals);
    
-  
-     pcl::PointCloud<pcl::PointNormal>::Ptr cloudWithNormals (new pcl::PointCloud<pcl::PointNormal>);
-    pcl::concatenateFields(*cloud,*cloud_normals, *cloudWithNormals);
+    for(int i = 0; i < cloudWithNormals->size();i++){
+       pcl::flipNormalTowardsViewpoint (cloud->points[i], 
+        0,
+        0, 
+        0, 
+        cloudWithNormals->points[i].x,
+        cloudWithNormals->points[i].y,
+        cloudWithNormals->points[i].z
+
+
+         );
+    }
+    
+    std::cout << "normaler klar" << std::endl;
 
     std::cout << "normaler klar" << std::endl;
     for(int i = 0; i < cloud_normals->size(); i++){
@@ -227,7 +240,7 @@ using namespace cv;
     
     tree2->setInputCloud (getNormals(cloud,cloud2));
 
-    //pcl::PolygonMesh mesh;
+  //  pcl::PolygonMesh mesh;
 
     pcl::GreedyProjectionTriangulation<pcl::PointNormal> gp3;
 
@@ -263,11 +276,10 @@ using namespace cv;
     //poisson.setSearchMethod(tree2);
     poisson.setInputCloud (getNormals (cloud, cloud2));
     pcl::PolygonMesh mesh;
-    //poisson.setScale(0.03);
-    poisson.setDepth(9);
 
     poisson.reconstruct (mesh);
-    pcl::io::saveOBJFile("file.obj", mesh);
+    poisson.setDepth(18);
+    //pcl::io::saveOBJFile("file.obj", mesh);
     std::cout << "cloud Poisson" << endl;
 
   }
@@ -281,11 +293,13 @@ using namespace cv;
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::setDelims(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
     pcl::ConditionAnd<pcl::PointXYZ>::Ptr range_cond ( new pcl::ConditionAnd<pcl::PointXYZ>);
+
     range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::LT, 1)));
     range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::GT, -1)));
     range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::LT, 1)));
     range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::GT, -1)));
     range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("y", pcl::ComparisonOps::LT, 0.5)));
+
     pcl::ConditionalRemoval<pcl::PointXYZ> condrem (range_cond);
     condrem.setInputCloud(cloud);
     condrem.setKeepOrganized(true);
@@ -336,3 +350,15 @@ using namespace cv;
 
     //I think it calls the destructor for the connection when it leaves the function. /Carl
   }
+
+  std::string renderMesh::currentDateTime() {
+    time_t     now = time(0);
+    struct tm  tstruct;
+    char       buf[80];
+    tstruct = *localtime(&now);
+    // Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
+    // for more information about date/time format
+    strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
+
+    return buf;
+}
