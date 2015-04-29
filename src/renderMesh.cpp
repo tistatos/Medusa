@@ -1,6 +1,6 @@
 #include "renderMesh.h"
 #include <mongo/client/gridfs.h>
-
+#include "MD5.h"
 
 using namespace cv;
 
@@ -232,7 +232,7 @@ using namespace cv;
     pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
     tree2->setInputCloud (cloudAndNormals);
 
-    pcl::PolygonMesh mesh;
+  //  pcl::PolygonMesh mesh;
 
     pcl::GreedyProjectionTriangulation<pcl::PointNormal> gp3;
 
@@ -340,3 +340,15 @@ using namespace cv;
 
     //I think it calls the destructor for the connection when it leaves the function. /Carl
   }
+
+  std::string renderMesh::currentDateTime() {
+    time_t     now = time(0);
+    struct tm  tstruct;
+    char       buf[80];
+    tstruct = *localtime(&now);
+    // Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
+    // for more information about date/time format
+    strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
+
+    return buf;
+}
