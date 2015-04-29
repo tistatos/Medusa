@@ -1,6 +1,6 @@
 #include "renderMesh.h"
 #include <mongo/client/gridfs.h>
-#include "MD5.h"
+
 
 using namespace cv;
 
@@ -9,7 +9,7 @@ using namespace cv;
    *
    * @param d description
    */
-  void renderMesh::run(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+  pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::run(pcl::PolygonMesh &mesh, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
     std::cout << "Starting" << endl;
 
@@ -32,12 +32,10 @@ using namespace cv;
 
     std::cout << "GP3 done." << endl;
 
-    //storeFile(hash);
-
-
-
+    //storeFile("file.obj");
     std::cout << "Finished" << endl;
 
+    return cloud;
   }
 
   /**
@@ -152,7 +150,7 @@ using namespace cv;
     //Smoothing object
     pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> filter;
     filter.setInputCloud(cloud);
-    filter.setSearchRadius(0.003);
+    filter.setSearchRadius(0.03);
     filter.setPolynomialFit(true);
     filter.setComputeNormals(true);
     pcl::search::KdTree<pcl::PointXYZ>::Ptr kdtree;
@@ -215,7 +213,7 @@ using namespace cv;
    *
    * @param  description
    */
-  void renderMesh::runGreedyProjectionTriangulation (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+  void renderMesh::runGreedyProjectionTriangulation (pcl::PolygonMesh &mesh, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
     pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>);
     tree->setInputCloud (cloud);
@@ -253,7 +251,7 @@ using namespace cv;
     gp3.reconstruct(mesh);
 
     std::cout << "runGreedyProjectionTriangulation done!" << endl;
-    pcl::io::saveOBJFile("file.obj", mesh);
+    //pcl::io::saveOBJFile("file.obj", mesh);
 
     //showMesh(mesh);
   }
@@ -272,7 +270,7 @@ using namespace cv;
     pcl::PolygonMesh mesh;
     poisson.reconstruct (mesh);
     poisson.setDepth(18);
-    pcl::io::saveOBJFile("file.obj", mesh);
+    //pcl::io::saveOBJFile("file.obj", mesh);
     std::cout << "cloud Poisson" << endl;
 
   }
@@ -342,16 +340,3 @@ using namespace cv;
 
     //I think it calls the destructor for the connection when it leaves the function. /Carl
   }
-
-  std::string renderMesh::currentDateTime() {
-    time_t     now = time(0);
-    struct tm  tstruct;
-    char       buf[80];
-    tstruct = *localtime(&now);
-    // Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
-    // for more information about date/time format
-    strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
-
-    return buf;
-}
-

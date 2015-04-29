@@ -5,21 +5,23 @@
   	<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/mainPage.css">
+    <link rel="stylesheet" type="text/css" href="styles/sweetalert.css">
     <title>mainPage</title>
   </head>
  
-  <body> 
-    
+  <body>     
     <!--<div id ="container"> -->
       <div id ="left">
+        <div id="box">Här kommer modellen att visas!</div>
       </div>
       <div class ="right">
         <button class ="save">Spara</button>
-        <button class ="qr">QR-kod</button>
-        <button class ="mail">Maila</button>
+        <!--<button class ="mail">Maila</button>-->
         <button id ="reDo">Gör om</button>
-        <a href="index.html"><button id ="quit">Avsluta</button></a>
+
+        <button id ="quit">Avsluta</button>
       </div> 
+
       <!--
       <div class="popupMail" role="alert">
         <div class="popupContainer">
@@ -41,5 +43,6 @@
     <script type="application/javascript" src="js/mainPage.js"></script>
     <script type="application/javascript" src="js/classie.js"></script>
     <script src="packages/browser/dart.js"></script>
+    <script src="js/sweetalert.min.js"></script>
   </body>
 </html>

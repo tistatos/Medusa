@@ -28,6 +28,7 @@ int main(int argc, char const *argv[])
 
   Websocket ws(7681);
   ws.init();
+  km.calibratePosition();
   Medusa medusa(&km, &ws);
 
 

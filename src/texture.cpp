@@ -14,133 +14,133 @@ using namespace pcl;
  * @return None.
  */
 /** \brief Save a textureMesh object to obj file */
-int Texture::saveOBJFile (const std::string &file_name, const pcl::TextureMesh &tex_mesh, unsigned precision)
-{
-  if (tex_mesh.cloud.data.empty ())
-  {
-    PCL_ERROR ("[pcl::io::saveOBJFile] Input point cloud has no data!\n");
-    return (-1);
-  }
+// int Texture::saveOBJFile (const std::string &file_name, const pcl::TextureMesh &tex_mesh, unsigned precision)
+// {
+//   if (tex_mesh.cloud.data.empty ())
+//   {
+//     PCL_ERROR ("[pcl::io::saveOBJFile] Input point cloud has no data!\n");
+//     return (-1);
+//   }
 
-  // Open file
-  std::ofstream fs;
-  fs.precision (precision);
-  fs.open (file_name.c_str());
+//   // Open file
+//   std::ofstream fs;
+//   fs.precision (precision);
+//   fs.open (file_name.c_str());
 
-  // Define material file
-  std::string mtl_file_name = file_name.substr (0, file_name.find_last_of (".")) + ".mtl";
-  // Strip path for "mtllib" command
-  std::string mtl_file_name_nopath = mtl_file_name;
-  mtl_file_name_nopath.erase (0, mtl_file_name.find_last_of ('/') + 1);
+//   // Define material file
+//   std::string mtl_file_name = file_name.substr (0, file_name.find_last_of (".")) + ".mtl";
+//   // Strip path for "mtllib" command
+//   std::string mtl_file_name_nopath = mtl_file_name;
+//   mtl_file_name_nopath.erase (0, mtl_file_name.find_last_of ('/') + 1);
 
-  /* Write 3D information */
-  // number of points
-  int nr_points  = tex_mesh.cloud.width * tex_mesh.cloud.height;
-  int point_size = tex_mesh.cloud.data.size () / nr_points;
+//   /* Write 3D information */
+//   // number of points
+//   int nr_points  = tex_mesh.cloud.width * tex_mesh.cloud.height;
+//   int point_size = tex_mesh.cloud.data.size () / nr_points;
 
-  // mesh size
-  int nr_meshes = tex_mesh.tex_polygons.size ();
-  // number of faces for header
-  int nr_faces = 0;
-  for (int m = 0; m < nr_meshes; ++m)
-    nr_faces += tex_mesh.tex_polygons[m].size ();
+//   // mesh size
+//   int nr_meshes = tex_mesh.tex_polygons.size ();
+//   // number of faces for header
+//   int nr_faces = 0;
+//   for (int m = 0; m < nr_meshes; ++m)
+//     nr_faces += tex_mesh.tex_polygons[m].size ();
 
-  // Write the header information
-  fs << "####" << std::endl;
-  fs << "# OBJ dataFile simple version. File name: " << file_name << std::endl;
-  fs << "# Vertices: " << nr_points << std::endl;
-  fs << "# Faces: " <<nr_faces << std::endl;
-  fs << "# Material information:" << std::endl;
-  fs << "mtllib " << mtl_file_name_nopath << std::endl;
-  fs << "####" << std::endl;
+//   // Write the header information
+//   fs << "####" << std::endl;
+//   fs << "# OBJ dataFile simple version. File name: " << file_name << std::endl;
+//   fs << "# Vertices: " << nr_points << std::endl;
+//   fs << "# Faces: " <<nr_faces << std::endl;
+//   fs << "# Material information:" << std::endl;
+//   fs << "mtllib " << mtl_file_name_nopath << std::endl;
+//   fs << "####" << std::endl;
 
-  // Write vertex coordinates
-  fs << "# Vertices" << std::endl;
-  for (int i = 0; i < nr_points; ++i)
-  {
-    int xyz = 0;
-    // "v" just be written one
-    bool v_written = false;
-    for (size_t d = 0; d < tex_mesh.cloud.fields.size (); ++d)
-    {
-      int count = tex_mesh.cloud.fields[d].count;
-      if (count == 0)
-        count = 1;          // we simply cannot tolerate 0 counts (coming from older converter code)
-      int c = 0;
-      // adding vertex
-      if ((tex_mesh.cloud.fields[d].datatype == pcl::PCLPointField::FLOAT32) && (
-                tex_mesh.cloud.fields[d].name == "x" ||
-                tex_mesh.cloud.fields[d].name == "y" ||
-                tex_mesh.cloud.fields[d].name == "z"))
-      {
-        if (!v_written)
-        {
-            // write vertices beginning with v
-            fs << "v ";
-            v_written = true;
-        }
-        float value;
-        memcpy (&value, &tex_mesh.cloud.data[i * point_size + tex_mesh.cloud.fields[d].offset + c * sizeof (float)], sizeof (float));
-        fs << value;
-        if (++xyz == 3)
-            break;
-        fs << " ";
-      }
-    }
-    if (xyz != 3)
-    {
-      PCL_ERROR ("[pcl::io::saveOBJFile] Input point cloud has no XYZ data!\n");
-      return (-2);
-    }
-    fs << std::endl;
-  }
-  fs << "# "<< nr_points <<" vertices" << std::endl;
+//   // Write vertex coordinates
+//   fs << "# Vertices" << std::endl;
+//   for (int i = 0; i < nr_points; ++i)
+//   {
+//     int xyz = 0;
+//     // "v" just be written one
+//     bool v_written = false;
+//     for (size_t d = 0; d < tex_mesh.cloud.fields.size (); ++d)
+//     {
+//       int count = tex_mesh.cloud.fields[d].count;
+//       if (count == 0)
+//         count = 1;          // we simply cannot tolerate 0 counts (coming from older converter code)
+//       int c = 0;
+//       // adding vertex
+//       if ((tex_mesh.cloud.fields[d].datatype == pcl::PCLPointField::FLOAT32) && (
+//                 tex_mesh.cloud.fields[d].name == "x" ||
+//                 tex_mesh.cloud.fields[d].name == "y" ||
+//                 tex_mesh.cloud.fields[d].name == "z"))
+//       {
+//         if (!v_written)
+//         {
+//             // write vertices beginning with v
+//             fs << "v ";
+//             v_written = true;
+//         }
+//         float value;
+//         memcpy (&value, &tex_mesh.cloud.data[i * point_size + tex_mesh.cloud.fields[d].offset + c * sizeof (float)], sizeof (float));
+//         fs << value;
+//         if (++xyz == 3)
+//             break;
+//         fs << " ";
+//       }
+//     }
+//     if (xyz != 3)
+//     {
+//       PCL_ERROR ("[pcl::io::saveOBJFile] Input point cloud has no XYZ data!\n");
+//       return (-2);
+//     }
+//     fs << std::endl;
+//   }
+//   fs << "# "<< nr_points <<" vertices" << std::endl;
 
-  // Write vertex normals
-  for (int i = 0; i < nr_points; ++i)
-  {
-    int xyz = 0;
-    // "vn" just be written one
-    bool v_written = false;
-    for (size_t d = 0; d < tex_mesh.cloud.fields.size (); ++d)
-    {
-      int count = tex_mesh.cloud.fields[d].count;
-      if (count == 0)
-      count = 1;          // we simply cannot tolerate 0 counts (coming from older converter code)
-      int c = 0;
-      // adding vertex
-      if ((tex_mesh.cloud.fields[d].datatype == pcl::PCLPointField::FLOAT32) && (
-      tex_mesh.cloud.fields[d].name == "normal_x" ||
-      tex_mesh.cloud.fields[d].name == "normal_y" ||
-      tex_mesh.cloud.fields[d].name == "normal_z"))
-      {
-        if (!v_written)
-        {
-          // write vertices beginning with vn
-          fs << "vn ";
-          v_written = true;
-        }
-        float value;
-        memcpy (&value, &tex_mesh.cloud.data[i * point_size + tex_mesh.cloud.fields[d].offset + c * sizeof (float)], sizeof (float));
-        fs << value;
-        if (++xyz == 3)
-          break;
-        fs << " ";
-      }
-    }
-    if (xyz != 3)
-    {
-    PCL_ERROR ("[pcl::io::saveOBJFile] Input point cloud has no normals!\n");
-    return (-2);
-    }
-    fs << std::endl;
-  }
-  // Write vertex texture with "vt" (adding latter)
+//   // Write vertex normals
+//   for (int i = 0; i < nr_points; ++i)
+//   {
+//     int xyz = 0;
+//     // "vn" just be written one
+//     bool v_written = false;
+//     for (size_t d = 0; d < tex_mesh.cloud.fields.size (); ++d)
+//     {
+//       int count = tex_mesh.cloud.fields[d].count;
+//       if (count == 0)
+//       count = 1;          // we simply cannot tolerate 0 counts (coming from older converter code)
+//       int c = 0;
+//       // adding vertex
+//       if ((tex_mesh.cloud.fields[d].datatype == pcl::PCLPointField::FLOAT32) && (
+//       tex_mesh.cloud.fields[d].name == "normal_x" ||
+//       tex_mesh.cloud.fields[d].name == "normal_y" ||
+//       tex_mesh.cloud.fields[d].name == "normal_z"))
+//       {
+//         if (!v_written)
+//         {
+//           // write vertices beginning with vn
+//           fs << "vn ";
+//           v_written = true;
+//         }
+//         float value;
+//         memcpy (&value, &tex_mesh.cloud.data[i * point_size + tex_mesh.cloud.fields[d].offset + c * sizeof (float)], sizeof (float));
+//         fs << value;
+//         if (++xyz == 3)
+//           break;
+//         fs << " ";
+//       }
+//     }
+//     if (xyz != 3)
+//     {
+//     PCL_ERROR ("[pcl::io::saveOBJFile] Input point cloud has no normals!\n");
+//     return (-2);
+//     }
+//     fs << std::endl;
+//   }
+//   // Write vertex texture with "vt" (adding latter)
 
-  for (int m = 0; m < nr_meshes; ++m)
-  {
-    if(tex_mesh.tex_coordinates.size() == 0)
-      continue;
+//   for (int m = 0; m < nr_meshes; ++m)
+//   {
+//     if(tex_mesh.tex_coordinates.size() == 0)
+//       continue;
 
     PCL_INFO ("%d vertex textures in submesh %d\n", tex_mesh.tex_coordinates[m].size (), m);
     fs << "# " << tex_mesh.tex_coordinates[m].size() << " vertex textures in submesh " << m <<  std::endl;
@@ -238,7 +238,7 @@ void Texture::showCameras (pcl::texture_mapping::CameraVector cams, pcl::PointCl
 {
 
   // visualization object
-  pcl::visualization::PCLVisualizer visu ("cameras");
+  //pcl::visualization::PCLVisualizer visu ("cameras");
 
   // add a visual for each camera at the correct pose
   for(int i = 0 ; i < cams.size () ; ++i)
@@ -269,6 +269,7 @@ void Texture::showCameras (pcl::texture_mapping::CameraVector cams, pcl::PointCl
     p3=pcl::transformPoint (p3, cam.pose);
     p4=pcl::transformPoint (p4, cam.pose);
     p5=pcl::transformPoint (p5, cam.pose);
+    /*
     std::stringstream ss;
     ss << "Cam #" << i+1;
     visu.addText3D(ss.str (), p1, 0.1, 1.0, 1.0, 1.0, ss.str ());
@@ -297,6 +298,7 @@ void Texture::showCameras (pcl::texture_mapping::CameraVector cams, pcl::PointCl
     ss.str ("");
     ss << "camera_" << i << "line8";
     visu.addLine (p3, p2,ss.str ());
+  */
   }
 
   // KAN TA BORT SEN?
@@ -331,17 +333,17 @@ void Texture::readCamPoseFile(pcl::TextureMapping<pcl::PointXYZ>::Camera &cam)
   cam.pose (2,3) = 0; //TZ
 
   // rotation coordinates
-  cam.pose (0,0) = -1;
+  cam.pose (0,0) = 1;
   cam.pose (0,1) = 0;
   cam.pose (0,2) = 0;
 
   cam.pose (1,0) = 0;
-  cam.pose (1,1) = -1;
+  cam.pose (1,1) = 1;
   cam.pose (1,2) = 0;
 
   cam.pose (2,0) = 0;
   cam.pose (2,1) = 0;
-  cam.pose (2,2) = -1;
+  cam.pose (2,2) = 1;
 
   cam.pose (3,0) = 0.0;
   cam.pose (3,1) = 0.0;
@@ -358,16 +360,13 @@ void Texture::readCamPoseFile(pcl::TextureMapping<pcl::PointXYZ>::Camera &cam)
  * @brief The run function for texturing
  * @details Where everything happens!
  */
-void Texture::applyTexture()
+void Texture::applyTexture(pcl::PolygonMesh &triangles, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud) // Att skicka med: PolygonMesh, pcl::PointCloud<pcl::PointNormal>
 {
-  // read mesh from plyfile
-  PCL_INFO ("\nLoading mesh from file %s...\n", "file.obj");
-  pcl::PolygonMesh triangles;
-  pcl::io::loadPolygonFile("file.obj", triangles);
+  //PCL_INFO ("\nLoading mesh from file %s...\n", "file.obj");
+  std::cout << "Loading mesh... " << std::endl;
+  //pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
 
-  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
-
-  fromPCLPointCloud2 (triangles.cloud, *cloud);
+  //fromPCLPointCloud2 (triangles.cloud, *cloud);
 
   // Create the texturemesh object that will contian our UV-mapped mesh
   TextureMesh mesh;
@@ -469,10 +468,11 @@ void Texture::applyTexture()
 
   pcl::toPCLPointCloud2 (*cloud_with_normals, mesh.cloud);
 
-  PCL_INFO ("\nSaving mesh to textured_mesh.obj\n");
+  PCL_INFO ("\nSaving mesh to file.obj\n");
 
-  //saveOBJFile ("textured_mesh.obj", mesh, 5);
-  pcl::io::saveOBJFile("file2.obj", mesh);
+  pcl::io::saveOBJFile("file.obj", mesh);
+
+  /*
   pcl::visualization::PCLVisualizer viewer ("surface fitting");
     viewer.addTextureMesh (mesh, "sample mesh");
 
@@ -481,5 +481,5 @@ void Texture::applyTexture()
       //viewer.spinOnce (100);
       boost::this_thread::sleep (boost::posix_time::microseconds (100000));
     }
-
+  */
 }
