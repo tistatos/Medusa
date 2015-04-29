@@ -28,7 +28,7 @@ using namespace cv;
     std::cout << timeHash << std::endl;
     std:: string hash = md5(timeHash);
     std::cout << hash << std::endl;
-    runPoisson(cloud);
+    runPoisson(cloud, cloud2);
     //runGreedyProjectionTriangulation(cloud);
 
     std::cout << "GP3 done." << endl;
@@ -179,7 +179,7 @@ using namespace cv;
 
     // Pass the original data (before downsampling) as the search surface
     n.setSearchSurface (cloud2);
-
+    pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
     // Create an empty kdtree representation, and pass it to the normal estimation object.
     // Its content will be filled inside the object, based on the given surface dataset.
     pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ> ());
@@ -187,6 +187,7 @@ using namespace cv;
 
     n.setRadiusSearch (0.03);
     //n.setRadiusSearch (5);
+    n.compute(*normals);
     std::cout << "alla sets klara"<<std::endl;
 
     // Output datasets
