@@ -34,6 +34,7 @@
 #include <pcl/compression/octree_pointcloud_compression.h>
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/surface/mls.h>
+#include <functional>
 
 class renderMesh
 {
@@ -62,6 +63,10 @@ class renderMesh
 		static pcl::PointCloud<pcl::PointXYZ>::Ptr smoothing (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
 		static void storeFile(string fileName);
+
+		static std::string currentDateTime();
+
+		static int hash( const string &key, int tableSize);
 
 
 };

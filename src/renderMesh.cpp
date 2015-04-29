@@ -1,6 +1,6 @@
 #include "renderMesh.h"
 #include <mongo/client/gridfs.h>
-
+#include "MD5.h"
 
 using namespace cv;
 
@@ -15,18 +15,27 @@ using namespace cv;
 
     cloud = setDelims(cloud);
     std::cout << "Delims set" << std::endl;
-    cloud = removeNoise(cloud);
-    std::cout << "Noise removed" << endl;
     cloud = reduceData(cloud);
     std::cout << "Data reduced" << std::endl;
+    cloud = removeNoise(cloud);
+    std::cout << "Noise removed" << endl;
+   
     //cloud = smoothing(cloud);
 
-    //runPoisson(cloud);
-    runGreedyProjectionTriangulation(cloud);
+    //skapar en md5 hash att använda i id-et.
+    string timeHash = string(currentDateTime())+"banan";
+    std::cout << timeHash << std::endl;
+    std:: string hash = md5(timeHash);
+    std::cout << hash << std::endl;
+    runPoisson(cloud);
+    //runGreedyProjectionTriangulation(cloud);
 
     std::cout << "GP3 done." << endl;
 
-    storeFile("file.obj");
+    //storeFile(hash);
+
+
+
     std::cout << "Finished" << endl;
 
   }
@@ -86,13 +95,13 @@ using namespace cv;
     //Removing outliers using a statisticalOutlierRemoval filter
     //Create the filtering object
 
-    /*pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor2;
+    pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor2;
     sor2.setInputCloud (cloud);
     sor2.setMeanK (50);
     sor2.setStddevMulThresh (1.0);
-    sor2.filter (*cloud_filtered);*/
+    sor2.filter (*cloud_filtered);
 
-    return cloud;
+    return cloud_filtered;
   }
 
   /**
@@ -143,7 +152,7 @@ using namespace cv;
     //Smoothing object
     pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> filter;
     filter.setInputCloud(cloud);
-    filter.setSearchRadius(0.03);
+    filter.setSearchRadius(0.003);
     filter.setPolynomialFit(true);
     filter.setComputeNormals(true);
     pcl::search::KdTree<pcl::PointXYZ>::Ptr kdtree;
@@ -173,15 +182,29 @@ using namespace cv;
     tree->setInputCloud (cloud);
     n.setInputCloud (cloud);
     n.setSearchMethod (tree);
-    n.setRadiusSearch (5);
+    n.setRadiusSearch (0.03);
     //n.setRadiusSearch (5);
+    std::cout << "alla sets klara"<<std::endl;
 
     pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
     n.compute (*normals);
 
     pcl::PointCloud<pcl::PointNormal>::Ptr cloudWithNormals (new pcl::PointCloud<pcl::PointNormal>);
     pcl::concatenateFields(*cloud,*normals, *cloudWithNormals);
+   
+    for(int i = 0; i < cloudWithNormals->size();i++){
+       pcl::flipNormalTowardsViewpoint (cloud->points[i], 
+        0,
+        0, 
+        0, 
+        cloudWithNormals->points[i].x,
+        cloudWithNormals->points[i].y,
+        cloudWithNormals->points[i].z
 
+
+         );
+    }
+    
     std::cout << "normaler klar" << std::endl;
 
     return cloudWithNormals;
@@ -248,7 +271,8 @@ using namespace cv;
     poisson.setInputCloud (getNormals (cloud));
     pcl::PolygonMesh mesh;
     poisson.reconstruct (mesh);
-
+    poisson.setDepth(18);
+    pcl::io::saveOBJFile("file.obj", mesh);
     std::cout << "cloud Poisson" << endl;
 
   }
@@ -263,9 +287,10 @@ using namespace cv;
   {
     pcl::ConditionAnd<pcl::PointXYZ>::Ptr range_cond ( new pcl::ConditionAnd<pcl::PointXYZ>);
     range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::LT, 2)));
-    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::GT, -2.1)));
+    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::GT, -0.1)));
     range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::LT, 0.5)));
-    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::GT, -0.5)));
+    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::GT, -0.5)));        range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::GT, -0.5)));
+    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::LT, 0.5)));
 
     pcl::ConditionalRemoval<pcl::PointXYZ> condrem (range_cond);
     condrem.setInputCloud(cloud);
@@ -317,3 +342,16 @@ using namespace cv;
 
     //I think it calls the destructor for the connection when it leaves the function. /Carl
   }
+
+  std::string renderMesh::currentDateTime() {
+    time_t     now = time(0);
+    struct tm  tstruct;
+    char       buf[80];
+    tstruct = *localtime(&now);
+    // Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
+    // for more information about date/time format
+    strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
+
+    return buf;
+}
+

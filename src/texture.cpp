@@ -331,17 +331,17 @@ void Texture::readCamPoseFile(pcl::TextureMapping<pcl::PointXYZ>::Camera &cam)
   cam.pose (2,3) = 0; //TZ
 
   // rotation coordinates
-  cam.pose (0,0) = 1;
+  cam.pose (0,0) = -1;
   cam.pose (0,1) = 0;
   cam.pose (0,2) = 0;
 
   cam.pose (1,0) = 0;
-  cam.pose (1,1) = 1;
+  cam.pose (1,1) = -1;
   cam.pose (1,2) = 0;
 
   cam.pose (2,0) = 0;
   cam.pose (2,1) = 0;
-  cam.pose (2,2) = 1;
+  cam.pose (2,2) = -1;
 
   cam.pose (3,0) = 0.0;
   cam.pose (3,1) = 0.0;
@@ -471,8 +471,8 @@ void Texture::applyTexture()
 
   PCL_INFO ("\nSaving mesh to textured_mesh.obj\n");
 
-  saveOBJFile ("textured_mesh.obj", mesh, 5);
-
+  //saveOBJFile ("textured_mesh.obj", mesh, 5);
+  pcl::io::saveOBJFile("file2.obj", mesh);
   pcl::visualization::PCLVisualizer viewer ("surface fitting");
     viewer.addTextureMesh (mesh, "sample mesh");
 
