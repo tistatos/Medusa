@@ -29,7 +29,10 @@ These notices must be retained in any copies of any part of this
 documentation and/or software.
  
 */
- 
+ /**
+  * Called using call md5(std::string), include header in file where it is to
+  * be used.
+  */
 /* interface header */
 #include "MD5.h"
  
