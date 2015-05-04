@@ -23,6 +23,13 @@
                         var seconds = parseInt(message.data[message.data.length-1])
                         countdown(seconds);
                     }
+                    else if(message.data.indexOf("hash") > -1)
+                    {
+                        //visa filen med hashen
+                        var hashID = message.data[message.data.length];
+                        consol.log(hashID);
+
+                    }
                     else
                     {
                         $('div').append($('<p>', { text: message.data }));

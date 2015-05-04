@@ -177,8 +177,8 @@ Kinect* KinectManager::getDevice(int index)
 void KinectManager::calibratePosition()
 {
   //make calibration logic here
-  mDevices[0]->setPosition(cv::Point3f(0,0,-1), true);
-  mDevices[1]->setPosition(cv::Point3f(0,0,1));
+  //mDevices[0]->setPosition(cv::Point3f(0,0,.95), true);
+  //mDevices[1]->setPosition(cv::Point3f(0,0,-.95));
 
   for (int i = 0; i < getConnectedDeviceCount(); ++i)
   {

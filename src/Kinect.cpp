@@ -133,7 +133,10 @@ pcl::PointCloud<pcl::PointXYZ> Kinect::getPointCloud()
   transform(1,3) = mPosition.y;
   transform(2,3) = mPosition.z;
   if(mMirror)
+  {
     transform(2,2) = -1;
+    transform(0,0) = -1;
+  }
   pcl::PointCloud<pcl::PointXYZ>::Ptr transformed_cloud (new pcl::PointCloud<pcl::PointXYZ> ());
   pcl::transformPointCloud(mCloud, *transformed_cloud, transform);
   return *transformed_cloud;
