@@ -334,7 +334,9 @@ using namespace cv;
 
     mongo::GridFS gfs = mongo::GridFS(c, "testet");
     gfs.storeFile(modellID);
-
+    
+    Websocket* mSocket; /// the socket
+    mSocket->returnHashID(modellID);
 
     //I think it calls the destructor for the 
     //connection when it leaves the function. /Carl

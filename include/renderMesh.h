@@ -31,7 +31,7 @@
 #include <pcl/compression/octree_pointcloud_compression.h>
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/surface/mls.h>
-
+#include "websocket.h"
 
 
 class renderMesh
