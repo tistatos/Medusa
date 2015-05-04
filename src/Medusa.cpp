@@ -139,7 +139,7 @@ void Medusa::run()
           pcl::PolygonMesh mesh;
           cloud2 = renderMesh::run(mesh, cloud2);
           Texture::applyTexture(mesh, cloud2);
-          //mongo::storeFile("file.obj");
+          //string modelID = mongo::storeObject();
         }
         else
         {

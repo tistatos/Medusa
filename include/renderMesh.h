@@ -59,15 +59,6 @@ class renderMesh
 		static pcl::PointCloud<pcl::PointXYZ>::Ptr mirrorCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
 		static pcl::PointCloud<pcl::PointXYZ>::Ptr smoothing (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
-
-		static void storeFile();
-
-		static std::string currentDateTime();
-
-		static int hash( const string &key, int tableSize);
-
-		static std::string getHash();
-
 };
 
 #endif

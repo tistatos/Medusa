@@ -94,21 +94,6 @@ using namespace cv;
 
     return cloud_filtered;
   }
-
-  
-  /**
-  * @brief getHash returns a md5-hash based on current time and the keyword "banan" as a std::string
-  * @return std::string
-  */
-  std::string renderMesh::getHash()
-  {
-
-    //Uses time and a keyword to create a modell id.
-    std::string timeHash = string(currentDateTime())+"banan";
-    std:: string hash = md5(timeHash);
-    return hash;
-  }
-
   
   /**
    * @brief Reduce A pointCloud using a VoxelGrid filter
@@ -319,37 +304,3 @@ using namespace cv;
 
     return transformed_cloud;
   }
-  
-
-  /**
-   * @brief Inserts file into Mongo
-   */
-   
-  void renderMesh::storeFile()
-  {
-    mongo::client::initialize();
-    mongo::DBClientConnection c;
-    c.connect("localhost");
-    std::string modellID = getHash();
-
-    mongo::GridFS gfs = mongo::GridFS(c, "testet");
-    gfs.storeFile(modellID);
-
-
-    //I think it calls the destructor for the 
-    //connection when it leaves the function. /Carl
-  }
-
-  
-  /**
-  * @brief Returns the current date as a char-string
-  */
-  std::string renderMesh::currentDateTime()
-  {
-    time_t     now = time(0);
-    struct tm  tstruct;
-    char       buf[80];
-    tstruct = *localtime(&now);
-    strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
-    return buf;
-}
