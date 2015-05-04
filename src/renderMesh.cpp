@@ -36,9 +36,8 @@ using namespace cv;
 
   
   /**
-  * @brief Displays a pcl::PointCloud, takes a pcl::PointCloud<pcl::PointXYZ>::Ptr
-  *
-  * @param d description
+  * @brief Displays a pcl::PointCloud
+  * @param pcl::PointXYZ::ConstPtr 
   */
   //Visualize Cloud data
   void renderMesh::show (pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud)
@@ -58,10 +57,8 @@ using namespace cv;
  
 
   /**
-  * @brief Displays a PolygoMesh, takes a pcl::PolygonMesh
-  * @details long description
-  *
-  * @param mesh description
+  * @brief Displays a PolygoMesh
+  * @param mesh pcl::PolygonMesh
   */
   //Visualize Mesh data
   void renderMesh::showMesh (pcl::PolygonMesh mesh)
@@ -79,11 +76,8 @@ using namespace cv;
   
   /**
   * @brief Remove noise from a pointcloud using stdandarddeviation, 
-  *takes a PointCloud::ptr and returns a PointCloud::ptr 
-  * @details long description0
-  *
-  * @param d description
-  * @return description
+  * @param pcl::PointXYZ::Ptr 
+  * @return pcl::PointXYZ::Ptr 
   */
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::removeNoise (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
@@ -104,27 +98,22 @@ using namespace cv;
   
   /**
   * @brief getHash returns a md5-hash based on current time and the keyword "banan" as a std::string
-  * @details long description0
-  *
-  * @param d description
-  * @return description
+  * @return std::string
   */
   std::string renderMesh::getHash()
   {
 
     //Uses time and a keyword to create a modell id.
-    string timeHash = string(currentDateTime())+"banan";
+    std::string timeHash = string(currentDateTime())+"banan";
     std:: string hash = md5(timeHash);
     return hash;
   }
 
   
   /**
-   * @brief Reduce A pointCloud using a VoxelGrid filter, takes a PointCloud::ptr, retuns a PointCloud::ptr 
-   * @details long description0
-   *
-   * @param d description
-   * @return description
+   * @brief Reduce A pointCloud using a VoxelGrid filter
+   * @param pcl::PointXYZ::Ptr 
+   * @return pcl::PointXYZ::Ptr 
    */
   //Downsampling pointCloud using VoxelGrid filter
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::reduceData (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
@@ -153,11 +142,9 @@ using namespace cv;
 
   
   /**
-  * @brief Suface smoothing using moving least squares, takes PointCloud::ptr, returns PointCloud::ptr 
-  * @details long description0
-  *
-  * @param d description
-  * @return description
+  * @brief Suface smoothing using moving least squares
+  * @param pcl::PointXYZ::Ptr 
+  * @return pcl::PointXYZ::Ptr 
   */
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::smoothing (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
@@ -182,11 +169,8 @@ using namespace cv;
 
   /**
    * @brief Returns normals for a pcl::PointCloud and points dem towards the origin
-   * takes a  PointCloud::ptr, returns pcl::PointCloud<pcl::PointNormal>::Ptr 
-   * @details long description
-   *
-   * @param d description
-   * @return description
+   * @param a pcl::PointXYZ::Ptr
+   * @return pcl::Normal>::Ptr 
    */
   pcl::PointCloud<pcl::PointNormal>::Ptr renderMesh::getNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2)
   {
@@ -232,10 +216,8 @@ using namespace cv;
     return cloudWithNormals;
   }
   /**
-  * @brief Build a surface using GPT, takes a pcl::PointXYZ::ptr
-  * @details long description
-  *
-  * @param  descriptionpcl::PointCloud<pcl::PointXYZ>::Ptr cloud
+  * @brief Build a surface using GPT, 
+  * @param  descriptionpcl::PointCloud<pcl::PointXYZ>::Ptr 
   */
 
   void renderMesh::runGreedyProjectionTriangulation (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2)
@@ -271,10 +253,8 @@ using namespace cv;
   
   
   /**
-   * @brief Builds a surface using poisson surface reconstruction, takes a pcl::PointXYZ::ptr
-   * @details long description
-   *
-   * @param d description
+   * @brief Builds a surface using poisson surface reconstruction
+   * @param a pcl::PointXYZ::ptr
    */
   void renderMesh::runPoisson(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2)
   {
@@ -293,12 +273,9 @@ using namespace cv;
   
 
   /**
-   * @brief Set max size of a cloud, max and min(x,y,z), takes a takes a pcl::PointXYZ::ptr
-   * returns a takes a pcl::PointXYZ::ptr
-   * @details long description
-   *
-   * @param  description
-   * @return description
+   * @brief Set max size of a cloud, max and min(x,y,z)
+   * @param  pcl::PointXYZ::ptr
+   * @return pcl::PointXYZ::ptr
    */
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::setDelims(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
@@ -320,12 +297,10 @@ using namespace cv;
   
 
   /**
-   * @brief Mirrors a cloud using a transformation matrix, takes a takes a pcl::PointXYZ::ptr
-   * retuns a takes a pcl::PointXYZ::ptr
-   * @details long description
+   * @brief Mirrors a cloud using a transformation matrix
    *
-   * @param d description
-   * @return description
+   * @param pcl::PointXYZ::ptr
+   * @return pcl::PointXYZ::ptr
    */
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::mirrorCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
@@ -348,11 +323,8 @@ using namespace cv;
 
   /**
    * @brief Inserts file into Mongo
-   * @details long description
-   *
-   * @param d description
-   * @return description
    */
+   
   void renderMesh::storeFile()
   {
     mongo::client::initialize();
@@ -364,16 +336,13 @@ using namespace cv;
     gfs.storeFile(modellID);
 
 
-    //I think it calls the destructor for the connection when it leaves the function. /Carl
+    //I think it calls the destructor for the 
+    //connection when it leaves the function. /Carl
   }
 
   
   /**
   * @brief Returns the current date as a char-string
-  * @details long description
-  *
-  * @param d description
-  * @return description
   */
   std::string renderMesh::currentDateTime()
   {
