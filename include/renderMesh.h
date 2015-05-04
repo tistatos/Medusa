@@ -9,11 +9,9 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <libfreenect/libfreenect.h>
-
 #include <pcl/io/vtk_io.h>
 #include <pcl/io/pcd_io.h>
 #include <pcl/io/obj_io.h>
-
 #include <pcl/kdtree/kdtree_flann.h>
 #include <pcl/features/normal_3d.h>
 #include <pcl/surface/gp3.h>
@@ -29,11 +27,12 @@
 #include <pcl/filters/filter.h>
 #include <pcl/filters/conditional_removal.h>
 #include <pcl/common/transforms.h>
-
 #include <pcl/filters/statistical_outlier_removal.h>
 #include <pcl/compression/octree_pointcloud_compression.h>
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/surface/mls.h>
+
+
 
 class renderMesh
 {
@@ -61,12 +60,13 @@ class renderMesh
 
 		static pcl::PointCloud<pcl::PointXYZ>::Ptr smoothing (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
-		static void storeFile(string fileName);
+		static void storeFile();
 
 		static std::string currentDateTime();
 
 		static int hash( const string &key, int tableSize);
 
+		static std::string getHash();
 
 };
 

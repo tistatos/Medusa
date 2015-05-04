@@ -4,11 +4,12 @@
 
 using namespace cv;
 
+
   /**
-   * @brief Initiate renderMesh
-   *
-   * @param d description
-   */
+  * @brief Initiate renderMesh 
+  *
+  * @param d description
+  */
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::run(pcl::PolygonMesh &mesh, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
     std::cout << "Starting" << endl;
@@ -21,34 +22,28 @@ using namespace cv;
     cloud = removeNoise(cloud);
     std::cout << "Noise removed" << endl;
    
+    //using with poisson smoothes away points 
+    //that are needed for reconstruction
     //cloud = smoothing(cloud);
-
-    //skapar en md5 hash att använda i id-et.
-    string timeHash = string(currentDateTime())+"banan";
-    std::cout << timeHash << std::endl;
-    std:: string hash = md5(timeHash);
-    std::cout << hash << std::endl;
+   
     runPoisson(cloud, cloud2);
     //runGreedyProjectionTriangulation(cloud);
-
     std::cout << "GP3 done." << endl;
-
-    //storeFile("file.obj");
+    //storeFile();
     std::cout << "Finished" << endl;
-
     return cloud;
   }
 
+  
   /**
-   * @brief Displays a pcl::PointCloud
-   *
-   * @param d description
-   */
+  * @brief Displays a pcl::PointCloud, takes a pcl::PointCloud<pcl::PointXYZ>::Ptr
+  *
+  * @param d description
+  */
   //Visualize Cloud data
   void renderMesh::show (pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud)
   {
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
-
     viewer->setBackgroundColor (0, 0, 0);
     viewer->addPointCloud<pcl::PointXYZ> (cloud, "sample cloud");
     viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "sample cloud");
@@ -60,8 +55,10 @@ using namespace cv;
       boost::this_thread::sleep (boost::posix_time::microseconds (100000));
     }
   }
- /**
-  * @brief Displays a PolygoMesh
+ 
+
+  /**
+  * @brief Displays a PolygoMesh, takes a pcl::PolygonMesh
   * @details long description
   *
   * @param mesh description
@@ -79,13 +76,15 @@ using namespace cv;
     }
   }
 
-   /**
-   * @brief Remove Noise
-   * @details long description0
-   *
-   * @param d description
-   * @return description
-   */
+  
+  /**
+  * @brief Remove noise from a pointcloud using stdandarddeviation, 
+  *takes a PointCloud::ptr and returns a PointCloud::ptr 
+  * @details long description0
+  *
+  * @param d description
+  * @return description
+  */
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::removeNoise (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_filtered (new pcl::PointCloud<pcl::PointXYZ>);
@@ -102,8 +101,26 @@ using namespace cv;
     return cloud_filtered;
   }
 
+  
   /**
-   * @brief Reduce A pointCloud
+  * @brief getHash returns a md5-hash based on current time and the keyword "banan" as a std::string
+  * @details long description0
+  *
+  * @param d description
+  * @return description
+  */
+  std::string renderMesh::getHash()
+  {
+
+    //Uses time and a keyword to create a modell id.
+    string timeHash = string(currentDateTime())+"banan";
+    std:: string hash = md5(timeHash);
+    return hash;
+  }
+
+  
+  /**
+   * @brief Reduce A pointCloud using a VoxelGrid filter, takes a PointCloud::ptr, retuns a PointCloud::ptr 
    * @details long description0
    *
    * @param d description
@@ -134,18 +151,18 @@ using namespace cv;
     return cloud_filtered;
   }
 
-    /**
-   * @brief Suface smoothing
-   * @details long description0
-   *
-   * @param d description
-   * @return description
-   */
+  
+  /**
+  * @brief Suface smoothing using moving least squares, takes PointCloud::ptr, returns PointCloud::ptr 
+  * @details long description0
+  *
+  * @param d description
+  * @return description
+  */
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::smoothing (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
     pcl::PointCloud<pcl::PointNormal>::Ptr smoothedNormalCloud (new pcl::PointCloud<pcl::PointNormal>);
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_smoothed (new pcl::PointCloud<pcl::PointXYZ>);
-
 
     //Smoothing object
     pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> filter;
@@ -155,18 +172,17 @@ using namespace cv;
     filter.setComputeNormals(true);
     pcl::search::KdTree<pcl::PointXYZ>::Ptr kdtree;
     filter.setSearchMethod(kdtree);
-
     filter.process(*smoothedNormalCloud);
 
     //convert pointNormal to pointCloud
     copyPointCloud(*smoothedNormalCloud, *cloud_smoothed);
-
     return cloud_smoothed;
   }
 
 
   /**
-   * @brief Returns normals for a pcl::PointCloud
+   * @brief Returns normals for a pcl::PointCloud and points dem towards the origin
+   * takes a  PointCloud::ptr, returns pcl::PointCloud<pcl::PointNormal>::Ptr 
    * @details long description
    *
    * @param d description
@@ -212,27 +228,15 @@ using namespace cv;
     std::cout << "normaler klar" << std::endl;
 
     std::cout << "normaler klar" << std::endl;
-    for(int i = 0; i < cloud_normals->size(); i++){
-       // Estimate the XYZ centroid
-   //pcl::flipNormalTowardsViewpoint(cloud_with_normals->points[i],0,0,1,cloud_with_normals->points[i].normal_x,cloud_with_normals->points[i].normal_y,cloud_with_normals->points[i].normal_z); 
-      pcl::flipNormalTowardsViewpoint(
-        cloud->points[i],
-        0,
-        0,
-        0,
-        cloudWithNormals->points[i].normal_x,
-        cloudWithNormals->points[i].normal_y,
-        cloudWithNormals->points[i].normal_z
-        );
-    }
+ 
     return cloudWithNormals;
   }
   /**
-   * @brief Build a surface using GPT
-   * @details long description
-   *
-   * @param  descriptionpcl::PointCloud<pcl::PointXYZ>::Ptr cloud
-   */
+  * @brief Build a surface using GPT, takes a pcl::PointXYZ::ptr
+  * @details long description
+  *
+  * @param  descriptionpcl::PointCloud<pcl::PointXYZ>::Ptr cloud
+  */
 
   void renderMesh::runGreedyProjectionTriangulation (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2)
 
@@ -257,15 +261,17 @@ using namespace cv;
     gp3.setSearchMethod (tree2);
     //gp.setResolution(1);
 
-  //  gp3.reconstruct(mesh);
+    //gp3.reconstruct(mesh);
 
     std::cout << "runGreedyProjectionTriangulation done!" << endl;
     //pcl::io::saveOBJFile("file.obj", mesh);
 
     //showMesh(mesh);
   }
+  
+  
   /**
-   * @brief Builds a surface using poisson
+   * @brief Builds a surface using poisson surface reconstruction, takes a pcl::PointXYZ::ptr
    * @details long description
    *
    * @param d description
@@ -284,8 +290,11 @@ using namespace cv;
     std::cout << "cloud Poisson" << endl;
 
   }
+  
+
   /**
-   * @brief Reduce a cloud with set parameters
+   * @brief Set max size of a cloud, max and min(x,y,z), takes a takes a pcl::PointXYZ::ptr
+   * returns a takes a pcl::PointXYZ::ptr
    * @details long description
    *
    * @param  description
@@ -308,8 +317,11 @@ using namespace cv;
 
     return cloud;
   }
+  
+
   /**
-   * @brief Mirrors a cloud
+   * @brief Mirrors a cloud using a transformation matrix, takes a takes a pcl::PointXYZ::ptr
+   * retuns a takes a pcl::PointXYZ::ptr
    * @details long description
    *
    * @param d description
@@ -332,6 +344,8 @@ using namespace cv;
 
     return transformed_cloud;
   }
+  
+
   /**
    * @brief Inserts file into Mongo
    * @details long description
@@ -339,27 +353,34 @@ using namespace cv;
    * @param d description
    * @return description
    */
-  void renderMesh::storeFile(string fileName)
+  void renderMesh::storeFile()
   {
     mongo::client::initialize();
     mongo::DBClientConnection c;
     c.connect("localhost");
+    std::string modellID = getHash();
 
     mongo::GridFS gfs = mongo::GridFS(c, "testet");
-    gfs.storeFile(fileName);
+    gfs.storeFile(modellID);
 
 
     //I think it calls the destructor for the connection when it leaves the function. /Carl
   }
 
-  std::string renderMesh::currentDateTime() {
+  
+  /**
+  * @brief Returns the current date as a char-string
+  * @details long description
+  *
+  * @param d description
+  * @return description
+  */
+  std::string renderMesh::currentDateTime()
+  {
     time_t     now = time(0);
     struct tm  tstruct;
     char       buf[80];
     tstruct = *localtime(&now);
-    // Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
-    // for more information about date/time format
     strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
-
     return buf;
 }
