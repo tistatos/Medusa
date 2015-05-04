@@ -1,6 +1,5 @@
 #include "renderMesh.h"
 #include <mongo/client/gridfs.h>
-#include "MD5.h"
 
 using namespace cv;
 

@@ -10,7 +10,7 @@ class mongo
 {
 public:
 
-	static void storeObject(string fileName);
+	static string storeObject();
 	
 	static void getObject();
 	
