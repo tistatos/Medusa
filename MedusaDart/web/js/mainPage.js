@@ -25,9 +25,12 @@
             confirmButtonText: "Skicka",
             cancelButtonText: "Avbryt",  
             inputPlaceholder: "Din mail" }, 
-            function(inputValue){   if (inputValue === false) return false;      
+            function(inputValue){   
+                                    if (inputValue === false) return false;      
                                     if (inputValue === "") {     swal.showInputError("Du har inte fyllt i någon mailadress!");     
-                                    return false   }      swal("Modellen är skickad till", inputValue); });
+                                    return false   }      swal("Modellen är skickad till", inputValue); 
+                                                                save.disabled = true;
+                                                                save.style.backgroundColor = "#DAE6EF";});
     });
 
   quit.addEventListener("click", function()
