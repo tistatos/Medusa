@@ -37,7 +37,7 @@ public:
   void stopVideo();
 
   bool getDepth(int index, uint16_t **frame);
-  bool getVideo(int index, uint8_t **frame);
+  bool getVideo(int index, VIDEO_IMAGE &image);
 
   void calibratePosition();
 
