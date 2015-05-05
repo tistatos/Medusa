@@ -3,7 +3,7 @@
 
 using namespace pcl;
 
-
+pcl::texture_mapping::CameraVector Texture::mCameras;
 /**
  * @deprecated no longer used
  * @brief Save file_name to .obj file
@@ -226,6 +226,8 @@ using namespace pcl;
 //   return (0);
 // }
 
+
+
 // KOMMER INTE ATT BEHÖVA showCameras I SENARE SKEDE
 /**
  * @brief Visualize cameras.
@@ -239,7 +241,7 @@ void Texture::showCameras (pcl::texture_mapping::CameraVector cams, pcl::PointCl
 {
 
   // visualization object
-  //pcl::visualization::PCLVisualizer visu ("cameras");
+  pcl::visualization::PCLVisualizer visu ("cameras");
 
   // add a visual for each camera at the correct pose
   for(int i = 0 ; i < cams.size () ; ++i)
@@ -270,7 +272,7 @@ void Texture::showCameras (pcl::texture_mapping::CameraVector cams, pcl::PointCl
     p3=pcl::transformPoint (p3, cam.pose);
     p4=pcl::transformPoint (p4, cam.pose);
     p5=pcl::transformPoint (p5, cam.pose);
-    /*
+
     std::stringstream ss;
     ss << "Cam #" << i+1;
     visu.addText3D(ss.str (), p1, 0.1, 1.0, 1.0, 1.0, ss.str ());
@@ -299,21 +301,36 @@ void Texture::showCameras (pcl::texture_mapping::CameraVector cams, pcl::PointCl
     ss.str ("");
     ss << "camera_" << i << "line8";
     visu.addLine (p3, p2,ss.str ());
-  */
   }
   // add a coordinate system
-  //visu.addCoordinateSystem (1.0);
+  visu.addCoordinateSystem (1.0);
 
   // add the mesh's cloud (colored on Z axis)
-  //pcl::visualization::PointCloudColorHandlerGenericField<pcl::PointXYZ> color_handler (cloud, "z");
-  //visu.addPointCloud (cloud, color_handler, "cloud");
+  pcl::visualization::PointCloudColorHandlerGenericField<pcl::PointXYZ> color_handler (cloud, "z");
+  visu.addPointCloud (cloud, color_handler, "cloud");
 
   // reset camera
-  //visu.resetCamera ();
+  visu.resetCamera ();
 
   // wait for user input
   //visu.spin ();
 }
+
+
+void Texture::applyCameraPose(Kinect* kinect)
+{
+  pcl::TextureMapping<pcl::PointXYZ>::Camera cam;
+  cam.pose = kinect->getPosition();
+  // camera focal length and size
+  cam.focal_length=525;
+  cam.height=480;
+  cam.width=640;
+
+  cam.texture_file = "0_bild.png";
+  mCameras.push_back(cam);
+
+}
+
 
 /**
  * @brief Get camera positions
@@ -401,7 +418,7 @@ void Texture::applyTexture(pcl::PolygonMesh &triangles, pcl::PointCloud<pcl::Poi
 
   // Display cameras to user
   PCL_INFO ("\nDisplaying cameras. Press \'q\' to continue texture mapping\n");
-  showCameras(my_cams, cloud);
+  showCameras(mCameras, cloud);
 
   // Create materials for each texture (and one extra for occluded faces)
   mesh.tex_materials.resize (my_cams.size () + 1);

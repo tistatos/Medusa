@@ -92,7 +92,6 @@ public:
   ~Kinect();
 
   bool getVideoFrame(VIDEO_IMAGE &frame);
-  bool getDepthFrame(uint16_t **frame);
 
   bool getVideoStatus();
   bool getDepthStatus();
@@ -101,10 +100,11 @@ public:
   pcl::PointCloud<pcl::PointXYZ> getPointCloud();
 
   void calibrate();
-  void setPosition(cv::Mat newPosition);
-  cv::Mat getPosition();
+  Eigen::Matrix4f getPosition();
 
 protected:
+  bool getDepthFrame(uint16_t **frame);
+  void setPosition(cv::Mat newPosition);
   void VideoCallback(void *video, uint32_t timestamp);
   void DepthCallback(void *_depth, uint32_t timestamp);
   Calibration mCameraCalibration;
@@ -116,7 +116,7 @@ private:
   uint8_t* mBufferVideo; ///video buffer
   Mutex mRgbMutex; //mutex lock for video data (write/read)
   Mutex mDepthMutex; //mutex lock for depth data (write/read)
-  cv::Mat mPosition; //the kinect's position from the center
+  Eigen::Matrix4f mPosition; //the kinect's position from the center
 };
 
 #endif

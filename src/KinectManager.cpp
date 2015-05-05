@@ -19,6 +19,7 @@ KinectManager::KinectManager()
     freenect_set_log_level(m_ctx, FREENECT_LOG_ERROR);
 #endif
     mInitialized = true;
+    mDevicesCalibrated = false;
 }
 
 
@@ -111,7 +112,7 @@ void KinectManager::stopVideo()
 
 /**
  * @brief get depth data from kinects
- *
+ * @deprecated no need to have raw depth data
  * @param index index of managed kinect
  * @param frame unitialized pointer to store data
  *
@@ -119,7 +120,8 @@ void KinectManager::stopVideo()
  */
 bool KinectManager::getDepth(int index, uint16_t **frame)
 {
-  return mDevices[index]->getDepthFrame(frame);
+  return false;
+  // return mDevices[index]->getDepthFrame(frame);
 }
 
 bool KinectManager::getDepthStatus()
@@ -182,5 +184,5 @@ void KinectManager::calibratePosition()
     mDevices[i]->calibrate();
   }
   stopVideo();
-
+  mDevicesCalibrated = true;
 }

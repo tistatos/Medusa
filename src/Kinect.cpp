@@ -23,6 +23,7 @@ Kinect::Kinect(freenect_context* ctx, int index): Freenect::FreenectDevice(ctx,i
   mNewRgbFrame(false), mNewDepthFrame(false),mCameraCalibration(10, 640, 480, 7,5)
 {
 
+  mPosition = Eigen::Matrix4f::Identity();
   mBufferVideo = new uint8_t[freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_RGB).bytes];
   mBufferDepth = new uint16_t[freenect_find_depth_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_DEPTH_REGISTERED).bytes/2];
 
@@ -131,22 +132,7 @@ bool Kinect::getDepthFrame(uint16_t **frame)
 pcl::PointCloud<pcl::PointXYZ> Kinect::getPointCloud()
 {
   Mutex::ScopedLock lock(mDepthMutex);
-  Eigen::Matrix4f transform = Eigen::Matrix4f::Identity();
-  transform(0,0) = mPosition.at<double>(0,0);
-  transform(1,0) = mPosition.at<double>(1,0);
-  transform(2,0) = mPosition.at<double>(2,0);
-
-  transform(0,1) = mPosition.at<double>(0,1);
-  transform(1,1) = mPosition.at<double>(1,1);
-  transform(2,1) = mPosition.at<double>(2,1);
-
-  transform(0,2) = mPosition.at<double>(0,2);
-  transform(1,2) = mPosition.at<double>(1,2);
-  transform(2,2) = mPosition.at<double>(2,2);
-
-  transform(0,3) = mPosition.at<double>(0,3);
-  transform(1,3) = mPosition.at<double>(1,3);
-  transform(2,3) = mPosition.at<double>(2,3);
+  Eigen::Matrix4f transform =  mPosition.inverse();
 
   pcl::PointCloud<pcl::PointXYZ>::Ptr transformed_cloud (new pcl::PointCloud<pcl::PointXYZ> ());
   pcl::transformPointCloud(mCloud, *transformed_cloud, transform);
@@ -189,14 +175,29 @@ bool Kinect::getDepthStatus()
  */
 void Kinect::setPosition(cv::Mat newPosition)
 {
-  mPosition = newPosition;
+  mPosition(0,0) = newPosition.at<double>(0,0);
+  mPosition(1,0) = newPosition.at<double>(1,0);
+  mPosition(2,0) = newPosition.at<double>(2,0);
+
+  mPosition(0,1) = newPosition.at<double>(0,1);
+  mPosition(1,1) = newPosition.at<double>(1,1);
+  mPosition(2,1) = newPosition.at<double>(2,1);
+
+  mPosition(0,2) = newPosition.at<double>(0,2);
+  mPosition(1,2) = newPosition.at<double>(1,2);
+  mPosition(2,2) = newPosition.at<double>(2,2);
+
+  mPosition(0,3) = newPosition.at<double>(0,3);
+  mPosition(1,3) = newPosition.at<double>(1,3);
+  mPosition(2,3) = newPosition.at<double>(2,3);
+
 }
 
 /**
  * @brief get transform of kinect
  * @return matrix of kinect
  */
-cv::Mat Kinect::getPosition()
+Eigen::Matrix4f Kinect::getPosition()
 {
   return mPosition;
 }

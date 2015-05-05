@@ -40,6 +40,7 @@ public:
   bool getVideo(int index, VIDEO_IMAGE &image);
 
   void calibratePosition();
+  bool getCalibrationStatus() { return mDevicesCalibrated; }
 
   bool getVideoStatus();
   bool getDepthStatus();
@@ -48,6 +49,7 @@ public:
 private:
   bool mInitialized; /// Initialized status of manager
   std::vector<Kinect*> mDevices; ///list of all connected kinects
+  bool mDevicesCalibrated; /// are the cameras calibrated?
 };
 
 #endif

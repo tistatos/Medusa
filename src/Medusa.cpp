@@ -60,6 +60,21 @@ Medusa::Medusa(KinectManager* manager, Websocket* socket)
   socket->setMedusa(this);
 }
 
+
+void Medusa::init()
+{
+  mManager->calibratePosition();
+
+
+  if(mManager->getCalibrationStatus())
+  {
+    for (int i = 0; i < mManager->getConnectedDeviceCount(); ++i)
+    {
+      Texture::applyCameraPose(mManager->getDevice(i));
+    }
+  }
+}
+
 Medusa::~Medusa()
 {
 }
@@ -110,7 +125,6 @@ void Medusa::run()
         if(mManager->getDepthStatus() && mManager->getVideoStatus())
         {
           saveImages();
-          return;
           for(int i = 0; i < mManager->getConnectedDeviceCount(); i++)
           {
             *cloud2 = *cloud2 + mManager->getDevice(i)->getPointCloud();
