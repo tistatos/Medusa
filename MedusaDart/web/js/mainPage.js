@@ -19,18 +19,35 @@
    // sweetAlert('Congratulations!', 'Your message has been successfully sent', 'success');
     swal({  title: "Maila mig min 3D-modell!",   
             text: "Skriv in din mailadress:",   
-            type: "input",   showCancelButton: true,   
+            type: "input",
+            inputType: "email",
+            showCancelButton: true,   
             closeOnConfirm: false,
             confirmButtonColor: "#7EC0EA",
             confirmButtonText: "Skicka",
             cancelButtonText: "Avbryt",  
             inputPlaceholder: "Din mail" }, 
             function(inputValue){   
+                                    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
                                     if (inputValue === false) return false;      
-                                    if (inputValue === "") {     swal.showInputError("Du har inte fyllt i någon mailadress!");     
-                                    return false   }      swal("Modellen är skickad till", inputValue); 
-                                                                save.disabled = true;
-                                                                save.style.backgroundColor = "#DAE6EF";});
+                                    if (inputValue === "") 
+                                    {     
+                                      swal.showInputError("Du har inte fyllt i någon mailadress!");     
+                                      return false   
+                                    }
+                                    if(!inputValue.match(mailformat))
+                                    {
+                                      swal.showInputError("Du har inte fyllt i en giltig mailadress!");     
+                                      return false 
+                                    }
+                                    else
+                                    {
+                                      swal("Modellen är skickad till", inputValue); 
+                                      save.disabled = true;
+                                      save.style.backgroundColor = "#DAE6EF";
+                                    }    
+
+                                    });
     });
 
   quit.addEventListener("click", function()
