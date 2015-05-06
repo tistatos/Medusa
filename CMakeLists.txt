@@ -120,7 +120,7 @@ add_library(calibration src/calibration.cpp)
 target_link_libraries(calibration ${FREENECT_LIBRARIES} ${OpenCV_LIBS})
 
 add_executable(medusa src/main.cpp src/Medusa.cpp src/websocket.cpp)
-target_link_libraries(medusa texture kinectmanager rendermesh calibration md5${ALL_LIBS})
+target_link_libraries(medusa texture kinectmanager rendermesh calibration md5 ${ALL_LIBS})
 
 add_executable(write_xml_file src/write_xml_file.cpp)
 target_link_libraries(write_xml_file ${OpenCV_LIBS})
