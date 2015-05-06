@@ -1,65 +1,64 @@
 #include "renderMesh.h"
 #include <mongo/client/gridfs.h>
 
-
 using namespace cv;
 
+
   /**
-   * @brief Initiate renderMesh
-   *
-   * @param d description
-   */
+  * @brief Initiate renderMesh 
+  *
+  * @param d description
+  */
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::run(pcl::PolygonMesh &mesh, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
     std::cout << "Starting" << endl;
-
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2 = cloud;
+    show(cloud);
     cloud = setDelims(cloud);
     //show(cloud);
     std::cout << "Delims set" << std::endl;
-    cloud = removeNoise(cloud);
-    std::cout << "Noise removed" << endl;
     cloud = reduceData(cloud);
     std::cout << "Data reduced" << std::endl;
+    cloud = removeNoise(cloud);
+    std::cout << "Noise removed" << endl;
+   
+    //using with poisson smoothes away points 
+    //that are needed for reconstruction
     //cloud = smoothing(cloud);
-
-    //runPoisson(cloud);
-    runGreedyProjectionTriangulation(mesh, cloud);
-
+   
+    runPoisson(cloud, cloud2);
+    //runGreedyProjectionTriangulation(cloud);
     std::cout << "GP3 done." << endl;
-
-    //storeFile("file.obj");
+    //storeFile();
     std::cout << "Finished" << endl;
-
     return cloud;
   }
 
+  
   /**
-   * @brief Displays a pcl::PointCloud
-   *
-   * @param d description
-   */
+  * @brief Displays a pcl::PointCloud
+  * @param pcl::PointXYZ::ConstPtr 
+  */
   //Visualize Cloud data
   void renderMesh::show (pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud)
   {
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
-
     viewer->setBackgroundColor (0, 0, 0);
     viewer->addPointCloud<pcl::PointXYZ> (cloud, "sample cloud");
     viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "sample cloud");
     viewer->addCoordinateSystem (1.0);
     viewer->initCameraParameters ();
-
     while (!viewer->wasStopped())
     {
       viewer->spinOnce (100);
       boost::this_thread::sleep (boost::posix_time::microseconds (100000));
     }
   }
- /**
+ 
+
+  /**
   * @brief Displays a PolygoMesh
-  * @details long description
-  *
-  * @param mesh description
+  * @param mesh pcl::PolygonMesh
   */
   //Visualize Mesh data
   void renderMesh::showMesh (pcl::PolygonMesh mesh)
@@ -74,13 +73,12 @@ using namespace cv;
     }
   }
 
-   /**
-   * @brief Remove Noise
-   * @details long description0
-   *
-   * @param d description
-   * @return description
-   */
+  
+  /**
+  * @brief Remove noise from a pointcloud using stdandarddeviation, 
+  * @param pcl::PointXYZ::Ptr 
+  * @return pcl::PointXYZ::Ptr 
+  */
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::removeNoise (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_filtered (new pcl::PointCloud<pcl::PointXYZ>);
@@ -88,21 +86,19 @@ using namespace cv;
     //Removing outliers using a statisticalOutlierRemoval filter
     //Create the filtering object
 
-    /*pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor2;
+    pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor2;
     sor2.setInputCloud (cloud);
-    sor2.setMeanK (50);
+    sor2.setMeanK (20);
     sor2.setStddevMulThresh (1.0);
-    sor2.filter (*cloud_filtered);*/
+    sor2.filter (*cloud_filtered);
 
-    return cloud;
+    return cloud_filtered;
   }
-
+  
   /**
-   * @brief Reduce A pointCloud
-   * @details long description0
-   *
-   * @param d description
-   * @return description
+   * @brief Reduce A pointCloud using a VoxelGrid filter
+   * @param pcl::PointXYZ::Ptr 
+   * @return pcl::PointXYZ::Ptr 
    */
   //Downsampling pointCloud using VoxelGrid filter
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::reduceData (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
@@ -129,18 +125,16 @@ using namespace cv;
     return cloud_filtered;
   }
 
-    /**
-   * @brief Suface smoothing
-   * @details long description0
-   *
-   * @param d description
-   * @return description
-   */
+  
+  /**
+  * @brief Suface smoothing using moving least squares
+  * @param pcl::PointXYZ::Ptr 
+  * @return pcl::PointXYZ::Ptr 
+  */
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::smoothing (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
     pcl::PointCloud<pcl::PointNormal>::Ptr smoothedNormalCloud (new pcl::PointCloud<pcl::PointNormal>);
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_smoothed (new pcl::PointCloud<pcl::PointXYZ>);
-
 
     //Smoothing object
     pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> filter;
@@ -150,70 +144,75 @@ using namespace cv;
     filter.setComputeNormals(true);
     pcl::search::KdTree<pcl::PointXYZ>::Ptr kdtree;
     filter.setSearchMethod(kdtree);
-
     filter.process(*smoothedNormalCloud);
 
     //convert pointNormal to pointCloud
     copyPointCloud(*smoothedNormalCloud, *cloud_smoothed);
-
     return cloud_smoothed;
   }
 
 
   /**
-   * @brief Returns normals for a pcl::PointCloud
-   * @details long description
-   *
-   * @param d description
-   * @return description
+   * @brief Returns normals for a pcl::PointCloud and points dem towards the origin
+   * @param a pcl::PointXYZ::Ptr
+   * @return pcl::Normal>::Ptr 
    */
-  pcl::PointCloud<pcl::PointNormal>::Ptr renderMesh::getNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+  pcl::PointCloud<pcl::PointNormal>::Ptr renderMesh::getNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2)
   {
     pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> n;
-
-    pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>);
-    tree->setInputCloud (cloud);
     n.setInputCloud (cloud);
-    n.setSearchMethod (tree);
-    n.setRadiusSearch (5);
-    //n.setRadiusSearch (5);
 
+    // Pass the original data (before downsampling) as the search surface
+    n.setSearchSurface (cloud2);
     pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
-    n.compute (*normals);
+    // Create an empty kdtree representation, and pass it to the normal estimation object.
+    // Its content will be filled inside the object, based on the given surface dataset.
+    pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ> ());
+    n.setSearchMethod (tree);
+
+    n.setRadiusSearch (0.03);
+    //n.setRadiusSearch (5);
+    n.compute(*normals);
+    std::cout << "alla sets klara"<<std::endl;
+
+    // Output datasets
+    pcl::PointCloud<pcl::Normal>::Ptr cloud_normals (new pcl::PointCloud<pcl::Normal>);
 
     pcl::PointCloud<pcl::PointNormal>::Ptr cloudWithNormals (new pcl::PointCloud<pcl::PointNormal>);
     pcl::concatenateFields(*cloud,*normals, *cloudWithNormals);
+   
+    for(int i = 0; i < cloudWithNormals->size();i++){
+       pcl::flipNormalTowardsViewpoint (cloud->points[i], 
+        0,
+        0, 
+        0, 
+        cloudWithNormals->points[i].x,
+        cloudWithNormals->points[i].y,
+        cloudWithNormals->points[i].z
 
+
+         );
+    }
+    
     std::cout << "normaler klar" << std::endl;
 
+    std::cout << "normaler klar" << std::endl;
+ 
     return cloudWithNormals;
   }
   /**
-   * @brief Build a surface using GPT
-   * @details long description
-   *
-   * @param  description
-   */
-  void renderMesh::runGreedyProjectionTriangulation (pcl::PolygonMesh &mesh, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+  * @brief Build a surface using GPT, 
+  * @param  descriptionpcl::PointCloud<pcl::PointXYZ>::Ptr 
+  */
+
+  void renderMesh::runGreedyProjectionTriangulation (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2)
+
   {
-    pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>);
-    tree->setInputCloud (cloud);
-
-    pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> n;
-    n.setInputCloud (cloud);
-    n.setSearchMethod (tree);
-    n.setKSearch (200);
-    //n.setRadiusSearch(0.03);
-
-    pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
-    n.compute (*normals);
-
-    pcl::PointCloud<pcl::PointNormal>::Ptr cloudAndNormals (new pcl::PointCloud<pcl::PointNormal>);
-    pcl::concatenateFields (*cloud,*normals, *cloudAndNormals);
     pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
-    tree2->setInputCloud (cloudAndNormals);
+    
+    tree2->setInputCloud (getNormals(cloud,cloud2));
 
-    //pcl::PolygonMesh mesh;
+  //  pcl::PolygonMesh mesh;
 
     pcl::GreedyProjectionTriangulation<pcl::PointNormal> gp3;
 
@@ -225,49 +224,53 @@ using namespace cv;
     gp3.setMaximumAngle (2 * M_PI / 3);
     gp3.setNormalConsistency (false);
 
-    gp3.setInputCloud (cloudAndNormals);
+    gp3.setInputCloud (getNormals(cloud,cloud2));
     gp3.setSearchMethod (tree2);
     //gp.setResolution(1);
 
-    gp3.reconstruct(mesh);
+    //gp3.reconstruct(mesh);
 
     std::cout << "runGreedyProjectionTriangulation done!" << endl;
     //pcl::io::saveOBJFile("file.obj", mesh);
 
     //showMesh(mesh);
   }
+  
+  
   /**
-   * @brief Builds a surface using poisson
-   * @details long description
-   *
-   * @param d description
+   * @brief Builds a surface using poisson surface reconstruction
+   * @param a pcl::PointXYZ::ptr
    */
-  void renderMesh::runPoisson(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+  void renderMesh::runPoisson(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2)
   {
     pcl::Poisson<pcl::PointNormal> poisson;
 
     //poisson.setSearchMethod(tree2);
-    poisson.setInputCloud (getNormals (cloud));
+    poisson.setInputCloud (getNormals (cloud, cloud2));
     pcl::PolygonMesh mesh;
-    poisson.reconstruct (mesh);
 
+    poisson.reconstruct (mesh);
+    poisson.setDepth(18);
+    //pcl::io::saveOBJFile("file.obj", mesh);
     std::cout << "cloud Poisson" << endl;
 
   }
+  
+
   /**
-   * @brief Reduce a cloud with set parameters
-   * @details long description
-   *
-   * @param  description
-   * @return description
+   * @brief Set max size of a cloud, max and min(x,y,z)
+   * @param  pcl::PointXYZ::ptr
+   * @return pcl::PointXYZ::ptr
    */
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::setDelims(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
     pcl::ConditionAnd<pcl::PointXYZ>::Ptr range_cond ( new pcl::ConditionAnd<pcl::PointXYZ>);
-    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::LT, 2)));
-    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::GT, -2.1)));
-    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::LT, 0.5)));
-    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::GT, -0.5)));
+
+    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::LT, 1)));
+    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::GT, -1)));
+    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::LT, 1)));
+    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::GT, -1)));
+    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("y", pcl::ComparisonOps::LT, 0.5)));
 
     pcl::ConditionalRemoval<pcl::PointXYZ> condrem (range_cond);
     condrem.setInputCloud(cloud);
@@ -276,12 +279,13 @@ using namespace cv;
 
     return cloud;
   }
+  
+
   /**
-   * @brief Mirrors a cloud
-   * @details long description
+   * @brief Mirrors a cloud using a transformation matrix
    *
-   * @param d description
-   * @return description
+   * @param pcl::PointXYZ::ptr
+   * @return pcl::PointXYZ::ptr
    */
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::mirrorCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
@@ -300,11 +304,3 @@ using namespace cv;
 
     return transformed_cloud;
   }
-  /**
-   * @brief Inserts file into Mongo
-   * @details long description
-   *
-   * @param d description
-   * @return description
-   */
-

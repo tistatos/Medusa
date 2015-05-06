@@ -4,13 +4,19 @@
 #include <mongo/client/dbclient.h>
 #include <mongo/bson/bson.h>
 #include <boost/thread/thread.hpp>
+#include "MD5.h"
 
 class mongo
 {
 public:
 
-	static void storeFile(string fileName);
+	static string storeObject();
 	
+	static void getObject();
+	
+	static std::string getHash();
+
+	static std::string currentDateTime();
 };
 
 #endif

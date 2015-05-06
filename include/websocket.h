@@ -24,6 +24,7 @@ class Websocket {
     void setMedusa(Medusa* m);
     bool newData();
     std::string getData();
+    void returnHashID(std::string hash);
     void startCountDown(int seconds);
   private:
     void sendData(std::string data);
