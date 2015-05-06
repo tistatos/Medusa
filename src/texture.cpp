@@ -313,7 +313,7 @@ void Texture::showCameras (pcl::texture_mapping::CameraVector cams, pcl::PointCl
   visu.resetCamera ();
 
   // wait for user input
-  //visu.spin ();
+  visu.spin ();
 }
 
 
@@ -321,6 +321,12 @@ void Texture::applyCameraPose(Kinect* kinect)
 {
   pcl::TextureMapping<pcl::PointXYZ>::Camera cam;
   cam.pose = kinect->getPosition();
+  // cam.pose = Eigen::Matrix4f::Identity();
+
+  cam.pose (0,3) *= -1; //TX
+  cam.pose (1,3) *= -1; //TY
+  cam.pose (2,3) *= -1; //TZ
+
   // camera focal length and size
   cam.focal_length=525;
   cam.height=480;

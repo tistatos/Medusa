@@ -26,12 +26,11 @@ int main(int argc, char const *argv[])
     std::cout << "Connected to " << km.getConnectedDeviceCount() << " devices." << std::endl;
   }
 
+
   Websocket ws(7681);
-  ws.init();
-  km.calibratePosition();
+  //ws.init(); //REMOVE COMMENT TO RUN WITH CALIBRATION
   Medusa medusa(&km, &ws);
-
-
+  medusa.init();
   medusa.run();
 
   return 0;

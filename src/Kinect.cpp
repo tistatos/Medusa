@@ -134,6 +134,8 @@ pcl::PointCloud<pcl::PointXYZ> Kinect::getPointCloud()
   Mutex::ScopedLock lock(mDepthMutex);
   Eigen::Matrix4f transform =  mPosition.inverse();
 
+  // Eigen::Matrix4f transform =  Eigen::Matrix4f::Identity();
+
   pcl::PointCloud<pcl::PointXYZ>::Ptr transformed_cloud (new pcl::PointCloud<pcl::PointXYZ> ());
   pcl::transformPointCloud(mCloud, *transformed_cloud, transform);
   return *transformed_cloud;
@@ -187,9 +189,9 @@ void Kinect::setPosition(cv::Mat newPosition)
   mPosition(1,2) = newPosition.at<double>(1,2);
   mPosition(2,2) = newPosition.at<double>(2,2);
 
-  mPosition(0,3) = newPosition.at<double>(0,3);
-  mPosition(1,3) = newPosition.at<double>(1,3);
-  mPosition(2,3) = newPosition.at<double>(2,3);
+  mPosition(0,3) = newPosition.at<double>(0,3)/1000.0f;
+  mPosition(1,3) = newPosition.at<double>(1,3)/1000.0f;
+  mPosition(2,3) = newPosition.at<double>(2,3)/1000.0f;
 
 }
 

@@ -14,6 +14,7 @@ using namespace cv;
     std::cout << "Starting" << endl;
 
     cloud = setDelims(cloud);
+    //show(cloud);
     std::cout << "Delims set" << std::endl;
     cloud = removeNoise(cloud);
     std::cout << "Noise removed" << endl;
@@ -45,7 +46,7 @@ using namespace cv;
     viewer->setBackgroundColor (0, 0, 0);
     viewer->addPointCloud<pcl::PointXYZ> (cloud, "sample cloud");
     viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "sample cloud");
-    //viewer->addCoordinateSystem (1.0);
+    viewer->addCoordinateSystem (1.0);
     viewer->initCameraParameters ();
 
     while (!viewer->wasStopped())
