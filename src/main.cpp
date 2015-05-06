@@ -28,9 +28,9 @@ int main(int argc, char const *argv[])
 
 
   Websocket ws(7681);
-  //ws.init(); //REMOVE COMMENT TO RUN WITH CALIBRATION
+  ws.init();
   Medusa medusa(&km, &ws);
-  medusa.init();
+  //medusa.init(); //REMOVE COMMENT TO RUN WITH CALIBRATION
   medusa.run();
 
   return 0;
