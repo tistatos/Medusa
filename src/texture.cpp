@@ -226,9 +226,6 @@ int Texture::saveOBJFile (const std::string &file_name, const pcl::TextureMesh &
   return (0);
 }
 
-
-
-// KOMMER INTE ATT BEHÖVA showCameras I SENARE SKEDE
 /**
  * @brief Visualize cameras.
  * @details Visualize cameras in window.
@@ -381,11 +378,7 @@ void Texture::readCamPoseFile(pcl::TextureMapping<pcl::PointXYZ>::Camera &cam)
  */
 void Texture::applyTexture(pcl::PolygonMesh &triangles, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud) // Att skicka med: PolygonMesh, pcl::PointCloud<pcl::PointNormal>
 {
-  //PCL_INFO ("\nLoading mesh from file %s...\n", "file.obj");
   std::cout << "Loading mesh... " << std::endl;
-  //pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
-
-  //fromPCLPointCloud2 (triangles.cloud, *cloud);
 
   // Create the texturemesh object that will contian our UV-mapped mesh
   TextureMesh mesh;
@@ -490,8 +483,6 @@ void Texture::applyTexture(pcl::PolygonMesh &triangles, pcl::PointCloud<pcl::Poi
   PCL_INFO ("\nSaving mesh to file.obj\n");
 
   Texture::saveOBJFile("file.obj", mesh, 5);
-  //pcl::io::saveOBJFile("file.obj", mesh);
-
 
   pcl::visualization::PCLVisualizer viewer ("surface fitting");
     viewer.addTextureMesh (mesh, "sample mesh");
