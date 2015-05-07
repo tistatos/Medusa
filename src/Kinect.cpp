@@ -20,7 +20,7 @@
  * @param index index of kinect (not used yet)
  */
 Kinect::Kinect(freenect_context* ctx, int index): Freenect::FreenectDevice(ctx,index),
-  mNewRgbFrame(false), mNewDepthFrame(false),mCameraCalibration(10, 640, 480, 7,5)
+  mNewRgbFrame(false), mNewDepthFrame(false),mCameraCalibration(10, 640, 480, 9,6)
 {
 
   mPosition = Eigen::Matrix4f::Identity();

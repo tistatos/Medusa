@@ -10,7 +10,6 @@
 #include "renderMesh.h"
 #include "texture.h"
 #include "png++/png.hpp"
-#include "mongo.h"
 
 /**
  * @brief open file for writing
@@ -127,7 +126,7 @@ void Medusa::run()
           pcl::PolygonMesh mesh;
           cloud2 = renderMesh::run(mesh, cloud2);
           Texture::applyTexture(mesh, cloud2);
-          string modelID = Mongo::storeObject();
+          // string modelID = Mongo::storeObject();
         }
         else
         {

@@ -12,7 +12,7 @@
 Calibration::Calibration(int nPictures, int width, int height, int boardX, int boardY):
 mImageSize(width,height), mBoardSize(boardX,boardY), mNumberOfPictures(nPictures)
 {
-	mGridSize = 29.0f;
+	mGridSize = 36.0f;
 	clear();
 }
 
