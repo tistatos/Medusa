@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <stdlib.h>
 
 #include <pcl/common/transforms.h>
 #include <pcl/kdtree/kdtree_flann.h>

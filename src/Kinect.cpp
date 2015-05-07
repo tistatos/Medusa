@@ -24,15 +24,20 @@ Kinect::Kinect(freenect_context* ctx, int index): Freenect::FreenectDevice(ctx,i
 {
 
   mPosition = Eigen::Matrix4f::Identity();
-  mBufferVideo = new uint8_t[freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_RGB).bytes];
-  mBufferDepth = new uint16_t[freenect_find_depth_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_DEPTH_REGISTERED).bytes/2];
-
+  mBufferVideo = new uint8_t[freenect_find_video_mode(FREENECT_RESOLUTION_HIGH, FREENECT_VIDEO_RGB).bytes];
+  mBufferDepth = new uint16_t[freenect_find_depth_mode(FREENECT_RESOLUTION_HIGH, FREENECT_DEPTH_REGISTERED).bytes/2];
+  setFlag(FREENECT_AUTO_EXPOSURE, true);
+  setFlag(FREENECT_AUTO_WHITE_BALANCE, true);
   setDepthFormat(FREENECT_DEPTH_REGISTERED);
   setVideoFormat(FREENECT_VIDEO_RGB);
 
   mCloud.width = 640;
   mCloud.height = 480;
   mCloud.points.resize(640*480);
+
+  mCalibrated = false;
+
+  mIndex = index;
 }
 
 /**
@@ -211,17 +216,29 @@ Eigen::Matrix4f Kinect::getPosition()
  */
 void Kinect::calibrate()
 {
-  while(mCameraCalibration.processedImages() < 10)
+  if(mCameraCalibration.processedImages() == 10 && mCalibrated)
+    return;
+
+  std::cout << "trying to grab image" << std::endl;
+  VIDEO_IMAGE image(640,480);
+  getVideoFrame(image);
+  mCameraCalibration.processImage(image);
+
+  if(mCameraCalibration.processedImages() == 10 && !mCalibrated)
   {
-    std::cout << "trying to grab image" << std::endl;
+    float resid = mCameraCalibration.calibrate();
+    std::cout << "Residual: "<< resid << std::endl;
+    mCalibrated = true;
+  }
+}
+
+bool Kinect::setExtrinsic()
+{
     VIDEO_IMAGE image(640,480);
     getVideoFrame(image);
-    mCameraCalibration.processImage(image);
-  }
-
-  float resid = mCameraCalibration.calibrate();
-  std::cout << "Residual: "<< resid << std::endl;
-
-  setPosition(mCameraCalibration.getCameraExtrinsic());
-  std::cout << getPosition() << std::endl;
+    setPosition(mCameraCalibration.getCameraExtrinsic(image));
+    if(getPosition() == Eigen::Matrix4f::Identity())
+      return false;
+    std::cout << getPosition() << std::endl;
+    return true;
 }

@@ -100,8 +100,10 @@ public:
   pcl::PointCloud<pcl::PointXYZ> getPointCloud();
 
   void calibrate();
+  bool setExtrinsic();
   Eigen::Matrix4f getPosition();
-
+  bool isCalibrated() { return mCalibrated; }
+  bool getIndex() { return mIndex; }
 protected:
   bool getDepthFrame(uint16_t **frame);
   void setPosition(cv::Mat newPosition);
@@ -109,6 +111,7 @@ protected:
   void DepthCallback(void *_depth, uint32_t timestamp);
   Calibration mCameraCalibration;
 private:
+  bool mCalibrated;
   bool mNewRgbFrame; ///true if new frame is present since last runt of getVideoFrame
   bool mNewDepthFrame; ///true if new frame is present since last runt of getDepthFrame
   pcl::PointCloud<pcl::PointXYZ> mCloud; ///internal cloud represntation from depth data
@@ -117,6 +120,7 @@ private:
   Mutex mRgbMutex; //mutex lock for video data (write/read)
   Mutex mDepthMutex; //mutex lock for depth data (write/read)
   Eigen::Matrix4f mPosition; //the kinect's position from the center
+  int mIndex;
 };
 
 #endif

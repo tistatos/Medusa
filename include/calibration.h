@@ -10,6 +10,28 @@
 # define _CRT_SECURE_NO_WARNINGS
 #endif
 
+#include <iostream>
+#include "libfreenect/libfreenect_sync.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <iostream>
+#include <sstream>
+#include <time.h>
+#include <stdio.h>
+
+#include <cmath>
+
+#include <unistd.h>
+
+#include <string>
+
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/calib3d/calib3d.hpp>
+#include <opencv2/highgui/highgui.hpp>
+
 
 #include <opencv2/core/core.hpp>
 #include <png++/png.hpp>
@@ -30,9 +52,10 @@ public:
   void clear();
   cv::Mat getCameraDistCoeff(){ return mDistCoeffs; }
   cv::Mat getCameraIntinsic() { return mCameraMatrix; }
-  cv::Mat getCameraExtrinsic();
+  cv::Mat getCameraExtrinsic(VIDEO_IMAGE frame);
   bool calibrated() { return mCalibrated; }
   int processedImages() { return mProcessedImages; }
+  static cv::Mat fromPNGtoMat(VIDEO_IMAGE);
 private:
   std::vector<std::vector<cv::Point3f> > getObjectPoints();
   std::vector<std::vector<cv::Point2f> > mImagePoints; /// Points collected from images

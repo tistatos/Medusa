@@ -320,19 +320,17 @@ void Texture::showCameras (pcl::texture_mapping::CameraVector cams, pcl::PointCl
 void Texture::applyCameraPose(Kinect* kinect)
 {
   pcl::TextureMapping<pcl::PointXYZ>::Camera cam;
-  cam.pose = kinect->getPosition();
-  // cam.pose = Eigen::Matrix4f::Identity();
 
-  cam.pose (0,3) *= -1; //TX
-  cam.pose (1,3) *= -1; //TY
-  cam.pose (2,3) *= -1; //TZ
+  cam.pose = kinect->getPosition();
+  cam.pose = cam.pose.inverse();
 
   // camera focal length and size
   cam.focal_length=525;
   cam.height=480;
   cam.width=640;
-
-  cam.texture_file = "0_bild.png";
+  char textureFile[64];
+  sprintf(textureFile, "%i_bild.png", kinect->getIndex());
+  cam.texture_file = textureFile;
   mCameras.push_back(cam);
 
 }
@@ -427,8 +425,8 @@ void Texture::applyTexture(pcl::PolygonMesh &triangles, pcl::PointCloud<pcl::Poi
   showCameras(mCameras, cloud);
 
   // Create materials for each texture (and one extra for occluded faces)
-  mesh.tex_materials.resize (my_cams.size () + 1);
-  for(int i = 0 ; i <= my_cams.size() ; ++i)
+  mesh.tex_materials.resize (mCameras.size () + 1);
+  for(int i = 0 ; i <= mCameras.size() ; ++i)
   {
     pcl::TexMaterial mesh_material;
     mesh_material.tex_Ka.r = 0.2f;
@@ -451,8 +449,8 @@ void Texture::applyTexture(pcl::PolygonMesh &triangles, pcl::PointCloud<pcl::Poi
     tex_name << "material_" << i;
     tex_name >> mesh_material.tex_name;
 
-    if(i < my_cams.size ())
-      mesh_material.tex_file = my_cams[i].texture_file;
+    if(i < mCameras.size ())
+      mesh_material.tex_file = mCameras[i].texture_file;
     else
       mesh_material.tex_file = "occluded.jpg";
 
@@ -462,11 +460,11 @@ void Texture::applyTexture(pcl::PolygonMesh &triangles, pcl::PointCloud<pcl::Poi
   // Sort faces
   PCL_INFO ("\nSorting faces by cameras...\n");
   pcl::TextureMapping<pcl::PointXYZ> tm; // TextureMapping object that will perform the sort
-  tm.textureMeshwithMultipleCameras(mesh, my_cams);
+  tm.textureMeshwithMultipleCameras(mesh, mCameras);
 
 
   PCL_INFO ("Sorting faces by cameras done.\n");
-  for(int i = 0 ; i <= my_cams.size() ; ++i)
+  for(int i = 0 ; i <= mCameras.size() ; ++i)
   {
     PCL_INFO ("\tSub mesh %d contains %d faces and %d UV coordinates.\n", i, mesh.tex_polygons[i].size (), mesh.tex_coordinates[i].size ());
   }

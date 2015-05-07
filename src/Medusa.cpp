@@ -64,15 +64,6 @@ Medusa::Medusa(KinectManager* manager, Websocket* socket)
 void Medusa::init()
 {
   mManager->calibratePosition();
-
-
-  if(mManager->getCalibrationStatus())
-  {
-    for (int i = 0; i < mManager->getConnectedDeviceCount(); ++i)
-    {
-      Texture::applyCameraPose(mManager->getDevice(i));
-    }
-  }
 }
 
 Medusa::~Medusa()
@@ -120,6 +111,7 @@ void Medusa::run()
         mManager->stopVideo();
 
         pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2(new pcl::PointCloud<pcl::PointXYZ>());
+        std::cout << "Scanning done" << std::endl;
 
         if(mManager->getDepthStatus() && mManager->getVideoStatus())
         {
@@ -128,7 +120,7 @@ void Medusa::run()
           {
             *cloud2 = *cloud2 + mManager->getDevice(i)->getPointCloud();
           }
-
+          std::cout << "creating mesh" << std::endl;
           //Saves cloud2 to temp/file.obj in renderMesh::run
           pcl::PolygonMesh mesh;
           cloud2 = renderMesh::run(mesh, cloud2);
@@ -137,7 +129,7 @@ void Medusa::run()
         }
         else
         {
-
+          std::cout << "No images :/" << std::endl;
         }
       }
     }

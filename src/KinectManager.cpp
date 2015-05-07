@@ -13,7 +13,6 @@
 KinectManager::KinectManager()
 {
 #ifdef DEBUG
-    printDebugMessage("Debugging on");
     freenect_set_log_level(m_ctx, FREENECT_LOG_DEBUG);
 #else
     freenect_set_log_level(m_ctx, FREENECT_LOG_ERROR);
@@ -177,12 +176,52 @@ Kinect* KinectManager::getDevice(int index)
 
 void KinectManager::calibratePosition()
 {
-  //make calibration logic here
+
   startVideo();
-  for (int i = 0; i < getConnectedDeviceCount(); ++i)
+
+  bool calibrated = false;
+  time_t start = time(0);
+  std::cout << "calibration" << std::endl;
+
+  while(!calibrated)
   {
-    mDevices[i]->calibrate();
+    double seconds_since_start = difftime( time(0), start);
+    if(seconds_since_start < 1)
+      continue;
+    calibrated = true;
+    for (int i = 0; i < getConnectedDeviceCount(); ++i)
+    {
+      mDevices[i]->calibrate();
+
+      if(calibrated)
+        calibrated = mDevices[i]->isCalibrated();
+    }
+    start = time(0);
   }
   stopVideo();
   mDevicesCalibrated = true;
+}
+
+void KinectManager::setOrigin()
+{
+  startVideo();
+  bool positioned = false;
+  while(!positioned) {
+    positioned = true;
+    for (int i = 0; i < getConnectedDeviceCount(); ++i)
+    {
+      bool devPositioned = mDevices[i]->setExtrinsic();
+
+      if(positioned)
+        positioned = devPositioned;
+    }
+  }
+  stopVideo();
+
+  for (int i = 0; i < getConnectedDeviceCount(); ++i)
+  {
+    Texture::applyCameraPose(getDevice(i));
+  }
+
+  std::cout << "origin set" << std::endl;
 }

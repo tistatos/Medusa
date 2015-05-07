@@ -10,13 +10,12 @@
 #define DEBUG true
 
 #include <libfreenect/libfreenect.hpp>
-
-#include "Kinect.h"
-#include "debug_helpers.h"
-
 #include <stddef.h>
 #include <vector>
 #include <string.h>
+
+#include "Kinect.h"
+#include "texture.h"
 
 /**
  * Manager for multiple connected kinects
@@ -40,6 +39,7 @@ public:
   bool getVideo(int index, VIDEO_IMAGE &image);
 
   void calibratePosition();
+  void setOrigin();
   bool getCalibrationStatus() { return mDevicesCalibrated; }
 
   bool getVideoStatus();
