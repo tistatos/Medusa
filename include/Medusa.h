@@ -27,8 +27,8 @@ public:
   void run();
   void stop();
   bool running();
-  void medusaCallback();
-
+  void saveImages();
+  
 private:
   KinectManager* mManager; /// kinect manager
   Websocket* mSocket; /// the socket

@@ -14,6 +14,7 @@
 #include <pcl/io/obj_io.h>
 #include <pcl/conversions.h>
 #include <pcl/visualization/pcl_visualizer.h>
+#include "Kinect.h"
 
 class Texture
 {
@@ -22,9 +23,11 @@ class Texture
 
 		static void showCameras (pcl::texture_mapping::CameraVector cams, pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud);
 
-		static void readCamPoseFile(pcl::TextureMapping<pcl::PointXYZ>::Camera &cam);
+    static void readCamPoseFile(pcl::TextureMapping<pcl::PointXYZ>::Camera &cam);
+		static void applyCameraPose(Kinect* kinect);
 
 		static void applyTexture(pcl::PolygonMesh &triangles, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
-};
+    static pcl::texture_mapping::CameraVector mCameras;
 
+};
 #endif

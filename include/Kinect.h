@@ -18,6 +18,9 @@
 #include <opencv2/core/core.hpp>
 
 #include <pthread.h>
+#include <png++/png.hpp>
+
+#include "calibration.h"
 
 /**
  * @brief Mutex class for locking and unlocking
@@ -77,6 +80,8 @@ private:
 };
 
 
+typedef png::image< png::rgb_pixel > VIDEO_IMAGE;
+
 /**
  * @brief Kinect class handles ineraction and callback to one kinect
  */
@@ -86,8 +91,7 @@ public:
   Kinect(freenect_context* ctx, int index);
   ~Kinect();
 
-  bool getVideoFrame(uint8_t **frame);
-  bool getDepthFrame(uint16_t **frame);
+  bool getVideoFrame(VIDEO_IMAGE &frame);
 
   bool getVideoStatus();
   bool getDepthStatus();
@@ -95,12 +99,15 @@ public:
   void savePointCloud(std::string filename);
   pcl::PointCloud<pcl::PointXYZ> getPointCloud();
 
-  void setPosition(cv::Point3f newPosition, bool mirror = false);
-  cv::Point3f getPosition();
+  void calibrate();
+  Eigen::Matrix4f getPosition();
 
 protected:
+  bool getDepthFrame(uint16_t **frame);
+  void setPosition(cv::Mat newPosition);
   void VideoCallback(void *video, uint32_t timestamp);
   void DepthCallback(void *_depth, uint32_t timestamp);
+  Calibration mCameraCalibration;
 private:
   bool mNewRgbFrame; ///true if new frame is present since last runt of getVideoFrame
   bool mNewDepthFrame; ///true if new frame is present since last runt of getDepthFrame
@@ -109,8 +116,7 @@ private:
   uint8_t* mBufferVideo; ///video buffer
   Mutex mRgbMutex; //mutex lock for video data (write/read)
   Mutex mDepthMutex; //mutex lock for depth data (write/read)
-  bool mMirror;
-  cv::Point3f mPosition; //the kinect's position from the center
+  Eigen::Matrix4f mPosition; //the kinect's position from the center
 };
 
 #endif

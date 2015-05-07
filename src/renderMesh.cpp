@@ -15,6 +15,7 @@ using namespace cv;
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2 = cloud;
     show(cloud);
     cloud = setDelims(cloud);
+    //show(cloud);
     std::cout << "Delims set" << std::endl;
     cloud = reduceData(cloud);
     std::cout << "Data reduced" << std::endl;
