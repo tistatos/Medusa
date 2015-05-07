@@ -1,16 +1,15 @@
-#ifndef __RENDERMESH_H__
-#define __RENDERMESH_H__
+
 
 #include <mongo/client/dbclient.h>
 #include <mongo/bson/bson.h>
 #include <boost/thread/thread.hpp>
 #include "MD5.h"
 
-class mongo
+class Mongo
 {
 public:
 
-	static string storeObject();
+	static std::string storeObject();
 	
 	static void getObject();
 	
@@ -19,4 +18,3 @@ public:
 	static std::string currentDateTime();
 };
 
-#endif

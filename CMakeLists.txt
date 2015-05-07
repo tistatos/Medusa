@@ -106,7 +106,6 @@ set(ALL_LIBS ${PCL_LIBRARIES} ${OpenCV_LIBS} ${FREENECT_LIBRARIES} ${CMAKE_THREA
 add_library(rendermesh src/renderMesh.cpp)
 target_link_libraries(rendermesh ${ALL_LIBS})
 
-
 add_library(md5 src/MD5.cpp)
 target_link_libraries(md5 ${ALL_LIBS})
 
