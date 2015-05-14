@@ -184,6 +184,7 @@ Lokala metoder behandlar rekonstruktionen för mindre delar av datan för sig. H
 Poisson Surface Reconstruction är en global metod där en ytterlinje skapas baserat på gradienten för en 3D-indicatorfunktion, som fås genom en integralrelation med punkterna. Funktionen är bitvis konstant vilket medför att ytan får obegränsat stora värden. För att undvika det appliceras ett smoothing filter på funktionen och gradienter beräknas för den nya funktionen. Användning av Poisson medför därför att följande steg, post-processing, inte behöver appliceras då de redan är inkluderat i metoden\cite{cluster, poisson}.
 
 \item Efterbehandling
+
 Vid inläsning av punktdata via Kinect-kamerorna uppstår det små distansfel mellan vissa av punkterna. Dessa fel orsakar ojämnhet hos modellens yta, vilket måste korrigeras för att modellen ska se tillräckligt bra ut. En ojämn yta kommer att ha normaler med spretiga riktningar, medan en jämnare yta har normaler som förhåller sig bättre till varandra.
 
 En metod som kan användas till att jämna ut ytan, som består av XYZ-koordinater, är marching cubes. Med marching cubes sätts de punkter som är placerade längst ut till ett referensplan. Metoden grundar sig i att en vertexpunkt väljs ut och att man därifrån stegar sig fram till de närmaste vertexpunkter med hjälp av smallest edge detection\cite{pointcloud2surface}.
@@ -255,7 +256,7 @@ Sekreterare               & \begin{tabular}[c]{@{}l@{}}Sekreteraren ansvarade f�
 \end{table}
 
 \subsection{Sprints och möten}
-\subsubsection{stående möte}
+\subsubsection{Stående möte}
 Varje morgon inleddes med ett stående möte där hela utvecklingsteamet närvarade. Mötet hölls kort, ungefär tio minuter, och syftade på att sammanfatta gårdagens arbete samt dagens kommande arbete för varje enskild person i utvecklingsteamet. Mötet resulterade i att samtliga gruppmedlemmar fick en inblick i vad som förväntades utföras under dagen och en i de andras arbete. Det medförde även att de olika ansvarsgrupperna hölls uppdaterade om arbetet utanför den egna gruppen.
 
 \subsubsection{Utvärdering av sprint}
@@ -356,7 +357,7 @@ Gränssnittet utvecklades som en webbapplikation med målet att därifrån kunna
 \subsection{Websockets}
 Websockets användes för att kommunicera mellan webbapplikation och den stationära datorn där själva programmet körs, för detta användes biblioteket \textbf{libwebsockets} på serversidan. Detta bibliotek valdes för att det var enkelt och avskalat vilket passade bra då det bara behövdes skickas små korta meddelanden. När ett meddelande skickas till servern tas detta emot och servern distribuerar ut uppgifter till de olika delmodulerna i systemet.
 
-\subsubsection{MongoDB}
+\subsection{MongoDB}
 För att lagra filerna används MongoDB, vilket möjliggör lagring av \emph{obj-filerna} direkt i databasen med ett \emph{MD5}-krypterat datum samt ett nyckelord som id. Nyckeln kan sedan skickas till användaren via epost om användaren bestämmer sig för att spara modellen samt användas för att radera modellen i annat fall. Klassen \emph{GridFS} användes för att undvika problem med filernas storlek. Stora filer delas då upp i flera delar i databasen.
 
 
@@ -503,7 +504,7 @@ Ett enkelt och billigt scanningssystem ger mindre företag och privatpersoner me
 
 \newpage
 \chapter{Involverade parter}
-Utecklingsteamet
+Utvecklingsteamet
 \begin{itemize}
 \item Pelle Serander: Scrummaster, jobbat med bildbehandling, MD5-kryptering samt databasstöd från C++-sidan.
 
