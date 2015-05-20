@@ -56,6 +56,8 @@ public:
   bool calibrated() { return mCalibrated; }
   int processedImages() { return mProcessedImages; }
   static cv::Mat fromPNGtoMat(VIDEO_IMAGE);
+
+  void setCalibrationData(cv::Mat intrinsic, cv::Mat distCoeffs);
 private:
   std::vector<std::vector<cv::Point3f> > getObjectPoints();
   std::vector<std::vector<cv::Point2f> > mImagePoints; /// Points collected from images

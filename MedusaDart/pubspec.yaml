@@ -8,9 +8,8 @@ dependencies:
   browser: any
   http: any
   http_server: any
-  three:
-    git: https://github.com/threeDart/three.dart.git
+  mongo_dart: any
   stats:
     git: git://github.com/Dartist/stats.dart.git
-
-
+  three:
+    git: https://github.com/threeDart/three.dart.git

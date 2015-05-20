@@ -200,6 +200,11 @@ void KinectManager::calibratePosition()
   }
   stopVideo();
   mDevicesCalibrated = true;
+
+  for (int i = 0; i < getConnectedDeviceCount(); ++i)
+  {
+    mDevices[i]->writeCalibrationData();
+  }
 }
 
 void KinectManager::setOrigin()
@@ -222,6 +227,15 @@ void KinectManager::setOrigin()
   {
     Texture::applyCameraPose(getDevice(i));
   }
+}
 
-  std::cout << "origin set" << std::endl;
+
+bool KinectManager::loadCalibration()
+{
+  for (int i = 0; i < getConnectedDeviceCount(); ++i)
+  {
+    if(!mDevices[i]->readCalibrationData())
+      return false;
+  }
+  return true;
 }

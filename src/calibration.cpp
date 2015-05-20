@@ -105,13 +105,13 @@ std::vector<std::vector<cv::Point3f> > Calibration::getObjectPoints()
 cv::Mat Calibration::getCameraExtrinsic(VIDEO_IMAGE frame)
 {
 	if(!mCalibrated)
-		return cv::Mat::zeros(3, 3, CV_64F);
+		return cv::Mat::zeros(4, 4, CV_64F);
 
 	//cv::Mat image = fromPNGtoMat(frame);
 	int processedImages = mProcessedImages;
 	processImage(frame);
 	if(processedImages == mProcessedImages)
-		return cv::Mat::zeros(3, 3, CV_64F);
+		return cv::Mat::zeros(4, 4, CV_64F);
 
 	cv::Mat rvec, tvec;
 	cv::solvePnP(getObjectPoints().at(0), mImagePoints.at(mImagePoints.size()-1), mCameraMatrix, mDistCoeffs, rvec, tvec);
@@ -149,4 +149,16 @@ cv::Mat Calibration::fromPNGtoMat(VIDEO_IMAGE frame)
 		}
 	}
 	return imageMatrix;
+}
+
+void Calibration::setCalibrationData(cv::Mat intrinsic, cv::Mat distCoeffs)
+{
+	mCameraMatrix = intrinsic;
+	mDistCoeffs = distCoeffs;
+
+	std::cout << "Cam Matrix: " << mCameraMatrix << std::endl;
+
+	std::cout << "Cam dist: " << mDistCoeffs << std::endl;
+
+	mCalibrated = true;
 }

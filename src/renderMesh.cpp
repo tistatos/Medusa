@@ -27,7 +27,7 @@ using namespace cv;
     //cloud = smoothing(cloud);
 
     runPoisson(cloud, cloud2);
-    //runGreedyProjectionTriangulation(cloud);
+    runGreedyProjectionTriangulation(cloud, cloud2);
     std::cout << "GP3 done." << endl;
     //storeFile();
     std::cout << "Finished" << endl;
@@ -205,13 +205,13 @@ using namespace cv;
   */
 
   void renderMesh::runGreedyProjectionTriangulation (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2)
-
   {
+    std::cout << "Greedy started" << endl;
     pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
 
     tree2->setInputCloud (getNormals(cloud,cloud2));
 
-  //  pcl::PolygonMesh mesh;
+   pcl::PolygonMesh mesh;
 
     pcl::GreedyProjectionTriangulation<pcl::PointNormal> gp3;
 
@@ -227,12 +227,10 @@ using namespace cv;
     gp3.setSearchMethod (tree2);
     //gp.setResolution(1);
 
-    //gp3.reconstruct(mesh);
-
+    gp3.reconstruct(mesh);
     std::cout << "runGreedyProjectionTriangulation done!" << endl;
     //pcl::io::saveOBJFile("file.obj", mesh);
-
-    //showMesh(mesh);
+    showMesh(mesh);
   }
 
 
