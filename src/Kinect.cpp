@@ -20,7 +20,7 @@
  * @param index index of kinect (not used yet)
  */
 Kinect::Kinect(freenect_context* ctx, int index): Freenect::FreenectDevice(ctx,index),
-  mNewRgbFrame(false), mNewDepthFrame(false),mCameraCalibration(10, 640, 480, 9,6)
+  mNewRgbFrame(false), mNewDepthFrame(false),mCameraCalibration(10, 640, 480, 7,5)
 {
 
   mPosition = Eigen::Matrix4f::Identity();
@@ -236,9 +236,40 @@ bool Kinect::setExtrinsic()
 {
     VIDEO_IMAGE image(640,480);
     getVideoFrame(image);
-    setPosition(mCameraCalibration.getCameraExtrinsic(image));
-    if(getPosition() == Eigen::Matrix4f::Identity())
+    cv::Mat viewMatrix = mCameraCalibration.getCameraExtrinsic(image);
+    if(countNonZero(viewMatrix) == 0)
       return false;
+    setPosition(viewMatrix);
     std::cout << getPosition() << std::endl;
     return true;
+}
+
+bool Kinect::readCalibrationData()
+{
+  char filename[64];
+  sprintf(filename, "calibration_data_%i.yaml", this->mIndex);
+  std::ifstream f(filename);
+  if(!f.good())
+  {
+    f.close();
+    return false;
+  }
+
+  cv::FileStorage fs(filename, cv::FileStorage::READ);
+  cv::Mat intrin, dist;
+  fs["intrinsic"] >> intrin;
+  fs["distortion"] >> dist;
+
+  mCameraCalibration.setCalibrationData(intrin, dist);
+  return true;
+
+}
+
+void Kinect::writeCalibrationData()
+{
+  char filename[64];
+  sprintf(filename, "calibration_data_%i.yaml", this->mIndex);
+  cv::FileStorage fs(filename, cv::FileStorage::WRITE);
+  fs << "intrinsic" << mCameraCalibration.getCameraIntinsic();
+  fs << "distortion" << mCameraCalibration.getCameraDistCoeff();
 }
