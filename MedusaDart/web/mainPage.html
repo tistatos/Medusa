@@ -1,44 +1,34 @@
 <!DOCTYPE html>
 
+<!--
+  mainPage is the page that will show the 3D-model for the user. Includes the options save, redo and quit.
+-->
+
 <html>
   <head>
   	<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/mainPage.css">
     <link rel="stylesheet" type="text/css" href="styles/sweetalert.css">
-    <title>mainPage</title>
+    <title>Medusa</title>
   </head>
  
   <body>     
-    <!--<div id ="container"> -->
-      <div id ="left">
-        <div id="box">Här kommer modellen att visas!</div>
-      </div>
-      <div class ="right">
-        <button class ="save">Spara</button>
-        <!--<button class ="mail">Maila</button>-->
-        <button id ="reDo">Gör om</button>
+    <!-- Left side of the page where the model is going to show -->
+    <div id ="left">
+      <div id="box">Här kommer modellen att visas!</div>
+    </div>
 
-        <button id ="quit">Avsluta</button>
-      </div> 
+    <!-- The right side of the page with the three options -->
+    <div class ="right">
+      <button class ="save">Spara</button>
 
-      <!--
-      <div class="popupMail" role="alert">
-        <div class="popupContainer">
-          <p>Skicka min modell via mail</p>
-          <a href="#0" class="closePopup">Stäng</a>
-        </div>
-      </div> 
-      
-      <div class="popupQR" role="alert">
-        <div class="popupContainer">
-          <p>Scanna QR-kod</p>
-          <a href="#0" class="closePopup">Stäng</a>
-        </div>
-      </div> -->
-      
-    <!--</div>-->
+      <button id ="reDo">Gör om</button>
+
+      <button id ="quit">Avsluta</button>
+    </div> 
     
+    <!-- include javascript and DART -->
     <script type="application/dart" src="loadObject.dart"></script>
     <script type="application/javascript" src="js/mainPage.js"></script>
     <script type="application/javascript" src="js/classie.js"></script>
