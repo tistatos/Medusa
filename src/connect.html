@@ -37,10 +37,9 @@
                 };
 
 
-                $('button').click(function(e) {
+                $('#exit').click(function(e) {
                     e.preventDefault();
-                    websocket.send($('input').val());
-                    $('input').val('');
+                    websocket.send("EXITMEDUSA");
                 });
 
                 $('#pic').click(function(e) {
@@ -69,8 +68,7 @@
         <div id="cd"></div>
 
         <form>
-            <input type="text" />
-            <button>Send</button>
+            <button id="exit">Exit</button>
             <button id="pic">Take Pic</button>
         </form>
         <div></div>

@@ -127,11 +127,23 @@ void Medusa::run()
           cloud2 = renderMesh::run(mesh, cloud2);
           Texture::applyTexture(mesh, cloud2);
           // string modelID = Mongo::storeObject();
+          std::cout << "Mesh construction Complete" << std::endl;
         }
         else
         {
           std::cout << "No images :/" << std::endl;
         }
+      }
+      else if(newData == "EXITMEDUSA")
+      {
+        std::cout << "Exiting..." << std::endl;
+        mRunning = false;
+        return;
+      }
+      else
+      {
+        std::cout << newData << std::endl;
+
       }
     }
   }
