@@ -13,6 +13,8 @@
 #include "websocket.h"
 #include "renderMesh.h"
 #include "texture.h"
+#include "mongo.h"
+#include "png++/png.hpp"
 
 
 class Websocket;

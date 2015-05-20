@@ -7,10 +7,6 @@
 
 #include "Medusa.h"
 
-#include "renderMesh.h"
-#include "texture.h"
-#include "png++/png.hpp"
-
 /**
  * @brief open file for writing
  * @deprecated save as png instead
@@ -125,8 +121,9 @@ void Medusa::run()
           //Saves cloud2 to temp/file.obj in renderMesh::run
           pcl::PolygonMesh mesh;
           cloud2 = renderMesh::run(mesh, cloud2);
+
           Texture::applyTexture(mesh, cloud2);
-          // string modelID = Mongo::storeObject();
+          //std::string modelID = Mongo::storeObject();
         }
         else
         {

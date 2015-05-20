@@ -13,9 +13,9 @@ using namespace cv;
   {
     std::cout << "Starting" << endl;
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2 = cloud;
-    // show(cloud);
+    show(cloud);
     cloud = setDelims(cloud);
-    //show(cloud);
+    show(cloud);
     std::cout << "Delims set" << std::endl;
     cloud = reduceData(cloud);
     std::cout << "Data reduced" << std::endl;
@@ -26,7 +26,7 @@ using namespace cv;
     //that are needed for reconstruction
     //cloud = smoothing(cloud);
 
-    runPoisson(cloud, cloud2);
+    runPoisson(cloud, cloud2, mesh);
     //runGreedyProjectionTriangulation(cloud);
     std::cout << "GP3 done." << endl;
     //storeFile();
@@ -152,53 +152,76 @@ using namespace cv;
     return cloud_smoothed;
   }
 
+  pcl::PointCloud<pcl::PointNormal>::Ptr renderMesh::getNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+  {
+    pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> n;
+
+    pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>);
+    tree->setInputCloud (cloud);
+    n.setInputCloud (cloud);
+    n.setSearchMethod (tree);
+    n.setRadiusSearch (5);
+    //n.setRadiusSearch (5);
+    
+    pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
+    n.compute (*normals);
+
+    pcl::PointCloud<pcl::PointNormal>::Ptr cloudWithNormals (new pcl::PointCloud<pcl::PointNormal>);
+    pcl::concatenateFields(*cloud,*normals, *cloudWithNormals);
+    
+    std::cout << "normaler klar" << std::endl;
+    
+    return cloudWithNormals;
+  }
+
+
 
   /**
    * @brief Returns normals for a pcl::PointCloud and points dem towards the origin
    * @param a pcl::PointXYZ::Ptr
    * @return pcl::Normal>::Ptr
    */
-  pcl::PointCloud<pcl::PointNormal>::Ptr renderMesh::getNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2)
-  {
-    pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> n;
-    n.setInputCloud (cloud);
+  // pcl::PointCloud<pcl::PointNormal>::Ptr renderMesh::getNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2)
+  // {
+  //   pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> n;
+  //   n.setInputCloud (cloud);
 
-    // Pass the original data (before downsampling) as the search surface
-    n.setSearchSurface (cloud2);
-    pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
-    // Create an empty kdtree representation, and pass it to the normal estimation object.
-    // Its content will be filled inside the object, based on the given surface dataset.
-    pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ> ());
-    n.setSearchMethod (tree);
+  //   // Pass the original data (before downsampling) as the search surface
+  //   n.setSearchSurface (cloud2);
+  //   pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
+  //   // Create an empty kdtree representation, and pass it to the normal estimation object.
+  //   // Its content will be filled inside the object, based on the given surface dataset.
+  //   pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ> ());
+  //   n.setSearchMethod (tree);
 
-    n.setRadiusSearch (0.03);
-    //n.setRadiusSearch (5);
-    n.compute(*normals);
-    std::cout << "alla sets klara"<<std::endl;
+  //   n.setRadiusSearch (0.03);
+  //   //n.setRadiusSearch (5);
+  //   n.compute(*normals);
+  //   std::cout << "alla sets klara"<<std::endl;
 
-    // Output datasets
-    pcl::PointCloud<pcl::Normal>::Ptr cloud_normals (new pcl::PointCloud<pcl::Normal>);
+  //   // Output datasets
+  //   pcl::PointCloud<pcl::Normal>::Ptr cloud_normals (new pcl::PointCloud<pcl::Normal>);
 
-    pcl::PointCloud<pcl::PointNormal>::Ptr cloudWithNormals (new pcl::PointCloud<pcl::PointNormal>);
-    pcl::concatenateFields(*cloud,*normals, *cloudWithNormals);
+  //   pcl::PointCloud<pcl::PointNormal>::Ptr cloudWithNormals (new pcl::PointCloud<pcl::PointNormal>);
+  //   pcl::concatenateFields(*cloud, *normals, *cloudWithNormals);
 
-    for(int i = 0; i < cloudWithNormals->size();i++){
-       pcl::flipNormalTowardsViewpoint (cloud->points[i],
-        0,
-        0,
-        0,
-        cloudWithNormals->points[i].x,
-        cloudWithNormals->points[i].y,
-        cloudWithNormals->points[i].z
+  //   for(int i = 0; i < cloudWithNormals->size();i++){
+  //      pcl::flipNormalTowardsViewpoint (cloud->points[i],
+  //       0,
+  //       0,
+  //       0,
+  //       cloudWithNormals->points[i].x,
+  //       cloudWithNormals->points[i].y,
+  //       cloudWithNormals->points[i].z
 
 
-         );
-    }
+  //        );
+  //   }
 
-    std::cout << "normaler klar" << std::endl;
+  //   std::cout << "normaler klar" << std::endl;
 
-    return cloudWithNormals;
-  }
+  //   return cloudWithNormals;
+  // }
   /**
   * @brief Build a surface using GPT,
   * @param  descriptionpcl::PointCloud<pcl::PointXYZ>::Ptr
@@ -209,7 +232,7 @@ using namespace cv;
   {
     pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
 
-    tree2->setInputCloud (getNormals(cloud,cloud2));
+    tree2->setInputCloud (getNormals(cloud));
 
   //  pcl::PolygonMesh mesh;
 
@@ -223,7 +246,7 @@ using namespace cv;
     gp3.setMaximumAngle (2 * M_PI / 3);
     gp3.setNormalConsistency (false);
 
-    gp3.setInputCloud (getNormals(cloud,cloud2));
+    // gp3.setInputCloud (getNormals(cloud,cloud2));
     gp3.setSearchMethod (tree2);
     //gp.setResolution(1);
 
@@ -240,16 +263,15 @@ using namespace cv;
    * @brief Builds a surface using poisson surface reconstruction
    * @param a pcl::PointXYZ::ptr
    */
-  void renderMesh::runPoisson(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2)
+  void renderMesh::runPoisson(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2, pcl::PolygonMesh &mesh)
   {
     pcl::Poisson<pcl::PointNormal> poisson;
 
     //poisson.setSearchMethod(tree2);
-    poisson.setInputCloud (getNormals (cloud, cloud2));
-    pcl::PolygonMesh mesh;
+    poisson.setInputCloud (getNormals (cloud));
 
     poisson.reconstruct (mesh);
-    poisson.setDepth(25);
+    poisson.setDepth(15);
     //pcl::io::saveOBJFile("file.obj", mesh);
     std::cout << "cloud Poisson" << endl;
     showMesh(mesh);

@@ -3,7 +3,7 @@
 
 using namespace std;
 
-string Mongo::storeObject()
+std::string Mongo::storeObject()
 {
 	mongo::client::initialize();
 	mongo::DBClientConnection c;

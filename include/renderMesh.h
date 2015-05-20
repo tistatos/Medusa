@@ -44,9 +44,9 @@ class renderMesh
 
 		static void showMesh(pcl::PolygonMesh mesh);
 
-		static void runPoisson(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2);
+		static void runPoisson(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2, pcl::PolygonMesh &mesh);
 
-		static  pcl::PointCloud<pcl::PointNormal>::Ptr getNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2);
+		static  pcl::PointCloud<pcl::PointNormal>::Ptr getNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud/*, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2*/);
 
 		static  void runGreedyProjectionTriangulation(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2);
 

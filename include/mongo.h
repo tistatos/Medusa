@@ -1,5 +1,6 @@
 #ifndef __MONGO_H__
 #define __MONGO_H__
+
 #include <mongo/client/dbclient.h>
 #include <mongo/bson/bson.h>
 #include <boost/thread/thread.hpp>
@@ -8,7 +9,6 @@
 class Mongo
 {
 public:
-
 	static std::string storeObject();
 
 	static void getObject();
