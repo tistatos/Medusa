@@ -19,13 +19,13 @@ int main(int argc, char const *argv[])
   if(devCount <= 0)
   {
     std::cout << "No kinects found!" << std::endl;
+    return -1;
   }
   else
   {
     km.connectToDevices();
     std::cout << "Connected to " << km.getConnectedDeviceCount() << " devices." << std::endl;
   }
-
 
   Websocket ws(7681);
   ws.init();
