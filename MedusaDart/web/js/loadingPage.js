@@ -4,7 +4,7 @@
 
 (function( window )
 {  
-  
+  //set up for the loadingbar
   window.onload = function onLoad() {
     var circle = new ProgressBar.Circle('#progress', {
       color: '#7EC0EA',
@@ -14,24 +14,15 @@
       easing: 'easeInOut'
     });
 
+    //start at 0
     circle.set(0);
 
-    /*setTimeout(function() {
-      circle.animate(0.3);
-    }, 1000);*/
-
-    /*setTimeout(function() {
-      circle.animate(0.4);
-    }, 2000);
-
-    setTimeout(function() {
-      circle.animate(0.8);
-    }, 7000);*/
-
+    //go to 100% directly
     setTimeout(function() {
       circle.animate(1);
     }, 0); 
 
+    //after 4000mm, go to mainPage.html
      setTimeout(function() {
       circle.animate(1);
       //fix, switch to mainPage to soon

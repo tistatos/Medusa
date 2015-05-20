@@ -4,7 +4,7 @@
 
 (function( window )
 {
-  
+  //connect to the tags in html
   var infoMenu = document.querySelector( ".infoMenu" ),
       infoButton = document.querySelector( ".infoButton" ),
       startButton = document.querySelector( ".startButton" ),
