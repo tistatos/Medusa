@@ -4,8 +4,7 @@
 (function( window )
 {
   //connect to the tags in the .html-file
-  var save = document.querySelector( ".save" ),
-      popupMail = document.querySelector( ".mail" ),
+  var save = document.querySelector( "#save" ),
       redo = document.querySelector("#reDo"),
       body = document.body,
       mask = document.createElement("div"), 

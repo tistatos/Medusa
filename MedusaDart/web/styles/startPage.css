@@ -7,114 +7,68 @@ html, body
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
-    /*background-image: url("../img/medusa.png");*/
     background-repeat: no-repeat;
     background-size: 100%;
+    overflow: hidden;
 }
 
-/*Custum start button*/
-.startButton
+/*Standard button*/
+.button
 {
-  display: inline-block;
+  color: #FFF;
   background-color: #7EC0EA;
   box-shadow: 0px 0px 2px, 0px 0px 0px 1px rgba(0, 0, 0, 0.05) inset;
-  color: #FFF;
   border: medium none;
-  box-shadow: none;
-  font-size: 17px;
-  font-weight: 500;
-  border-radius: 5px;
-  padding: 7px 0px;
-  cursor: pointer;
-  top:40%;
+  font-size: 100%;
+  outline:none;
+  text-align: center;
+  display: inline-block;
   position: absolute;
+  font-size: 17px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: 500;
+  -webkit-transition: all 0.5s !important;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
+}
+
+/*Start button, position and size*/
+#startButton
+{
+  padding: 7px 0px;
+  top:40%;
   height: 10%;
   width: 30%; 
   left:35%;
-  text-align: center;
-  font-size: 100%; 
-  outline:none;
-  -webkit-transition: all 0.5s !important;
-  -moz-transition: all 0.5s;
-  -ms-transition: all 0.5s;
-  -o-transition: all 0.5s;
-  transition: all 0.5s;
 }
 
-.startButton:active
-{
-  /*background-color: 4B686E;*/
-  /*background-image: -moz-linear-gradient(center top , #6384CB 0%, #1F448F 50%, #0E3072 50%, #0D2759 100%);*/
-  /*background-image: -webkit-linear-gradient(top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); */
-}
-
-.startButton:target
-{
-  background-image: -moz-linear-gradient(center top , #6384CB 0%, #1F448F 50%, #0E3072 50%, #0D2759 100%);
-  background-image: -webkit-linear-gradient(top , #759AE9 0%, #376FE0 50%, #1A5AD9 50%, #2463DE 100%); 
-}
-
-#continueButton {
-  display: inline-block;
-  background-color: #7EC0EA;
-  box-shadow: 0px 0px 2px, 0px 0px 0px 1px rgba(0, 0, 0, 0.05) inset;
-  color: #FFF;
-  border: medium none;
-  box-shadow: none;
-  font-size: 17px;
-  font-weight: 500;
-  border-radius: 5px;
-  /*padding: 7px 0px;*/
-  /*margin: 26px 5px 0px;*/
-  cursor: pointer;
-  top:200%;
-  position: absolute;
-  height: 65px;
-  width: 200px; 
-  margin-left: -185px;  
-  left: 85%;
-  text-align: center;
-  font-size: 100%; 
-  outline:none;
-  -webkit-transition: all 0.5s !important;
-  -moz-transition: all 0.5s;
-  -ms-transition: all 0.5s;
-  -o-transition: all 0.5s;
-  transition: all 0.5s;
-}
-
-body.startButton-open .startButton
+/*make the button disappear*/
+body.startButton-open #startButton
 {
   top: 100%;
   overflow: hidden;
 }
 
-/*Info button*/
-.infoButton
+/*Continue button, position and size*/
+#continueButton 
 {
-  display: inline-block;
-  background-color: #7EC0EA;
-  box-shadow: 0px 0px 2px, 0px 0px 0px 1px rgba(0, 0, 0, 0.05) inset;
-  color: #FFF;
-  border: medium none;
-  box-shadow: none;
-  font-size: 17px;
-  font-weight: 500;
-  border-radius: 5px;
+  top:200%;
+  height: 65px;
+  width: 200px; 
+  margin-left: -185px;  
+  left: 85%;
+}
+
+/*Info button, position and size*/
+#infoButton
+{
   padding: 7px 0px;
-  cursor: pointer;
-  position: absolute;
   width: 60px; 
   margin-left: 2%;
   margin-top: 2%;
-  text-align: center;
-  font-size: 100%; 
-  outline:none;
-  -webkit-transition: all 0.5s !important;
-  -moz-transition: all 0.5s;
-  -ms-transition: all 0.5s;
-  -o-transition: all 0.5s;
-  transition: all 0.5s;
 }
 
 /*Custum information menu*/
@@ -165,31 +119,12 @@ body.menu-open .infoMenu
 }
 
 /*Custum close button in information menu*/
-.closeButton 
+#closeButton 
 {
-  display: inline-block;
-  background-color: #7EC0EA;
-  box-shadow: 0px 0px 2px, 0px 0px 0px 1px rgba(0, 0, 0, 0.05) inset;
-  color: #FFF;
-  border: medium none;
-  box-shadow: none;
-  font-size: 17px;
-  font-weight: 500;
-  border-radius: 5px;
   padding: 7px 0px;
-  cursor: pointer;
-  position: absolute;
   width: 60px; 
   margin-left: 71%;
   margin-top: 15px;
-  text-align: center;
-  font-size: 100%; 
-  outline:none;
-  -webkit-transition: all 0.5s !important;
-  -moz-transition: all 0.5s;
-  -ms-transition: all 0.5s;
-  -o-transition: all 0.5s;
-  transition: all 0.5s;
 }
 
 
