@@ -6,14 +6,14 @@
  */
 
 #include "Medusa.h"
+
 #include "renderMesh.h"
 #include "texture.h"
-#include "mongo.h"
 #include "png++/png.hpp"
 
 /**
  * @brief open file for writing
- *
+ * @deprecated save as png instead
  * @param filename name of file
  * @return pointer to file
  */
@@ -31,7 +31,7 @@ FILE *open_dump(const char *filename)
 
 /**
  * @brief Save rgb image to file
- *
+ * @deprecated save as png instead
  * @param fp file
  * @param data data
  * @param int width of image
@@ -61,11 +61,33 @@ Medusa::Medusa(KinectManager* manager, Websocket* socket)
   socket->setMedusa(this);
 }
 
+
+void Medusa::init()
+{
+  mManager->calibratePosition();
+}
+
 Medusa::~Medusa()
 {
 }
 
-/**s
+/**
+ * @brief Save kinect rgb images to hardrive
+ * @todo  perhaps a nicer filename?
+ */
+void Medusa::saveImages()
+{
+  for (int i = 0; i < mManager->getConnectedDeviceCount(); ++i)
+  {
+    VIDEO_IMAGE image(640,480);
+    mManager->getVideo(i, image);
+    char filename[128];
+    sprintf(filename, "%i_bild.png", i);
+    image.write(filename);
+  }
+}
+
+/**
  * @brief running loop of medusa
  */
 void Medusa::run()
@@ -88,62 +110,27 @@ void Medusa::run()
         std::cout << "Five seconds" << std::endl;
         mManager->stopDepth();
         mManager->stopVideo();
+
         pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2(new pcl::PointCloud<pcl::PointXYZ>());
+        std::cout << "Scanning done" << std::endl;
 
         if(mManager->getDepthStatus() && mManager->getVideoStatus())
         {
-          //Save images from cameras
-          for (int i = 0; i < mManager->getConnectedDeviceCount(); ++i)
-          {
-            uint8_t* frame;
-            FILE *fp;
-            mManager->getVideo(i, &frame);
-
-            char filename[128];
-            sprintf(filename, "%i_bild.png", i);
-
-            std::cout << "Saving image to: " << filename << std::endl;
-
-            fp = open_dump(filename);
-           // dump_rgb(fp, frame, 640, 480);
-
-            std::cout << "skapar image" << std::endl;
-            png::image< png::rgb_pixel > image(640,480);
-            //png::image<png::index_pixel> image;
-            std::cout << "skapar bild"<< std::endl;
-            for(int h = 0; h < 640*480*3; h+=3)
-            {
-                int y = h/(640*3);
-                int x = (h/3)%640;
-                image[y][x] = png::rgb_pixel(frame[h], frame[h+1], frame[h+2]);
-            }
-
-            std::cout<<"skriver till bild"<< std::endl;
-            image.write(filename);
-
-
-            fclose(fp);
-
-            delete[] frame;
-            *cloud2 = *cloud2 + mManager->getDevice(i)->getPointCloud();
-            //pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2(new pcl::PointCloud<pcl::PointXYZ>(mManager->getDevice(i)->getPointCloud()));
-            //pcl::io::savePCDFile("file.obj", mManager->getDevice(i)->getPointCloud());
-            //renderMesh::show(cloud2);
-          }
+          saveImages();
           for(int i = 0; i < mManager->getConnectedDeviceCount(); i++)
           {
-            mManager->getDevice(i)->getPointCloud();
+            *cloud2 = *cloud2 + mManager->getDevice(i)->getPointCloud();
           }
-
+          std::cout << "creating mesh" << std::endl;
           //Saves cloud2 to temp/file.obj in renderMesh::run
           pcl::PolygonMesh mesh;
           cloud2 = renderMesh::run(mesh, cloud2);
           Texture::applyTexture(mesh, cloud2);
-          //mongo::storeFile("file.obj");
+          // string modelID = Mongo::storeObject();
         }
         else
         {
-
+          std::cout << "No images :/" << std::endl;
         }
       }
     }

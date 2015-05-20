@@ -13,12 +13,12 @@
 KinectManager::KinectManager()
 {
 #ifdef DEBUG
-    printDebugMessage("Debugging on");
     freenect_set_log_level(m_ctx, FREENECT_LOG_DEBUG);
 #else
     freenect_set_log_level(m_ctx, FREENECT_LOG_ERROR);
 #endif
     mInitialized = true;
+    mDevicesCalibrated = false;
 }
 
 
@@ -111,7 +111,7 @@ void KinectManager::stopVideo()
 
 /**
  * @brief get depth data from kinects
- *
+ * @deprecated no need to have raw depth data
  * @param index index of managed kinect
  * @param frame unitialized pointer to store data
  *
@@ -119,7 +119,8 @@ void KinectManager::stopVideo()
  */
 bool KinectManager::getDepth(int index, uint16_t **frame)
 {
-  return mDevices[index]->getDepthFrame(frame);
+  return false;
+  // return mDevices[index]->getDepthFrame(frame);
 }
 
 bool KinectManager::getDepthStatus()
@@ -134,7 +135,6 @@ bool KinectManager::getDepthStatus()
   return true;
 }
 
-
 /**
  * @brief get video data from kinects
  *
@@ -143,7 +143,7 @@ bool KinectManager::getDepthStatus()
  *
  * @return true if there is a new frame to get from kinect
  */
-bool KinectManager::getVideo(int index, uint8_t **frame)
+bool KinectManager::getVideo(int index, VIDEO_IMAGE &frame)
 {
   return mDevices[index]->getVideoFrame(frame);
 }
@@ -176,11 +176,52 @@ Kinect* KinectManager::getDevice(int index)
 
 void KinectManager::calibratePosition()
 {
-  //make calibration logic here
-  mDevices[0]->setPosition(cv::Point3f(0,0,-1), true);
-  mDevices[1]->setPosition(cv::Point3f(0,0,1));
+
+  startVideo();
+
+  bool calibrated = false;
+  time_t start = time(0);
+  std::cout << "calibration" << std::endl;
+
+  while(!calibrated)
+  {
+    double seconds_since_start = difftime( time(0), start);
+    if(seconds_since_start < 1)
+      continue;
+    calibrated = true;
+    for (int i = 0; i < getConnectedDeviceCount(); ++i)
+    {
+      mDevices[i]->calibrate();
+
+      if(calibrated)
+        calibrated = mDevices[i]->isCalibrated();
+    }
+    start = time(0);
+  }
+  stopVideo();
+  mDevicesCalibrated = true;
+}
+
+void KinectManager::setOrigin()
+{
+  startVideo();
+  bool positioned = false;
+  while(!positioned) {
+    positioned = true;
+    for (int i = 0; i < getConnectedDeviceCount(); ++i)
+    {
+      bool devPositioned = mDevices[i]->setExtrinsic();
+
+      if(positioned)
+        positioned = devPositioned;
+    }
+  }
+  stopVideo();
 
   for (int i = 0; i < getConnectedDeviceCount(); ++i)
   {
+    Texture::applyCameraPose(getDevice(i));
   }
+
+  std::cout << "origin set" << std::endl;
 }

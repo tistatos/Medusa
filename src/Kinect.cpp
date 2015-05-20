@@ -20,18 +20,24 @@
  * @param index index of kinect (not used yet)
  */
 Kinect::Kinect(freenect_context* ctx, int index): Freenect::FreenectDevice(ctx,index),
-  mNewRgbFrame(false), mNewDepthFrame(false)
+  mNewRgbFrame(false), mNewDepthFrame(false),mCameraCalibration(10, 640, 480, 9,6)
 {
 
-  mBufferVideo = new uint8_t[freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_RGB).bytes];
-  mBufferDepth = new uint16_t[freenect_find_depth_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_DEPTH_REGISTERED).bytes/2];
-
+  mPosition = Eigen::Matrix4f::Identity();
+  mBufferVideo = new uint8_t[freenect_find_video_mode(FREENECT_RESOLUTION_HIGH, FREENECT_VIDEO_RGB).bytes];
+  mBufferDepth = new uint16_t[freenect_find_depth_mode(FREENECT_RESOLUTION_HIGH, FREENECT_DEPTH_REGISTERED).bytes/2];
+  setFlag(FREENECT_AUTO_EXPOSURE, true);
+  setFlag(FREENECT_AUTO_WHITE_BALANCE, true);
   setDepthFormat(FREENECT_DEPTH_REGISTERED);
   setVideoFormat(FREENECT_VIDEO_RGB);
 
   mCloud.width = 640;
   mCloud.height = 480;
   mCloud.points.resize(640*480);
+
+  mCalibrated = false;
+
+  mIndex = index;
 }
 
 /**
@@ -83,14 +89,18 @@ void Kinect::DepthCallback(void *_depth, uint32_t timestamp)
  * @param frame pointer for returning data
  * @return true if new data was found, else false
  */
-bool Kinect::getVideoFrame(uint8_t **frame)
+bool Kinect::getVideoFrame(VIDEO_IMAGE &image)
 {
   if(!mNewRgbFrame)
     return false;
   Mutex::ScopedLock lock(mRgbMutex);
-  *frame = new uint8_t[getVideoBufferSize()];
 
-  memcpy(*frame, mBufferVideo, getVideoBufferSize());
+  for(int h = 0; h < 640*480*3; h+=3)
+  {
+    int y = h/(640*3);
+    int x = (h/3)%640;
+    image[y][x] = png::rgb_pixel(mBufferVideo[h], mBufferVideo[h+1], mBufferVideo[h+2]);
+  }
 
   mNewRgbFrame = false;
 
@@ -127,13 +137,10 @@ bool Kinect::getDepthFrame(uint16_t **frame)
 pcl::PointCloud<pcl::PointXYZ> Kinect::getPointCloud()
 {
   Mutex::ScopedLock lock(mDepthMutex);
-  Eigen::Matrix4f transform = Eigen::Matrix4f::Identity();
+  Eigen::Matrix4f transform =  mPosition.inverse();
 
-  transform(0,3) = mPosition.x;
-  transform(1,3) = mPosition.y;
-  transform(2,3) = mPosition.z;
-  if(mMirror)
-    transform(2,2) = -1;
+  // Eigen::Matrix4f transform =  Eigen::Matrix4f::Identity();
+
   pcl::PointCloud<pcl::PointXYZ>::Ptr transformed_cloud (new pcl::PointCloud<pcl::PointXYZ> ());
   pcl::transformPointCloud(mCloud, *transformed_cloud, transform);
   return *transformed_cloud;
@@ -150,11 +157,20 @@ void Kinect::savePointCloud(std::string filename)
   pcl::io::savePCDFileASCII (filename, mCloud);
 }
 
+/**
+ * @brief check if new data from video is available
+ * @return true if the new frames hasn't been accessed before
+ */
 bool Kinect::getVideoStatus()
 {
   return mNewRgbFrame;
 }
 
+
+/**
+ * @brief check if new data from depth is available
+ * @return true if the new frames hasn't been accessed before
+ */
 bool Kinect::getDepthStatus()
 {
   return mNewDepthFrame;
@@ -162,16 +178,67 @@ bool Kinect::getDepthStatus()
 
 /**
  * @brief Set position of kinect
- * @todo should include orientation
- * @param newPosition new position from calibration
+ * @param newPosition new position from calibration as matrix
  */
-void Kinect::setPosition(cv::Point3f newPosition, bool mirror)
+void Kinect::setPosition(cv::Mat newPosition)
 {
-  mPosition = newPosition;
-  mMirror = mirror;
+  mPosition(0,0) = newPosition.at<double>(0,0);
+  mPosition(1,0) = newPosition.at<double>(1,0);
+  mPosition(2,0) = newPosition.at<double>(2,0);
+
+  mPosition(0,1) = newPosition.at<double>(0,1);
+  mPosition(1,1) = newPosition.at<double>(1,1);
+  mPosition(2,1) = newPosition.at<double>(2,1);
+
+  mPosition(0,2) = newPosition.at<double>(0,2);
+  mPosition(1,2) = newPosition.at<double>(1,2);
+  mPosition(2,2) = newPosition.at<double>(2,2);
+
+  mPosition(0,3) = newPosition.at<double>(0,3)/1000.0f;
+  mPosition(1,3) = newPosition.at<double>(1,3)/1000.0f;
+  mPosition(2,3) = newPosition.at<double>(2,3)/1000.0f;
+
 }
 
-cv::Point3f Kinect::getPosition()
+/**
+ * @brief get transform of kinect
+ * @return matrix of kinect
+ */
+Eigen::Matrix4f Kinect::getPosition()
 {
   return mPosition;
+}
+
+/**
+ * @brief calibrate kinect
+ * @details takes on image with the kinect
+ * @todo  increase this value for better dist. coeffectients and intrinsic values
+ */
+void Kinect::calibrate()
+{
+  if(mCameraCalibration.processedImages() == 10 && mCalibrated)
+    return;
+
+  std::cout << "trying to grab image" << std::endl;
+  VIDEO_IMAGE image(640,480);
+  getVideoFrame(image);
+  mCameraCalibration.processImage(image);
+
+  if(mCameraCalibration.processedImages() == 10 && !mCalibrated)
+  {
+    float resid = mCameraCalibration.calibrate();
+    std::cout << "Residual: "<< resid << std::endl;
+    mCalibrated = true;
+  }
+}
+
+bool Kinect::setExtrinsic()
+{
+    VIDEO_IMAGE image(640,480);
+    getVideoFrame(image);
+    setPosition(mCameraCalibration.getCameraExtrinsic(image));
+    if(getPosition() == Eigen::Matrix4f::Identity())
+      return false;
+    std::cout << getPosition() << std::endl;
+    return true;
 }

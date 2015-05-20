@@ -1,136 +1,152 @@
-#include <iostream>
-#include "libfreenect/libfreenect_sync.h"
+#include "calibration.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-
-#include <iostream>
-#include <sstream>
-#include <time.h>
-#include <stdio.h>
-
-#include <cmath>
-
-#include <unistd.h>
-
-#include <string>
-
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/calib3d/calib3d.hpp>
-#include <opencv2/highgui/highgui.hpp>
-
-#ifndef _CRT_SECURE_NO_WARNINGS
-# define _CRT_SECURE_NO_WARNINGS
-#endif
-
-//need one rgb-image and one depth-image
-
-using namespace std;
-using namespace cv;
-
-const int HEIGHT = 480;
-const int WIDTH = 640;
-
-FILE *open_dump(const char *filename)
+/**
+ * @brief Constructor of calibrator
+ *
+ * @param nPictures number of pictures used for calibration
+ * @param width width of images
+ * @param height height of images
+ * @param boardX grid size of chessboard
+ * @param boardY grid size
+ */
+Calibration::Calibration(int nPictures, int width, int height, int boardX, int boardY):
+mImageSize(width,height), mBoardSize(boardX,boardY), mNumberOfPictures(nPictures)
 {
-	//open file
-	FILE* fp = fopen(filename, "w");
-	if (fp == NULL) {
-		fprintf(stderr, "Error: Cannot open file [%s]\n", filename);
-		exit(1);
-	}
-	printf("%s\n", filename);
-	return fp;
+	mGridSize = 36.0f;
+	clear();
 }
 
-void dump_rgb(FILE *fp, void *data, unsigned int width, unsigned int height)
+/**
+ * @brief reset calibration parameters
+ */
+void Calibration::clear()
 {
-	//*3 = channel
-	fprintf(fp, "P6 %u %u 255\n", width, height);
-	//write to file
-	fwrite(data, width * height * 3, 1, fp);
+	mCameraMatrix = cv::Mat::eye(3, 3, CV_64F);
+ 	mDistCoeffs = cv::Mat::zeros(8, 1, CV_64F);
+ 	mProcessedImages = 0;
+ 	mCalibrated = false;
 }
 
-Mat nextImage_RGB()
+/**
+ * @brief process image sent to calibrator
+ * @todo currently save and loads a temp.png fix this
+ *
+ * @param frame frame to process
+ * @return number of processed images
+ */
+int Calibration::processImage(VIDEO_IMAGE frame)
 {
-	Mat result_rgb;
-	int ret;
-	char *rgb = 0;
+	cv::Mat view_rgb = fromPNGtoMat(frame);
+	std::vector<cv::Point2f> pointBuf_RGB;
 
-	uint32_t ts;
-
-	FILE *fp;
-
-	ret = freenect_sync_get_video((void**)&rgb, &ts, 0, FREENECT_VIDEO_RGB);
-	fp = open_dump("cali_rgb.jpg");
-	dump_rgb(fp, rgb, WIDTH, HEIGHT);
-	fclose(fp);
-	result_rgb = imread("cali_rgb.jpg");
-	resize(result_rgb, result_rgb, Size(WIDTH/3,HEIGHT/3));
-
-	return result_rgb;
-}
-
-//create a matrix, 35x3
-Mat Matrix(vector<Point2f> v)
-{
-	Mat tmp(35,3, CV_64F);
-	for(int i = 0; i < 35; i++)
+	bool found_rgb = findChessboardCorners(view_rgb, mBoardSize, pointBuf_RGB);
+	if(found_rgb)
 	{
-		tmp.at<double>(i,0) = v.at(i).x;
-		tmp.at<double>(i,1) = v.at(i).y;
-		tmp.at<double>(i,2) = 1;
+		mImagePoints.push_back(pointBuf_RGB);
+		mProcessedImages++; //counter for every image that have been taken
+		std::cout << "Found chess: " << mProcessedImages << std::endl;
 	}
-	return tmp;
-}
-//converting of MATLAB-code for calibration
-//change name after
-vector<Point2f> MATLAB(vector<Point2f> RGB, vector<Point2f> IR)
-{
-	vector<Point2f> temp;
 
-	Mat rgb = Matrix(RGB);
-	Mat ir = Matrix(IR);
-	Mat x = rgb.inv() * ir;
-
-	return temp;
+	return mProcessedImages;
 }
 
-int main(int argc, char const *argv[])
+/**
+ * @brief use the processed images to calibrate camera
+ *
+ * @return residual of calibration, -1 if incorrect number of images has been processed
+ */
+double Calibration::calibrate()
 {
 
-	Size boardSize(7,5); //how many corners that have to be found
-	int counter = 0;
-	int rgb_img = 1; //for function nextImage
-
-	do
+	if(mProcessedImages >= mNumberOfPictures)
 	{
-		Mat view_rgb; //InputArray image
+		std::vector<cv::Mat > rvecs, tvecs;
 
-		view_rgb = nextImage_RGB(); //
+		double rms = calibrateCamera(getObjectPoints(), mImagePoints, mImageSize, mCameraMatrix,
+                            			mDistCoeffs, rvecs, tvecs);
+		mCalibrated = true;
+		std::cout << "Cam Matrix: " << mCameraMatrix << std::endl;
 
-		vector<Point2f> pointBuf_RGB;
+		std::cout << "Cam dist: " << mDistCoeffs << std::endl;
+		return rms;
+	}
+	else
+	{
+		std::cout << "cant Calibrate" << std::endl;
+		return -1;
+	}
+}
 
-		bool found_rgb = findChessboardCorners(view_rgb, boardSize, pointBuf_RGB);
+/**
+ * @brief object points for the chessboar
+ * @return returns array of arrays size determined by chess size and number of images
+ */
+std::vector<std::vector<cv::Point3f> > Calibration::getObjectPoints()
+{
+	std::vector<cv::Point3f> corners;
 
-		if(found_rgb)
+  corners.resize(0);
+
+  for( int i = 0; i < mBoardSize.height; ++i )
+    for( int j = 0; j < mBoardSize.width; ++j )
+        corners.push_back(cv::Point3f(float( j*mGridSize ), float( i*mGridSize ), 0));
+
+  std::vector<std::vector<cv::Point3f> > objectPoints(0);
+  objectPoints.resize(mImagePoints.size(),corners);
+  return objectPoints;
+}
+
+/**
+ * @brief Calculate camera extrinsics
+ * @todo  should use all images to calculate extrinsics
+ * @details [long description]
+ * @return matrix with extrinsic data
+ */
+cv::Mat Calibration::getCameraExtrinsic(VIDEO_IMAGE frame)
+{
+	if(!mCalibrated)
+		return cv::Mat::zeros(3, 3, CV_64F);
+
+	//cv::Mat image = fromPNGtoMat(frame);
+	int processedImages = mProcessedImages;
+	processImage(frame);
+	if(processedImages == mProcessedImages)
+		return cv::Mat::zeros(3, 3, CV_64F);
+
+	cv::Mat rvec, tvec;
+	cv::solvePnP(getObjectPoints().at(0), mImagePoints.at(mImagePoints.size()-1), mCameraMatrix, mDistCoeffs, rvec, tvec);
+
+	cv::Mat rotation, viewMatrix(4, 4, CV_64F);
+	cv::Rodrigues(rvec, rotation);
+
+	for(unsigned int row=0; row<3; ++row)
+	{
+	   for(unsigned int col=0; col<3; ++col)
+	   {
+	      viewMatrix.at<double>(row, col) = rotation.at<double>(row, col);
+	   }
+	   viewMatrix.at<double>(row, 3) = tvec.at<double>(row, 0);
+	}
+	viewMatrix.at<double>(3, 3) = 1.0f;
+	viewMatrix.at<double>(3, 0) = 0.0f;
+	viewMatrix.at<double>(3, 1) = 0.0f;
+	viewMatrix.at<double>(3, 2) = 0.0f;
+
+	return  viewMatrix;
+}
+
+cv::Mat Calibration::fromPNGtoMat(VIDEO_IMAGE frame)
+{
+	cv::Mat imageMatrix = cv::Mat::zeros(640,480, CV_8UC3);
+	uint8_t* pixelPtr = (uint8_t*)imageMatrix.data;
+	for (int i = 0; i < 480; ++i)
+	{
+		for (int j = 0; j < 640; ++j)
 		{
-			counter++; //counter for every image that have been taken
-			cout << "Bild " << counter << " tagen" << endl;
-			drawChessboardCorners(view_rgb, boardSize, Mat(pointBuf_RGB), found_rgb);
-
-			cout << pointBuf_RGB << endl;
-			string RGB_name = "rgb_corners.ppm";
-
-			//save image
-			imwrite(RGB_name, view_rgb);
-
-			cout << "skriver!" << endl;
+			pixelPtr[i*imageMatrix.cols*3 + j*3 + 0] = frame[i][j].blue;//B
+			pixelPtr[i*imageMatrix.cols*3 + j*3 + 1] = frame[i][j].green;//G
+			pixelPtr[i*imageMatrix.cols*3 + j*3 + 2] = frame[i][j].red;//R
 		}
-	}while(counter != 10); //stop loop when 10 images have been taken
-
-	cout << "Calibration done!" << endl;
-
-	return 0;
+	}
+	return imageMatrix;
 }

@@ -8,10 +8,12 @@
 #ifndef __MEDUSALOGIC_H__
 #define __MEDUSALOGIC_H__
 
+
 #include "KinectManager.h"
 #include "websocket.h"
 #include "renderMesh.h"
 #include "texture.h"
+
 
 class Websocket;
 
@@ -24,7 +26,8 @@ public:
   void run();
   void stop();
   bool running();
-  void medusaCallback();
+  void saveImages();
+
 private:
   KinectManager* mManager; /// kinect manager
   Websocket* mSocket; /// the socket

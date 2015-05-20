@@ -3,7 +3,7 @@
 
 using namespace pcl;
 
-
+pcl::texture_mapping::CameraVector Texture::mCameras;
 /**
  * @deprecated no longer used
  * @brief Save file_name to .obj file
@@ -226,7 +226,6 @@ int Texture::saveOBJFile (const std::string &file_name, const pcl::TextureMesh &
   return (0);
 }
 
-// KOMMER INTE ATT BEHÖVA showCameras I SENARE SKEDE
 /**
  * @brief Visualize cameras.
  * @details Visualize cameras in window.
@@ -270,7 +269,7 @@ void Texture::showCameras (pcl::texture_mapping::CameraVector cams, pcl::PointCl
     p3=pcl::transformPoint (p3, cam.pose);
     p4=pcl::transformPoint (p4, cam.pose);
     p5=pcl::transformPoint (p5, cam.pose);
-    
+
     std::stringstream ss;
     ss << "Cam #" << i+1;
     visu.addText3D(ss.str (), p1, 0.1, 1.0, 1.0, 1.0, ss.str ());
@@ -299,7 +298,6 @@ void Texture::showCameras (pcl::texture_mapping::CameraVector cams, pcl::PointCl
     ss.str ("");
     ss << "camera_" << i << "line8";
     visu.addLine (p3, p2,ss.str ());
-  
   }
   // add a coordinate system
   visu.addCoordinateSystem (1.0);
@@ -314,6 +312,26 @@ void Texture::showCameras (pcl::texture_mapping::CameraVector cams, pcl::PointCl
   // wait for user input
   visu.spin ();
 }
+
+
+void Texture::applyCameraPose(Kinect* kinect)
+{
+  pcl::TextureMapping<pcl::PointXYZ>::Camera cam;
+
+  cam.pose = kinect->getPosition();
+  cam.pose = cam.pose.inverse();
+
+  // camera focal length and size
+  cam.focal_length=525;
+  cam.height=480;
+  cam.width=640;
+  char textureFile[64];
+  sprintf(textureFile, "%i_bild.png", kinect->getIndex());
+  cam.texture_file = textureFile;
+  mCameras.push_back(cam);
+
+}
+
 
 /**
  * @brief Get camera positions
@@ -360,11 +378,7 @@ void Texture::readCamPoseFile(pcl::TextureMapping<pcl::PointXYZ>::Camera &cam)
  */
 void Texture::applyTexture(pcl::PolygonMesh &triangles, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud) // Att skicka med: PolygonMesh, pcl::PointCloud<pcl::PointNormal>
 {
-  //PCL_INFO ("\nLoading mesh from file %s...\n", "file.obj");
   std::cout << "Loading mesh... " << std::endl;
-  //pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
-
-  //fromPCLPointCloud2 (triangles.cloud, *cloud);
 
   // Create the texturemesh object that will contian our UV-mapped mesh
   TextureMesh mesh;
@@ -401,11 +415,11 @@ void Texture::applyTexture(pcl::PolygonMesh &triangles, pcl::PointCloud<pcl::Poi
 
   // Display cameras to user
   PCL_INFO ("\nDisplaying cameras. Press \'q\' to continue texture mapping\n");
-  showCameras(my_cams, cloud);
+  showCameras(mCameras, cloud);
 
   // Create materials for each texture (and one extra for occluded faces)
-  mesh.tex_materials.resize (my_cams.size () + 1);
-  for(int i = 0 ; i <= my_cams.size() ; ++i)
+  mesh.tex_materials.resize (mCameras.size () + 1);
+  for(int i = 0 ; i <= mCameras.size() ; ++i)
   {
     pcl::TexMaterial mesh_material;
     mesh_material.tex_Ka.r = 0.2f;
@@ -428,8 +442,8 @@ void Texture::applyTexture(pcl::PolygonMesh &triangles, pcl::PointCloud<pcl::Poi
     tex_name << "material_" << i;
     tex_name >> mesh_material.tex_name;
 
-    if(i < my_cams.size ())
-      mesh_material.tex_file = my_cams[i].texture_file;
+    if(i < mCameras.size ())
+      mesh_material.tex_file = mCameras[i].texture_file;
     else
       mesh_material.tex_file = "occluded.jpg";
 
@@ -439,11 +453,11 @@ void Texture::applyTexture(pcl::PolygonMesh &triangles, pcl::PointCloud<pcl::Poi
   // Sort faces
   PCL_INFO ("\nSorting faces by cameras...\n");
   pcl::TextureMapping<pcl::PointXYZ> tm; // TextureMapping object that will perform the sort
-  tm.textureMeshwithMultipleCameras(mesh, my_cams);
+  tm.textureMeshwithMultipleCameras(mesh, mCameras);
 
 
   PCL_INFO ("Sorting faces by cameras done.\n");
-  for(int i = 0 ; i <= my_cams.size() ; ++i)
+  for(int i = 0 ; i <= mCameras.size() ; ++i)
   {
     PCL_INFO ("\tSub mesh %d contains %d faces and %d UV coordinates.\n", i, mesh.tex_polygons[i].size (), mesh.tex_coordinates[i].size ());
   }
@@ -469,9 +483,7 @@ void Texture::applyTexture(pcl::PolygonMesh &triangles, pcl::PointCloud<pcl::Poi
   PCL_INFO ("\nSaving mesh to file.obj\n");
 
   Texture::saveOBJFile("file.obj", mesh, 5);
-  //pcl::io::saveOBJFile("file.obj", mesh);
 
-  
   pcl::visualization::PCLVisualizer viewer ("surface fitting");
     viewer.addTextureMesh (mesh, "sample mesh");
 
@@ -480,5 +492,5 @@ void Texture::applyTexture(pcl::PolygonMesh &triangles, pcl::PointCloud<pcl::Poi
       viewer.spinOnce (100);
       boost::this_thread::sleep (boost::posix_time::microseconds (100000));
     }
-  
+
 }

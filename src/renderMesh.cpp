@@ -1,12 +1,11 @@
 #include "renderMesh.h"
 #include <mongo/client/gridfs.h>
-#include "MD5.h"
 
 using namespace cv;
 
 
   /**
-  * @brief Initiate renderMesh 
+  * @brief Initiate renderMesh
   *
   * @param d description
   */
@@ -14,30 +13,32 @@ using namespace cv;
   {
     std::cout << "Starting" << endl;
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2 = cloud;
-    show(cloud);
+    // show(cloud);
     cloud = setDelims(cloud);
+    //show(cloud);
     std::cout << "Delims set" << std::endl;
     cloud = reduceData(cloud);
     std::cout << "Data reduced" << std::endl;
     cloud = removeNoise(cloud);
     std::cout << "Noise removed" << endl;
-   
-    //using with poisson smoothes away points 
+
+    //using with poisson smoothes away points
     //that are needed for reconstruction
     //cloud = smoothing(cloud);
-   
+
     runPoisson(cloud, cloud2);
     //runGreedyProjectionTriangulation(cloud);
     std::cout << "GP3 done." << endl;
     //storeFile();
     std::cout << "Finished" << endl;
+
     return cloud;
   }
 
-  
+
   /**
   * @brief Displays a pcl::PointCloud
-  * @param pcl::PointXYZ::ConstPtr 
+  * @param pcl::PointXYZ::ConstPtr
   */
   //Visualize Cloud data
   void renderMesh::show (pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud)
@@ -54,7 +55,7 @@ using namespace cv;
       boost::this_thread::sleep (boost::posix_time::microseconds (100000));
     }
   }
- 
+
 
   /**
   * @brief Displays a PolygoMesh
@@ -73,11 +74,11 @@ using namespace cv;
     }
   }
 
-  
+
   /**
-  * @brief Remove noise from a pointcloud using stdandarddeviation, 
-  * @param pcl::PointXYZ::Ptr 
-  * @return pcl::PointXYZ::Ptr 
+  * @brief Remove noise from a pointcloud using stdandarddeviation,
+  * @param pcl::PointXYZ::Ptr
+  * @return pcl::PointXYZ::Ptr
   */
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::removeNoise (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
@@ -95,25 +96,10 @@ using namespace cv;
     return cloud_filtered;
   }
 
-  
-  /**
-  * @brief getHash returns a md5-hash based on current time and the keyword "banan" as a std::string
-  * @return std::string
-  */
-  std::string renderMesh::getHash()
-  {
-
-    //Uses time and a keyword to create a modell id.
-    std::string timeHash = string(currentDateTime())+"banan";
-    std:: string hash = md5(timeHash);
-    return hash;
-  }
-
-  
   /**
    * @brief Reduce A pointCloud using a VoxelGrid filter
-   * @param pcl::PointXYZ::Ptr 
-   * @return pcl::PointXYZ::Ptr 
+   * @param pcl::PointXYZ::Ptr
+   * @return pcl::PointXYZ::Ptr
    */
   //Downsampling pointCloud using VoxelGrid filter
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::reduceData (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
@@ -140,11 +126,11 @@ using namespace cv;
     return cloud_filtered;
   }
 
-  
+
   /**
   * @brief Suface smoothing using moving least squares
-  * @param pcl::PointXYZ::Ptr 
-  * @return pcl::PointXYZ::Ptr 
+  * @param pcl::PointXYZ::Ptr
+  * @return pcl::PointXYZ::Ptr
   */
   pcl::PointCloud<pcl::PointXYZ>::Ptr renderMesh::smoothing (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
@@ -170,7 +156,7 @@ using namespace cv;
   /**
    * @brief Returns normals for a pcl::PointCloud and points dem towards the origin
    * @param a pcl::PointXYZ::Ptr
-   * @return pcl::Normal>::Ptr 
+   * @return pcl::Normal>::Ptr
    */
   pcl::PointCloud<pcl::PointNormal>::Ptr renderMesh::getNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2)
   {
@@ -195,12 +181,12 @@ using namespace cv;
 
     pcl::PointCloud<pcl::PointNormal>::Ptr cloudWithNormals (new pcl::PointCloud<pcl::PointNormal>);
     pcl::concatenateFields(*cloud,*normals, *cloudWithNormals);
-   
+
     for(int i = 0; i < cloudWithNormals->size();i++){
-       pcl::flipNormalTowardsViewpoint (cloud->points[i], 
+       pcl::flipNormalTowardsViewpoint (cloud->points[i],
         0,
-        0, 
-        0, 
+        0,
+        0,
         cloudWithNormals->points[i].x,
         cloudWithNormals->points[i].y,
         cloudWithNormals->points[i].z
@@ -208,23 +194,21 @@ using namespace cv;
 
          );
     }
-    
-    std::cout << "normaler klar" << std::endl;
 
     std::cout << "normaler klar" << std::endl;
- 
+
     return cloudWithNormals;
   }
   /**
-  * @brief Build a surface using GPT, 
-  * @param  descriptionpcl::PointCloud<pcl::PointXYZ>::Ptr 
+  * @brief Build a surface using GPT,
+  * @param  descriptionpcl::PointCloud<pcl::PointXYZ>::Ptr
   */
 
   void renderMesh::runGreedyProjectionTriangulation (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2)
 
   {
     pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
-    
+
     tree2->setInputCloud (getNormals(cloud,cloud2));
 
   //  pcl::PolygonMesh mesh;
@@ -250,8 +234,8 @@ using namespace cv;
 
     //showMesh(mesh);
   }
-  
-  
+
+
   /**
    * @brief Builds a surface using poisson surface reconstruction
    * @param a pcl::PointXYZ::ptr
@@ -265,12 +249,13 @@ using namespace cv;
     pcl::PolygonMesh mesh;
 
     poisson.reconstruct (mesh);
-    poisson.setDepth(18);
+    poisson.setDepth(25);
     //pcl::io::saveOBJFile("file.obj", mesh);
     std::cout << "cloud Poisson" << endl;
+    showMesh(mesh);
 
   }
-  
+
 
   /**
    * @brief Set max size of a cloud, max and min(x,y,z)
@@ -281,11 +266,12 @@ using namespace cv;
   {
     pcl::ConditionAnd<pcl::PointXYZ>::Ptr range_cond ( new pcl::ConditionAnd<pcl::PointXYZ>);
 
-    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::LT, 1)));
-    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::GT, -1)));
-    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::LT, 1)));
-    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::GT, -1)));
+    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::LT, .5)));
+    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("z", pcl::ComparisonOps::GT, -.5)));
+    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::LT, .5)));
+    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("x", pcl::ComparisonOps::GT, -.5)));
     range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("y", pcl::ComparisonOps::LT, 0.5)));
+    range_cond->addComparison(pcl::FieldComparison<pcl::PointXYZ>::ConstPtr (new pcl::FieldComparison<pcl::PointXYZ> ("y", pcl::ComparisonOps::GT, -0.5)));
 
     pcl::ConditionalRemoval<pcl::PointXYZ> condrem (range_cond);
     condrem.setInputCloud(cloud);
@@ -294,7 +280,7 @@ using namespace cv;
 
     return cloud;
   }
-  
+
 
   /**
    * @brief Mirrors a cloud using a transformation matrix
@@ -319,37 +305,3 @@ using namespace cv;
 
     return transformed_cloud;
   }
-  
-
-  /**
-   * @brief Inserts file into Mongo
-   */
-   
-  void renderMesh::storeFile()
-  {
-    mongo::client::initialize();
-    mongo::DBClientConnection c;
-    c.connect("localhost");
-    std::string modellID = getHash();
-
-    mongo::GridFS gfs = mongo::GridFS(c, "testet");
-    gfs.storeFile(modellID);
-
-
-    //I think it calls the destructor for the 
-    //connection when it leaves the function. /Carl
-  }
-
-  
-  /**
-  * @brief Returns the current date as a char-string
-  */
-  std::string renderMesh::currentDateTime()
-  {
-    time_t     now = time(0);
-    struct tm  tstruct;
-    char       buf[80];
-    tstruct = *localtime(&now);
-    strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
-    return buf;
-}

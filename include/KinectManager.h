@@ -10,13 +10,12 @@
 #define DEBUG true
 
 #include <libfreenect/libfreenect.hpp>
-
-#include "Kinect.h"
-#include "debug_helpers.h"
-
 #include <stddef.h>
 #include <vector>
 #include <string.h>
+
+#include "Kinect.h"
+#include "texture.h"
 
 /**
  * Manager for multiple connected kinects
@@ -37,9 +36,11 @@ public:
   void stopVideo();
 
   bool getDepth(int index, uint16_t **frame);
-  bool getVideo(int index, uint8_t **frame);
+  bool getVideo(int index, VIDEO_IMAGE &image);
 
   void calibratePosition();
+  void setOrigin();
+  bool getCalibrationStatus() { return mDevicesCalibrated; }
 
   bool getVideoStatus();
   bool getDepthStatus();
@@ -48,6 +49,7 @@ public:
 private:
   bool mInitialized; /// Initialized status of manager
   std::vector<Kinect*> mDevices; ///list of all connected kinects
+  bool mDevicesCalibrated; /// are the cameras calibrated?
 };
 
 #endif
