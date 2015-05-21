@@ -727,6 +727,17 @@ void Texture::applyTexture(pcl::PolygonMesh &triangles, pcl::PointCloud<pcl::Poi
   pcl::concatenateFields (*cloud, *normals, *cloud_with_normals);
   PCL_INFO ("...Done.\n");
 
+    for(int i = 0; i < cloud_with_normals->size();i++){
+     pcl::flipNormalTowardsViewpoint (cloud->points[i],
+      Texture::mCameras[0].pose(0,3),
+      Texture::mCameras[0].pose(1,3),
+      Texture::mCameras[0].pose(2,3),
+      cloud_with_normals->points[i].x,
+      cloud_with_normals->points[i].y,
+      cloud_with_normals->points[i].z
+    );
+  }
+
   pcl::toPCLPointCloud2 (*cloud_with_normals, mesh.cloud);
 
   PCL_INFO("TRIANGLES!!!\n");

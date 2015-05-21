@@ -161,13 +161,23 @@ using namespace cv;
     n.setInputCloud (cloud);
     n.setSearchMethod (tree);
     n.setRadiusSearch (5);
-    //n.setRadiusSearch (5);
     
     pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
     n.compute (*normals);
 
     pcl::PointCloud<pcl::PointNormal>::Ptr cloudWithNormals (new pcl::PointCloud<pcl::PointNormal>);
     pcl::concatenateFields(*cloud,*normals, *cloudWithNormals);
+
+    for(int i = 0; i < cloudWithNormals->size();i++){
+       pcl::flipNormalTowardsViewpoint (cloud->points[i],
+        Texture::mCameras[0].pose(0,3),
+        Texture::mCameras[0].pose(1,3),
+        Texture::mCameras[0].pose(2,3),
+        cloudWithNormals->points[i].x,
+        cloudWithNormals->points[i].y,
+        cloudWithNormals->points[i].z
+      );
+    }
     
     std::cout << "normaler klar" << std::endl;
     
