@@ -232,7 +232,27 @@ void KinectManager::setOrigin()
 
 bool KinectManager::loadCalibration()
 {
-  for (int i = 0; i < getConnectedDeviceCount(); ++i)
+  int kinectCount = getConnectedDeviceCount();
+  DIR* pDir = opendir("./");
+  if(pDir != NULL)
+  {
+    struct dirent *pDirent;
+    while((pDirent = readdir(pDir)) != NULL)
+    {
+       int len = strlen (pDirent->d_name);
+        if (len >= 4) {
+            if (strcmp (".yaml", &(pDirent->d_name[len - 4])) == 0) {
+                printf ("%s\n", pDirent->d_name);
+            }
+        }
+    }
+  }
+  else
+  {
+    return false;
+  }
+  
+  for (int i = 0; i < kinectCount; ++i)
   {
     if(!mDevices[i]->readCalibrationData())
       return false;
