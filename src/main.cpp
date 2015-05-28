@@ -19,6 +19,7 @@ int main(int argc, char const *argv[])
   if(devCount <= 0)
   {
     std::cout << "No kinects found!" << std::endl;
+    return -1;
   }
   else
   {
@@ -26,29 +27,48 @@ int main(int argc, char const *argv[])
     std::cout << "Connected to " << km.getConnectedDeviceCount() << " devices." << std::endl;
   }
 
-
   Websocket ws(7681);
   ws.init();
   Medusa medusa(&km, &ws);
 
   string option;
-  std::cout << "Would you like to calibrate(y/n)?";
-  std::cin >> option;
-  if(option == "y")
+
+  while(true)
   {
-    medusa.init();
-    std::cout << "Place origin and write \"ok\"";
+    std::cout << "Would you like to recalibrate(y/n)? ";
     std::cin >> option;
-    if(option == "ok")
-      km.setOrigin();
+    if(option == "y")
+    {
+      medusa.init();
+      break;
+    }
+    else
+    {
+      std::cout << "Trying to load data from files..." << std::endl;
 
-    std::cout << "Origin Set";
+      if(!km.loadCalibration())
+      {
+        std::cout << "Failed ot load calibration data" << std::endl;
+      }
+      else
+      {
+        std::cout << "Calibration data loaded" << std::endl;
+        break;
+      }
+    }
 
   }
-  else
-  {
-    //TODO: read data from an XML file
-  }
+
+
+  std::cout << "Place origin and write \"ok\" ";
+  std::cin >> option;
+  if(option == "ok")
+    km.setOrigin();
+
+  std::cout << "Origin Set" << std::endl;
+
+  std::cout << "Awaiting Connection" << std::endl;
+
   medusa.run();
 
   return 0;

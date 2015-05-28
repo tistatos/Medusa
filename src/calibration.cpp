@@ -12,7 +12,7 @@
 Calibration::Calibration(int nPictures, int width, int height, int boardX, int boardY):
 mImageSize(width,height), mBoardSize(boardX,boardY), mNumberOfPictures(nPictures)
 {
-	mGridSize = 36.0f;
+	mGridSize = 22.0f;
 	clear();
 }
 
@@ -42,9 +42,13 @@ int Calibration::processImage(VIDEO_IMAGE frame)
 	bool found_rgb = findChessboardCorners(view_rgb, mBoardSize, pointBuf_RGB);
 	if(found_rgb)
 	{
-		mImagePoints.push_back(pointBuf_RGB);
-		mProcessedImages++; //counter for every image that have been taken
-		std::cout << "Found chess: " << mProcessedImages << std::endl;
+	  cv::Mat viewGray;
+	  cv::cvtColor(view_rgb, viewGray, CV_BGR2GRAY);
+	  cv::cornerSubPix( viewGray, pointBuf_RGB, cv::Size(11,11),
+	  		    cv::Size(-1,-1), cv::TermCriteria(CV_TERMCRIT_EPS+CV_TERMCRIT_ITER, 30, 0.1 ));
+	  mImagePoints.push_back(pointBuf_RGB);
+	  mProcessedImages++; //counter for every image that have been taken
+	  std::cout << "Found chess: " << mProcessedImages << std::endl;
 	}
 
 	return mProcessedImages;
@@ -83,14 +87,20 @@ double Calibration::calibrate()
  */
 std::vector<std::vector<cv::Point3f> > Calibration::getObjectPoints()
 {
-	std::vector<cv::Point3f> corners;
+  std::vector<cv::Point3f> corners;
 
   corners.resize(0);
+  
+  int middleY = mBoardSize.height/2+1;
+  int middleX = mBoardSize.width/2+1;
 
   for( int i = 0; i < mBoardSize.height; ++i )
+  {
     for( int j = 0; j < mBoardSize.width; ++j )
-        corners.push_back(cv::Point3f(float( j*mGridSize ), float( i*mGridSize ), 0));
-
+    {
+	corners.push_back(cv::Point3f(float( j*mGridSize ), float( i*mGridSize ), 0));
+    }
+  }
   std::vector<std::vector<cv::Point3f> > objectPoints(0);
   objectPoints.resize(mImagePoints.size(),corners);
   return objectPoints;
@@ -105,13 +115,13 @@ std::vector<std::vector<cv::Point3f> > Calibration::getObjectPoints()
 cv::Mat Calibration::getCameraExtrinsic(VIDEO_IMAGE frame)
 {
 	if(!mCalibrated)
-		return cv::Mat::zeros(3, 3, CV_64F);
+		return cv::Mat::zeros(4, 4, CV_64F);
 
 	//cv::Mat image = fromPNGtoMat(frame);
 	int processedImages = mProcessedImages;
 	processImage(frame);
 	if(processedImages == mProcessedImages)
-		return cv::Mat::zeros(3, 3, CV_64F);
+		return cv::Mat::zeros(4, 4, CV_64F);
 
 	cv::Mat rvec, tvec;
 	cv::solvePnP(getObjectPoints().at(0), mImagePoints.at(mImagePoints.size()-1), mCameraMatrix, mDistCoeffs, rvec, tvec);
@@ -149,4 +159,16 @@ cv::Mat Calibration::fromPNGtoMat(VIDEO_IMAGE frame)
 		}
 	}
 	return imageMatrix;
+}
+
+void Calibration::setCalibrationData(cv::Mat intrinsic, cv::Mat distCoeffs)
+{
+	mCameraMatrix = intrinsic;
+	mDistCoeffs = distCoeffs;
+
+	std::cout << "Cam Matrix: " << mCameraMatrix << std::endl;
+
+	std::cout << "Cam dist: " << mDistCoeffs << std::endl;
+
+	mCalibrated = true;
 }

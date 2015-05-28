@@ -6,8 +6,8 @@
 {
   
   var infoMenu = document.querySelector( ".infoMenu" ),
-      infoButton = document.querySelector( ".infoButton" ),
-      startButton = document.querySelector( ".startButton" ),
+      infoButton = document.querySelector( "#infoButton" ),
+      startButton = document.querySelector( "#startButton" ),
       continueButton = document.querySelector( "#continueButton" ),
       instructionsMenu = document.querySelector( "instructions"),
       body = document.body,
@@ -27,7 +27,7 @@
   });
   
   //Close the information menu when the close button is pushed
-  [].slice.call(document.querySelectorAll(".closeButton")).forEach(function(el,i){
+  [].slice.call(document.querySelectorAll("#closeButton")).forEach(function(el,i){
     el.addEventListener( "click", function(){
       classie.remove( body, activeNav2 );
       activeNav2 = "";

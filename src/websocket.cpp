@@ -29,7 +29,7 @@ static int callback_http (struct libwebsocket_context * context,
       // log what we recieved and what we're going to send as a response.
       // that disco syntax `%.*s` is used to print just a part of our buffer
       // http://stackoverflow.com/questions/5189071/print-part-of-char-array
-      printf("received data: %s", (char *) in);
+      printf("received data: %s \n", (char *) in);
 
       ws->setData((char*)in, len);
       break;

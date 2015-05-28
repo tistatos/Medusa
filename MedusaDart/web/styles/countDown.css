@@ -7,31 +7,8 @@ html, body
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
-    /*background-image: url("../img/medusa.png");*/
     background-repeat: no-repeat;
     background-size: 100%;
-}
-
-.count h1 {
-    display: block;
-    top: 30%;
-    left: 47%;
-    margin-left: -100px;
-    /*height: 10%;
-    width: 20%; */
-    heigt: 70px;
-    width: 250px;
-    border-style:none;
-    text-align: center;
-    font-size: 25px;
-    color: #323232; 
-    position: fixed; 
-    outline:none; 
-    -webkit-transition: all 0.5s !important;
-    -moz-transition: all 0.5s;
-    -ms-transition: all 0.5s;
-    -o-transition: all 0.5s;
-    transition: all 0.5s; 
 }
 
 .count
@@ -42,16 +19,17 @@ html, body
   margin-left: -20px;
   height: 10%;
   width: 20%; 
-  border-style:none;
   text-align: center;
   font-size: 70px;
-  color: #000000;
-  position: fixed; 
-  outline:none; 
   color: #323232;
+  position: fixed; 
   -webkit-transition: all 0.5s !important;
   -moz-transition: all 0.5s;
   -ms-transition: all 0.5s;
   -o-transition: all 0.5s;
   transition: all 0.5s; 
+}
+
+.count h1 {
+  font-size: 25px;
 }

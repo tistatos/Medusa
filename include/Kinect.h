@@ -104,6 +104,8 @@ public:
   Eigen::Matrix4f getPosition();
   bool isCalibrated() { return mCalibrated; }
   bool getIndex() { return mIndex; }
+  void writeCalibrationData();
+  bool readCalibrationData();
 protected:
   bool getDepthFrame(uint16_t **frame);
   void setPosition(cv::Mat newPosition);

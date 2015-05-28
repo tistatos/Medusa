@@ -38,6 +38,7 @@ public:
   bool getDepth(int index, uint16_t **frame);
   bool getVideo(int index, VIDEO_IMAGE &image);
 
+  bool loadCalibration();
   void calibratePosition();
   void setOrigin();
   bool getCalibrationStatus() { return mDevicesCalibrated; }

@@ -43,18 +43,12 @@ h1 {
     text-align: center;
     margin-left: -70px;
     margin-top: -75px;
-
     outline:none; 
     -webkit-transition: all 0.5s !important;
     -moz-transition: all 0.5s;
     -ms-transition: all 0.5s;
     -o-transition: all 0.5s;
     transition: all 0.5s; 
-}
-
-.progress > svg {
-    /*height: 100%;
-    display: block;*/
 }
 
 
