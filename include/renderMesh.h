@@ -48,7 +48,7 @@ class renderMesh
 
 		static  pcl::PointCloud<pcl::PointNormal>::Ptr getNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud/*, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2*/);
 
-		static  void runGreedyProjectionTriangulation(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2);
+		static  pcl::PolygonMesh runGreedyProjectionTriangulation(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2);
 
 		static pcl::PointCloud<pcl::PointXYZ>::Ptr setDelims(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 

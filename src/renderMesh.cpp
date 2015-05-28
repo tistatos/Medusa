@@ -13,9 +13,9 @@ using namespace cv;
   {
     std::cout << "Starting" << endl;
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2 = cloud;
-    show(cloud);
+    //show(cloud);
     cloud = setDelims(cloud);
-    show(cloud);
+    //show(cloud);
     std::cout << "Delims set" << std::endl;
     cloud = reduceData(cloud);
     std::cout << "Data reduced" << std::endl;
@@ -27,12 +27,12 @@ using namespace cv;
     //cloud = smoothing(cloud);
 
     runPoisson(cloud, cloud2, mesh);
-    //runGreedyProjectionTriangulation(cloud, cloud2);
+    //mesh = runGreedyProjectionTriangulation(cloud, cloud2);
 
     std::cout << "GP3 done." << endl;
     //storeFile();
     std::cout << "Finished" << endl;
-
+    pcl::io::saveOBJFile("mesh.obj",mesh);
     return cloud;
   }
 
@@ -168,15 +168,15 @@ using namespace cv;
 
     pcl::PointCloud<pcl::PointNormal>::Ptr cloudWithNormals (new pcl::PointCloud<pcl::PointNormal>);
     pcl::concatenateFields(*cloud,*normals, *cloudWithNormals);
-
+   
     for(int i = 0; i < cloudWithNormals->size();i++){
        pcl::flipNormalTowardsViewpoint (cloud->points[i],
         Texture::mCameras[0].pose(0,3),
         Texture::mCameras[0].pose(1,3),
         Texture::mCameras[0].pose(2,3),
-        cloudWithNormals->points[i].x,
-        cloudWithNormals->points[i].y,
-        cloudWithNormals->points[i].z
+        cloudWithNormals->points[i].normal_x,
+        cloudWithNormals->points[i].normal_y,
+        cloudWithNormals->points[i].normal_z
       );
     }
     
@@ -238,7 +238,7 @@ using namespace cv;
   * @param  descriptionpcl::PointCloud<pcl::PointXYZ>::Ptr
   */
 
-  void renderMesh::runGreedyProjectionTriangulation (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2)
+  pcl::PolygonMesh renderMesh::runGreedyProjectionTriangulation (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2)
   {
     std::cout << "Greedy started" << endl;
     pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
@@ -257,7 +257,7 @@ using namespace cv;
     gp3.setMaximumAngle (2 * M_PI / 3);
     gp3.setNormalConsistency (false);
 
-    // gp3.setInputCloud (getNormals(cloud,cloud2));
+    gp3.setInputCloud (getNormals(cloud));
     gp3.setSearchMethod (tree2);
     //gp.setResolution(1);
 
@@ -265,6 +265,7 @@ using namespace cv;
     std::cout << "runGreedyProjectionTriangulation done!" << endl;
     //pcl::io::saveOBJFile("file.obj", mesh);
     showMesh(mesh);
+    return mesh;
   }
 
 
@@ -280,7 +281,7 @@ using namespace cv;
     poisson.setInputCloud (getNormals (cloud));
 
     poisson.reconstruct (mesh);
-    poisson.setDepth(15);
+    poisson.setDepth(20);
     //pcl::io::saveOBJFile("file.obj", mesh);
     std::cout << "cloud Poisson" << endl;
     showMesh(mesh);

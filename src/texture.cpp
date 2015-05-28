@@ -552,12 +552,11 @@ void Texture::applyCameraPose(Kinect* kinect)
 void Texture::applyTexture(pcl::PolygonMesh &triangles, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud) // Att skicka med: PolygonMesh, pcl::PointCloud<pcl::PointNormal>
 {
   std::cout << "Loading mesh... " << std::endl;
-
+  fromPCLPointCloud2 (triangles.cloud, *cloud);
   // Create the texturemesh object that will contian our UV-mapped mesh
   TextureMesh mesh;
   mesh.cloud = triangles.cloud;
   std::vector<pcl::Vertices> polygon_1;
-
   // push faces into the texturemesh object
   polygon_1.resize (triangles.polygons.size ());
   for(size_t i =0; i < triangles.polygons.size (); ++i)
@@ -638,7 +637,7 @@ void Texture::applyTexture(pcl::PolygonMesh &triangles, pcl::PointCloud<pcl::Poi
   pcl::PointCloud<pcl::PointNormal>::Ptr cloud_with_normals (new pcl::PointCloud<pcl::PointNormal>);
   pcl::concatenateFields (*cloud, *normals, *cloud_with_normals);
   PCL_INFO ("...Done.\n");
-  
+  /* 
     for(int i = 0; i < cloud_with_normals->size();i++){
      pcl::flipNormalTowardsViewpoint (cloud_with_normals->points[i],
       Texture::mCameras[0].pose(0,3),
@@ -649,22 +648,22 @@ void Texture::applyTexture(pcl::PolygonMesh &triangles, pcl::PointCloud<pcl::Poi
       cloud_with_normals->points[i].z
     );
   }
-
+  */
   pcl::toPCLPointCloud2 (*cloud_with_normals, mesh.cloud);
 
 
   PCL_INFO ("\nSaving mesh to file.obj\n");
 
-  // pcl::io::saveOBJFile("file.obj", mesh);
+  pcl::io::saveOBJFile("file.obj", mesh);
 
-  pcl::visualization::PCLVisualizer viewer ("surface fitting");
-  viewer.addTextureMesh (mesh, "sample mesh");
+  // pcl::visualization::PCLVisualizer viewer ("surface fitting");
+  //viewer.addTextureMesh (mesh, "sample mesh");
 
-  while (!viewer.wasStopped ())
-  {
-    viewer.spinOnce (100);
-    boost::this_thread::sleep (boost::posix_time::microseconds (100000));
-  }
+  //while (!viewer.wasStopped ())
+  //{
+  //  viewer.spinOnce (100);
+  //  boost::this_thread::sleep (boost::posix_time::microseconds (100000));
+  //}
 
   Texture::saveOBJFile("textured.obj", mesh, 5);
 }

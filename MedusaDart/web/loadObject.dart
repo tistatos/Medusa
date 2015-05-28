@@ -55,12 +55,16 @@ init()
   //Ta bort sen
   
   var loader = new OBJLoader();
-    loader.load('obj/file.obj').then((object) {
+    loader.load('obj/textured.obj').then((object) {
       //object.position.y = -90.0;
       //object.position.z = -340.0;
-      object.position.z = -5.0;
-      object.rotation.y = -Math.PI/2;
-      
+      object.position.z = 0.0;
+      object.rotation.y = Math.PI;
+      object.scale.x = 7.0;
+      object.scale.y = object.scale.x;
+      object.scale.z = object.scale.x;
+      object.name = "mesh";
+      //object.applyMatrix(object.matrix.invert());
       scene.add(object);
     });
   //----------
@@ -88,7 +92,7 @@ init()
   //Init renderer
   renderer = new WebGLRenderer(antialias: true, alpha: true);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setClearColorHex( 0xF5F5F5, 1 );
+  renderer.setClearColorHex( 0xFFFFFF, 1 );
   container.append(renderer.domElement);
   document.onMouseMove.listen(onDocumentMouseMove);  
 }
@@ -110,12 +114,17 @@ animate(num time)
 //Render function
 render()
 {
+  var r = 7;
+  var theta = mouseX/100;
+  var x = r*Math.sin(theta);
+  var z = r*Math.cos(theta);
+  camera.position.x= x;
+  camera.position.z= z;
   //camera.position.x += (mouseX - camera.position.x) * 0.05;
   //camera.position.y += (-mouseY - camera.position.y) * 0.05;
   camera.lookAt(scene.position);
-  
-  //object.rotation.y += 0.5;
-  //object is null in render loop????
+  //var obj = scene.getObjectByID(1);
+  //obj.rotation.y = Math.PI + mouseX;
   
   renderer.render(scene, camera);
 }
