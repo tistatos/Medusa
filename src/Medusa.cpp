@@ -80,8 +80,8 @@ void Medusa::saveImages()
     char filename[128];
     sprintf(filename, "%i_bild.png", i);
     cv::Mat cvImage = Calibration::fromPNGtoMat(image);
-    cv::Mat newImage = cv::Mat::zeros(1024,1024, CV_8UC3);
-    cv::resize(cvImage, newImage, newImage.size(), 1,8, cv::INTER_CUBIC);
+    cv::Mat newImage;
+    cv::resize(cvImage, newImage, cv::Size(1024,1024),0,0, cv::INTER_CUBIC);
     cv::imwrite(filename, newImage);
     image.write("non_cropped.png");
   }

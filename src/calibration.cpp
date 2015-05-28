@@ -90,7 +90,7 @@ std::vector<std::vector<cv::Point3f> > Calibration::getObjectPoints()
   std::vector<cv::Point3f> corners;
 
   corners.resize(0);
-  
+
   int middleY = mBoardSize.height/2+1;
   int middleX = mBoardSize.width/2+1;
 
@@ -147,7 +147,7 @@ cv::Mat Calibration::getCameraExtrinsic(VIDEO_IMAGE frame)
 
 cv::Mat Calibration::fromPNGtoMat(VIDEO_IMAGE frame)
 {
-	cv::Mat imageMatrix = cv::Mat::zeros(640,480, CV_8UC3);
+	cv::Mat imageMatrix = cv::Mat::zeros(480,640, CV_8UC3);
 	uint8_t* pixelPtr = (uint8_t*)imageMatrix.data;
 	for (int i = 0; i < 480; ++i)
 	{
