@@ -108,7 +108,7 @@ Teckensnitt & Förklaring & Exempel \\ \hline
 Möjligheten att återskapa objekt från verkliga världen i en virtuell värld har varit ett intresseområde de senaste 30 åren i både underhållningssyfte och för informationsvisualisering\cite{craigroberts}. Det är en process som tidigare krävt komplettering av mänskligt arbete. Med hjälp av ny teknik och mer datorkraft, har denna process kunnat automatiseras till den grad att det som förut skulle kunna ta en vecka nu kan ske på några sekunder. Hårdvaran som har använts har utvecklats och är nu tillgänglig för alla. Detta, i kombination med utvecklingen av \emph{3D-skrivare}, har lett till att intresset för att återskapa objekt blivit ett populärt ämne.
 
 \section{Bakgrund}
-I kursen “Medietekniskt kandidatarbete”, TNM094, fick ett utvecklingsteam bestående av sju personer i uppgift att utveckla ett 3D-scannerbås för att skapa en modell av användaren i färg. Båset skulle innehålla flera djupkameror för att scanna användaren. Den erhållna punktdatan skulle användas för att skapa en solid tredimensionell modell. Användaren skulle även ha möjlighet att interagera med systemet via ett enkelt gränssnitt. Gränssnittet skulle ha som användningsområde att starta scanning, spara- och kasta modell och göra om scanningsprocessen. En stor del av uppgiften var att arbeta med en agil utvecklingsmetod. Fokus för projektet har legat på att utveckla programvaran till ett fysiskt scanningsbås.
+I kursen “Medietekniskt kandidatarbete”, TNM094, fick ett utvecklingsteam bestående av sju personer i uppgift att utveckla ett mjukvarusystem för ett 3D-scannerbås för att skapa en modell av användaren i färg. Båset skulle innehålla flera djupkameror för att scanna användaren. Den erhållna punktdatan skulle användas för att skapa en solid tredimensionell modell. Användaren skulle även ha möjlighet att interagera med systemet via ett enkelt gränssnitt. Gränssnittet skulle ha som användningsområde att starta scanning, spara- och kasta modell och göra om scanningsprocessen. En stor del av uppgiften var att arbeta med en agil utvecklingsmetod. Fokus för projektet har legat på att utveckla programvaran till ett fysiskt scanningsbås.
 
 \section{Syfte}
 Syftet med rapporten är att framlägga målet med projektet och beskriva arbetsmetoder och verktyg som har behandlats under projektets gång. Syftet är även att ge en tydlig reflektion över metodval för arbetsprocessen och undersöka dessa metoder i verklig miljö. Samtliga medlemmar i projektet ska utveckla en förståelse för teoretiska metoder inom systemutveckling.
@@ -266,7 +266,8 @@ Efter varje avslutad sprint hölls ett utvärderingsmöte. Under utvärderingsm�
 Retrospektivmöten skedde i slutet av varje sprint där det togs upp vad som hade gått dåligt respektive bra med arbetssättet under sprinten. Där kom utvecklingsteamet överens om det behövdes ändra någonting till nästkommande sprint och gav förslag på förbättringsmöjligheter som kunde utföras. Ett exempel på vad som förändrades tidigt i projektet var att de stående mötena flyttades bak från 09.00 till 08.30 för att teamet tidigare skulle kunna komma igång med arbetet för dagen och att alla skulle vara uppdaterade med vad andra gjorde.
 
 \subsubsection{Planeringsmöte}
-Ett planeringsmöte hölls en gång per sprint och syftade till att välja ut user stories från projektets produktbacklogg inför den kommande sprinten. Varje story delades sedan upp i mindre tasks och utvecklingsteamet diskuterade vad som skulle prioriteras. Utvecklingsteamet valde att planera flera tasks än vad som antogs hinna med och sedan arbeta med de högst prioriterade tasksen.
+Ett planeringsmöte hölls en gång per sprint och syftade till att välja ut user stories från projektets produktbacklogg inför den kommande sprinten. Varje story delades sedan upp i mindre tasks och utvecklingsteamet diskuterade vad som skulle prioriteras. Utvecklingsteamet valde att planera flera tasks än vad som antogs hinna med och sedan arbeta med de högst prioriterade tasksen. Detta motsäger dock arbetsmetodiken \emph{scrums} grundprinciper, som menar att en sprint ska innehålla de tasks som utvecklingssteamet tror sig hinna med.
+
 
 \subsubsection{Kodgranskning}
 Kodgranskningstillfällen hölls i slutet av varje vecka, alltså två gånger per sprint. Målet med kodgranskningen var att säkerställa att all kod höll en hög standard, var välkommenterad och följde de riktlinjer om kodstandard som utvecklingsteamet hade beslutat om. Det var viktigt för utvecklingsteamet att alla ansvarsgrupperna närvarade oavsett vilken kod som granskades, eftersom koden skulle vara förstålig oavsett vem som skrivit den.
@@ -279,6 +280,7 @@ Efter första mötet med kunden fick utvecklingsteamet krav som slutprodukten sk
 \item Modellen ska vara solid, alltså ett objekt som är slutet.
 \item Det ska vara möjligt för användaren att antingen kunna spara eller kasta modellen.
 \item Modellen ska vara redo för att kunna skrivas ut på 3D-skrivare.
+\item Kunden hade som önskemål att systemet skulle fungera på en dator med operativsystemet Linux.  
 \end{itemize}
 
 Ut efter dessa krav gjordes en kravspecifikation, vilket teamets produktbacklogg inkluderar, med krav som går att mäta.
@@ -293,7 +295,7 @@ Alla filer i projektet kommenterades enligt \emph{Doxygens}\footnote{www.doxygen
 \section{Versionshantering}
 \emph{Git} användes för versionshantering under projektet. För att dela koden användes \emph{Github} med välkommenterade \emph{commits} om vilka ändringar som utförts vid varje \emph{push}.
 
-För att enkelt separera olika delar i projektet använde utvecklingsteamet olika grenar. Det fanns tre olika huvudgrenar förutom \emph{develop} och \emph{master}. Dessa var bildbehandling, scanning och DART-utveckling. Förutom dessa grenar skapades även separata grenar av alla utvecklare för att arbeta på mindre funktionaliteter. Dessa kunde sedan implementeras in i huvudgrenarna.
+För att enkelt separera olika delar i projektet använde utvecklingsteamet olika grenar. Det fanns tre olika huvudgrenar förutom \emph{develop} och \emph{master}. Dessa var bildbehandling, scanning och DART-utveckling. DART är ett programmeringsspråk som är \textbf{open-source}, skalbart och anpassat för web-applikationer. Förutom dessa grenar skapades även separata grenar av alla utvecklare för att arbeta på mindre funktionaliteter. Dessa kunde sedan implementeras in i huvudgrenarna.
 
 \section{Testning}
 Testningen som har genomförts innefattar användartester på gränssnittet samt kodgranskningar för att säkerställa att en god kvalité hölls och koden följde de bestämda riktlinjerna. Kodgranskningarna underlättade även för olika ansvarsgrupperna att förstå varandras kod.
@@ -335,7 +337,7 @@ Vid en kalibrering måste först Kinect-kamerorna kalibreras enskilt för att ta
 \subsection{Bildbehandling}
 För bearbetning av djupdata användes \textbf{PCL}. \textbf{PCL} är en samling av moderna algoritmer och metoder för att hantera 3D-data för både företag och privatpersoner. Bibliotekets uppbyggnad är modulbaserat vilket innebär att det är ett relativt enkelt att hantera metoder för önskad funktionalitet\cite{pcl}.
 
-\subsubsection{Scanningsporcessen}
+\subsubsection{Scanningsprocessen}
 För att minska risken för förbisedda punkter och få en tillräckligt stor täckning av objektet användes tre stycken Kinect-kameror, positionerade enligt Figur \ref{fig:kinect}. Punkterna hos det scannade objektet registrerades med Kinect-kamerornas IR-kameror, enligt kapitel \ref{Kinect}. Bruspunkter i punktdatan rensades bort med metoden \textbf{\emph{StatisticalOutlierRemoval filter}}, en metod i \textbf{PCL}.
 
 \begin{figure}[tb]
@@ -365,10 +367,20 @@ För att lagra filerna används MongoDB, vilket möjliggör lagring av \emph{obj
 \section{Scanning}
 Projektarbetet resulterade i ett system som utför en scanning med ett flertal sammankopplade Kinect-kameror. Hårdvarans prestanda avgör hur många Kinect-kameror som kan användas samtidigt. Dock är minsta möjliga antal kameror för en total scanning tre stycken för total täckning. Systemet är utformat för att sättas upp i ett bås med en skärm på insidan som via ett gränssnitt går att interagera med.
 \section{Gränssnitt}
-Det första som användaren möter är en touchskärm med en startsida innehållande en stor knapp i mitten med texten \emph{‘Starta’} samt en liten knapp i det övre vänstra hörnet där det står \emph{‘Info’}. Trycker användaren på info-knappen visas bakgrundsinformation om projektet samt kort om hur systemet fungerar. Trycker användaren på \emph{‘Starta’} byts mittenknappen ut mot en ruta med enkla instruktioner om vart användaren bör placera sig och uppmannas att stå still under scanningen. Tillsammans med instruktionerna finns en knapp där det står \emph{‘Starta scanning’}. Om användaren trycker på den knappen visas en nedräkning på tre sekunder med texten \emph{“Scanningen börjar om ...”}. Då nedräkningen kommer till noll utförs själva scanningen och en laddningssymbol visas då istället. När scanningen är klar och bildbehandlingen har utförts kommer användaren till den sista sidan där modellen presenteras. Användaren har här tre knappar att trycka på, \emph{‘Spara’}, \emph{‘Gör om’} och \emph{‘Avsluta’}. Då användaren trycker på \emph{‘Spara’} dyker det upp en ruta där användaren kan skriva in sin e-postadress och trycka på \emph{‘Skicka’} eller \emph{‘Avbryt’}. Trycker användaren på ‘Skicka’ kommer modellen att skickas till den angivna e-postadressen och knappen \emph{‘Spara’} får en neutral färg och görs oklickbar. Om knappen \emph{‘Gör om’} trycks dyker en bekräftelseruta upp där användaren kan trycka på antingen \emph{‘Avbryt’} eller \emph{‘Ja, gör om!’}. Trycker användaren på \emph{‘Ja, gör om!’} kommer användaren till nedräkningssidan. Väljer användaren att trycka på \emph{‘Avsluta’} kommer en bekräftelseruta upp som säger \emph{“Din modell kommer nu att kastas om du inte har sparat den!”.} Användaren kan då trycka på \emph{‘Avbryt’} eller \emph{‘OK’}. Trycker användaren på \emph{‘OK’} kommer användaren tillbaka till startskärmen.
+Bilden nedan representerar gränssnittets utseende och vad som händer när användaren interagerar med de olika knappalternativen. Användaren möts först av sidan som visas på skärmen högst upp till vänster. Där finns det två alternativ en knapp med texten “Info” som leder till skärmen högst upp till vänster. Där får användaren information om projektet och om systemet. Andra knappen med texten “START” på leder vidare i scanninngsprocessen. En kort information om vad användaren ska göra för att starta scanningen och en tillhörande knapp under informationen som leder till sidan längst ner till höger. Den sidan visar en nedräkning på när scanningen startas och användaren hinner ställa sig i den position den vill bli scannad i. När nedräkningen når noll kommer användaren vidare till nästa sida som visar en laddningssymbol på hur långt scanningen har kommit. När den är fylld kommer användaren till sista sidan och 3D-modellen visas och får då tre alternativ.
+
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.85\textwidth]{bilder/gui.png}
+  \includegraphics[width=0.85\textwidth]{bilder/granssnitt.jpg}
+  \caption{Gränssnittet när modellen presenteras för användaren}
+  \label{fig:gui}
+\end{figure}
+
+Användaren kan välja mellan att spara, gör om och avsluta systemet. Varje alternativ visar ett pop-up fönster enligt figuren ovan. Väljer användaren att spara kommer det upp ett fönster där en e-postadress kan skrivas in. Här valideras e-postadressen till den grad att användaren behöver skriva in rätt format på adressen, alltså kontrolleras inte att adressen finns. Stämmer inte formatet på adressen måste användaren skriva om adressen igen. Stämmer adressen får användaren en återkoppling om att modellen är sparad och skickad till den angivna adressen. Användaren kommer då tillbaka till sidan där modellen visas men det är nu inte längre möjligt att spara om modellen på nytt. Väljer användaren att göra om modellen kommer det upp ett fönster som frågar om användaren är säker på att användaren vill göra om modellen och talar om att nuvarande modell kommer att kastas, detta visas i figuren ovan på den mellersta skärmen. Nu hamnar användaren tillbaka till det steget där användaren ska ställa sig i position för scanningen. Sista alternativet, “Avsluta”, fungerar som “Gör om” men användaren kommer nu komma tillbaka till första skärmen.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.85\textwidth]{bilder/save_doover.jpg}
   \caption{Gränssnittet när modellen presenteras för användaren}
   \label{fig:gui}
 \end{figure}
