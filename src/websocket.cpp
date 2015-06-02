@@ -205,5 +205,5 @@ void Websocket::startCountDown(int seconds)
 
 void Websocket::returnHashID(std::string hash)
 {
-  sendData("hash");
+  sendData("hash " + hash);
 }

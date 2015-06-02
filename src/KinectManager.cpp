@@ -251,11 +251,20 @@ bool KinectManager::loadCalibration()
   {
     return false;
   }
-  
+
   for (int i = 0; i < kinectCount; ++i)
   {
     if(!mDevices[i]->readCalibrationData())
       return false;
   }
   return true;
+}
+
+
+void KinectManager::setFilename(std::string filename)
+{
+   for (int i = 0; i < getConnectedDeviceCount(); ++i)
+  {
+    mDevices[i]->setFilename(filename);
+  }
 }

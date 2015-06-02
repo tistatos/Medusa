@@ -273,3 +273,12 @@ void Kinect::writeCalibrationData()
   fs << "intrinsic" << mCameraCalibration.getCameraIntinsic();
   fs << "distortion" << mCameraCalibration.getCameraDistCoeff();
 }
+
+
+void Kinect::setFilename(std::string filename)
+{
+  std::stringstream ss;
+  ss << mIndex;
+  std::string index = ss.str();
+  mFilename = filename + "_" + index + ".png";
+}
