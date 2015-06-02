@@ -17,7 +17,7 @@
 
 \usepackage{titling}
 \title{Medusa - 3D-rekonstruktion\\Projektrapport, TNM094}
-\author{\\Caroline Gard\\Isabell Jansson\\Cecilia Lagerwall\\Johan Reimann\\Erik Sandrén\\Pelle Serander}
+\author{\\Caroline Gard\\Isabell Jansson\\Cecilia Lagerwall\\Johan Reimann\\Erik Sandrén\\Pelle Serander\\Carl Englund}
 
 \frenchspacing
 \setlength{\parindent}{0pt}
@@ -181,13 +181,13 @@ Globala metoder innebär att hela datamängden behandlas direkt vilket medför a
 
 Lokala metoder behandlar rekonstruktionen för mindre delar av datan för sig. Hur delarna sedan byggs ihop är en uppskattning av ytan. Lokala metoder ger ett detaltrikare resultat men har en högre känslighet för brus \cite{poisson}.
 
-Poisson Surface Reconstruction är en global metod där en ytterlinje skapas baserat på gradienten för en 3D-indicatorfunktion, som fås genom en integralrelation med punkterna. Funktionen är bitvis konstant vilket medför att ytan får obegränsat stora värden. För att undvika det appliceras ett smoothing filter på funktionen och gradienter beräknas för den nya funktionen. Användning av Poisson medför därför att följande steg, post-processing, inte behöver appliceras då de redan är inkluderat i metoden\cite{cluster, poisson}.
+\emph{Poisson Surface Reconstruction} är en global metod där en ytterlinje skapas baserat på gradienten för en 3D-indicatorfunktion, som fås genom en integralrelation med punkterna. Funktionen är bitvis konstant vilket medför att ytan får obegränsat stora värden. För att undvika det appliceras ett \emph{smoothing filter} på funktionen och gradienter beräknas för den nya funktionen. Användning av Poisson medför därför att följande steg, post-processing, inte behöver appliceras då de redan är inkluderat i metoden\cite{cluster, poisson}.
 
 \item Efterbehandling
 
 Vid inläsning av punktdata via Kinect-kamerorna uppstår det små distansfel mellan vissa av punkterna. Dessa fel orsakar ojämnhet hos modellens yta, vilket måste korrigeras för att modellen ska se tillräckligt bra ut. En ojämn yta kommer att ha normaler med spretiga riktningar, medan en jämnare yta har normaler som förhåller sig bättre till varandra.
 
-En metod som kan användas till att jämna ut ytan, som består av XYZ-koordinater, är marching cubes. Med marching cubes sätts de punkter som är placerade längst ut till ett referensplan. Metoden grundar sig i att en vertexpunkt väljs ut och att man därifrån stegar sig fram till de närmaste vertexpunkter med hjälp av smallest edge detection\cite{pointcloud2surface}.
+En metod som kan användas till att jämna ut ytan, som består av XYZ-koordinater, är marching cubes. Med \emph{marching cubes} sätts de punkter som är placerade längst ut till ett referensplan. Metoden grundar sig i att en vertexpunkt väljs ut och att man därifrån stegar sig fram till de närmaste vertexpunkter med hjälp av \emph{smallest edge detection}\cite{pointcloud2surface}.
 
 \end{enumerate}
 
