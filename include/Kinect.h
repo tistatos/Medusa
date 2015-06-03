@@ -106,6 +106,8 @@ public:
   bool getIndex() { return mIndex; }
   void writeCalibrationData();
   bool readCalibrationData();
+  void setFilename(std::string filename);
+  std::string getFilename() {return mFilename; }
 protected:
   bool getDepthFrame(uint16_t **frame);
   void setPosition(cv::Mat newPosition);
@@ -123,6 +125,7 @@ private:
   Mutex mDepthMutex; //mutex lock for depth data (write/read)
   Eigen::Matrix4f mPosition; //the kinect's position from the center
   int mIndex;
+  std::string mFilename;
 };
 
 #endif

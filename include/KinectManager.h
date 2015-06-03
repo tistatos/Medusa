@@ -47,6 +47,7 @@ public:
   bool getDepthStatus();
   Kinect* getDevice(int index);
 
+  void setFilename(std::string filename);
 private:
   bool mInitialized; /// Initialized status of manager
   std::vector<Kinect*> mDevices; ///list of all connected kinects

@@ -90,7 +90,7 @@ set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)
 set(Boost_DEBUG 1)
 
-FIND_PACKAGE( Boost 1.46 REQUIRED COMPONENTS regex)
+FIND_PACKAGE( Boost 1.46 REQUIRED COMPONENTS regex system)
 INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIRS} )
 
 ##################
@@ -118,11 +118,12 @@ target_link_libraries(kinectmanager ${FREENECT_LIBRARIES})
 add_library(calibration src/calibration.cpp)
 target_link_libraries(calibration ${FREENECT_LIBRARIES} ${OpenCV_LIBS})
 
-add_executable(medusa src/main.cpp src/Medusa.cpp src/websocket.cpp)
-target_link_libraries(medusa texture kinectmanager rendermesh calibration md5 ${ALL_LIBS})
+add_library(mongodb src/mongo.cpp)
+target_link_libraries(mongodb md5 ${ALL_LIBS})
 
-add_executable(write_xml_file src/write_xml_file.cpp)
-target_link_libraries(write_xml_file ${OpenCV_LIBS})
+
+add_executable(medusa src/main.cpp src/Medusa.cpp src/websocket.cpp)
+target_link_libraries(medusa texture kinectmanager rendermesh calibration md5 mongodb ${ALL_LIBS})
 
 ##################
 # testing

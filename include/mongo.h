@@ -9,7 +9,7 @@
 class Mongo
 {
 public:
-	static std::string storeObject();
+	static void storeObject(std::string modelID);
 
 	static void getObject();
 

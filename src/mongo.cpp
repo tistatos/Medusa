@@ -2,30 +2,21 @@
 #include "mongo.h"
 
 using namespace std;
-
-std::string Mongo::storeObject()
+void Mongo::storeObject(string modelID)
 {
-	mongo::client::initialize();
-	mongo::DBClientConnection c;
-	c.connect("localhost");
-    std::string modelID = getHash();
-	std::system("zip " + modelID + ".zip file.* *_bild.png");
+	// mongo::client::initialize();
+	// mongo::DBClientConnection c;
+	// c.connect("localhost");
+	string command = "zip ./scans/" + modelID +".zip ./scans/" + modelID + "*";
+	system(command.c_str());
 
-	mongo::GridFS gfs = mongo::GridFS(c, "testet");
-	gfs.storeFile(modelID+".zip");
+	// mongo::GridFS gfs = mongo::GridFS(c, "testet");
+	// gfs.storeFile(modelID+".zip");
 
-	if(gfs.findFileByName(modelID) == modelID)
-	{
-		cout << "found it" << endl;
-	}
-	return modelID;
-
-}
-
-
-void Mongo::getObject()
-{
-	
+	// if(gfs.findFileByName(modelID) == modelID)
+	// {
+	// 	cout << "found it" << endl;
+	// }
 }
 
 /**

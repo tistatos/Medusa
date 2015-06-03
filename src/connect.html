@@ -18,20 +18,25 @@
                 };
 
                 websocket.onmessage = function (message) {
+                    console.log(message);
                     if(message.data.indexOf("STARTCD") > -1)
                     {
+                        console.log(message.data.indexOf("STARTCD"));
                         var seconds = parseInt(message.data[message.data.length-1])
                         countdown(seconds);
                     }
                     else if(message.data.indexOf("hash") > -1)
                     {
                         //visa filen med hashen
-                        var hashID = message.data[message.data.length];
-                        consol.log(hashID);
+                        console.log(message.data.indexOf("hash"))
+                        var hashID = message.data.substring(5, message.data.length-1);
+                        console.log(hashID);
 
                     }
                     else
                     {
+                        console.log("problems :(");
+                        console.log(message.data);
                         $('div').append($('<p>', { text: message.data }));
                     }
                 };

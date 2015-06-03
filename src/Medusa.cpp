@@ -71,19 +71,20 @@ Medusa::~Medusa()
  * @brief Save kinect rgb images to hardrive
  * @todo  perhaps a nicer filename?
  */
-void Medusa::saveImages()
+void Medusa::saveImages(string modelID)
 {
   for (int i = 0; i < mManager->getConnectedDeviceCount(); ++i)
   {
+
     VIDEO_IMAGE image(640,480);
     mManager->getVideo(i, image);
-    char filename[128];
-    sprintf(filename, "%i_bild.png", i);
+    Texture::updateTextureFiles(mManager->getDevice(i));
+    string filename = mManager->getDevice(i)->getFilename();
     cv::Mat cvImage = Calibration::fromPNGtoMat(image);
     cv::Mat newImage;
     cv::resize(cvImage, newImage, cv::Size(1024,1024),0,0, cv::INTER_CUBIC);
-    cv::imwrite(filename, newImage);
-    image.write("non_cropped.png");
+
+    cv::imwrite("./scans/" + filename, newImage);
   }
 }
 
@@ -114,22 +115,25 @@ void Medusa::run()
         pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2(new pcl::PointCloud<pcl::PointXYZ>());
         std::cout << "Scanning done" << std::endl;
 
+        string modelID = Mongo::getHash();
+        mManager->setFilename(modelID);
+
         if(mManager->getDepthStatus() && mManager->getVideoStatus())
         {
-          saveImages();
+          saveImages(modelID);
           for(int i = 0; i < mManager->getConnectedDeviceCount(); i++)
           {
             *cloud2 = *cloud2 + mManager->getDevice(i)->getPointCloud();
           }
           std::cout << "creating mesh" << std::endl;
-          //Saves cloud2 to temp/file.obj in renderMesh::run
           pcl::PolygonMesh mesh;
           cloud2 = renderMesh::run(mesh, cloud2);
 
-          Texture::applyTexture(mesh, cloud2);
+          Texture::applyTexture(mesh, cloud2, modelID);
 
-          // string modelID = Mongo::storeObject();
+          Mongo::storeObject(modelID);
           std::cout << "Mesh construction Complete" << std::endl;
+          mSocket->returnHashID(modelID);
         }
         else
         {

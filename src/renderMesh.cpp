@@ -32,7 +32,6 @@ using namespace cv;
     std::cout << "GP3 done." << endl;
     //storeFile();
     std::cout << "Finished" << endl;
-    pcl::io::saveOBJFile("mesh.obj",mesh);
     return cloud;
   }
 
@@ -162,13 +161,13 @@ using namespace cv;
     n.setInputCloud (cloud);
     n.setSearchMethod (tree);
     n.setRadiusSearch (5);
-    
+
     pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
     n.compute (*normals);
 
     pcl::PointCloud<pcl::PointNormal>::Ptr cloudWithNormals (new pcl::PointCloud<pcl::PointNormal>);
     pcl::concatenateFields(*cloud,*normals, *cloudWithNormals);
-   
+
     for(int i = 0; i < cloudWithNormals->size();i++){
        pcl::flipNormalTowardsViewpoint (cloud->points[i],
         Texture::mCameras[0].pose(0,3),
@@ -179,9 +178,9 @@ using namespace cv;
         cloudWithNormals->points[i].normal_z
       );
     }
-    
+
     std::cout << "normaler klar" << std::endl;
-    
+
     return cloudWithNormals;
   }
 
@@ -264,7 +263,7 @@ using namespace cv;
     gp3.reconstruct(mesh);
     std::cout << "runGreedyProjectionTriangulation done!" << endl;
     //pcl::io::saveOBJFile("file.obj", mesh);
-    showMesh(mesh);
+    //showMesh(mesh);
     return mesh;
   }
 
@@ -284,7 +283,7 @@ using namespace cv;
     poisson.setDepth(20);
     //pcl::io::saveOBJFile("file.obj", mesh);
     std::cout << "cloud Poisson" << endl;
-    showMesh(mesh);
+    //showMesh(mesh);
 
   }
 

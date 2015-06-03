@@ -28,7 +28,7 @@ public:
   void run();
   void stop();
   bool running();
-  void saveImages();
+  void saveImages(string modelID);
 
 private:
   KinectManager* mManager; /// kinect manager
