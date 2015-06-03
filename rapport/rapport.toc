@@ -16,6 +16,7 @@
 \contentsline {section}{\numberline {2.3}Gr\IeC {\"a}nssnitt}{5}{section.2.3}
 \contentsline {subsection}{\numberline {2.3.1}Websockets}{5}{subsection.2.3.1}
 \contentsline {subsection}{\numberline {2.3.2}MongoDB}{6}{subsection.2.3.2}
+\contentsline {subsection}{\numberline {2.3.3}DART}{6}{subsection.2.3.3}
 \contentsline {chapter}{\numberline {3}Arbetss\IeC {\"a}tt}{7}{chapter.3}
 \contentsline {section}{\numberline {3.1}Arbetsmetoden Scrum}{7}{section.3.1}
 \contentsline {subsection}{\numberline {3.1.1}Sprints och m\IeC {\"o}ten}{9}{subsection.3.1.1}
@@ -58,7 +59,7 @@
 \contentsline {chapter}{\numberline {7}Slutsatser}{24}{chapter.7}
 \contentsline {section}{\numberline {7.1}Svar p\IeC {\r a} fr\IeC {\r a}gest\IeC {\"a}llningar}{24}{section.7.1}
 \contentsline {section}{\numberline {7.2}Framtida f\IeC {\"o}rb\IeC {\"a}ttringar}{25}{section.7.2}
-\contentsline {section}{\numberline {7.3}Konsekvenser f\IeC {\"o}r ber\IeC {\"o}r m\IeC {\r a}lgrupp}{25}{section.7.3}
+\contentsline {section}{\numberline {7.3}Konsekvenser f\IeC {\"o}r ber\IeC {\"o}rd m\IeC {\r a}lgrupp}{25}{section.7.3}
 \contentsline {chapter}{Litteraturf\"orteckning}{26}{chapter*.15}
 \contentsline {chapter}{\numberline {A}Involverade parter}{27}{appendix.A}
 \contentsline {chapter}{\numberline {B}Statistik fr\IeC {\r a}n github}{28}{appendix.B}

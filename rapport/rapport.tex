@@ -104,7 +104,7 @@ Teckensnitt & Förklaring & Exempel \\ \hline
 
 \chapter{Inledning}
 \label{ch:inledning}
-Möjligheten att återskapa objekt från verkliga världen i en virtuell värld har varit ett intresseområde de senaste 30 åren i både underhållningssyfte och för informationsvisualisering\cite{craigroberts}. Det är en process som tidigare krävt komplettering av mänskligt arbete. Med hjälp av ny teknik och mer datorkraft, har denna process kunnat automatiseras till den grad att det som förut skulle kunna ta en vecka nu kan ske på några sekunder. Hårdvaran som har använts har utvecklats och är nu tillgänglig för alla. Detta, i kombination med utvecklingen av \emph{3D-skrivare}, har lett till att intresset för att återskapa objekt blivit ett populärt ämne.
+Möjligheten att återskapa objekt från verkliga världen i en virtuell värld har varit ett intresseområde de senaste 30 åren i både underhållningssyfte och för informationsvisualisering\cite{craigroberts}. Det är en process som tidigare krävt komplettering av mänskligt arbete. Med hjälp av ny teknik och mer datorkraft, har denna process kunnat automatiseras till den grad att det som förut skulle kunna ta en vecka nu kan ske på några sekunder. Hårdvaran som har använts har utvecklats genom åren och är nu tillgänglig för alla. Detta, i kombination med utvecklingen av \emph{3D-skrivare}, har lett till att intresset för att återskapa objekt blivit ett populärt ämne.
 
 \section{Bakgrund}
 I kursen “Medietekniskt kandidatarbete”, TNM094, fick ett utvecklingsteam bestående av sju personer i uppgift att utveckla ett mjukvarusystem för ett 3D-scannerbås för att skapa en modell av användaren i färg. Båset skulle innehålla flera djupkameror för att scanna användaren. Den erhållna punktdatan skulle användas för att skapa en solid tredimensionell modell. Användaren skulle även ha möjlighet att interagera med systemet via ett enkelt gränssnitt. Gränssnittet skulle ha som användningsområde att starta scanning, spara- och kasta modell och göra om scanningsprocessen. En stor del av uppgiften var att arbeta med en agil utvecklingsmetod. Fokus för projektet har legat på att utveckla programvaran till ett fysiskt scanningsbås.
@@ -136,7 +136,7 @@ En annan avgränsning för systemet var att ingen automatisering av 3D-utskrift 
 En \emph{Kinect-kamera} består av en färgkamera, en IR-kamera\footnote{Infraröd-kamera} samt en projektor. Projektorn sänder ut punkter som fångas upp av IR-kameran. Punkterna jämförs sedan med ett referensmönster som erhålls genom att Kinect-kameran skapar ett plan på ett känt avstånd från kamerasensorn. Planet sparas sedan i Kinect-kamerans sensorminne. Genom att jämföra om varje punkt är placerad framför eller bakom planet kan Kinect-kameran avgöra vilka punkter som är synliga eller gömda bakom olika föremål. Denna process utförs automatiskt av Kinecten. För bästa resultat bör det inscannade objektet befinna sig inom ett område av en till tre meter från sensorn, vilket resulterar i mindre brus och bättre upplösning av djupdatan\cite{Kinectsensor}.
 
 \subsection{Kalibrering av färgkamera och IR-kamera hos Kinect}
-Eftersom färgkameran och IR-kameran inte har exakt samma position i en Kinect-kamera behöver dessa kameror kalibreras. Utan kalibrering kommer texturen att projiceras på modellen inkorrekt\cite{Kinectsensor}. BBåda kamerorna i Kinecten kalibreras samtidigt genom att använda en bild av ett schackmönster. Båda kamerorna måste sedan extrahera hörnpunkterna i schackmönstret, vilket till exempel kan utföras med hjälp av biblioteket \textbf{OpenCV}. Dessa punkter sparas sedan för att ta fram en \emph{\textbf{translationsmatris}} som beskriver sambandet mellan djupbilden från IR-kameran och bilden från färgkameran. Translationsmatrisen används för att förflytta färgbilden innan den projiceras som textur på objektet. Utöver translationsmatrisen erhålls även koefficienter som beskriver den radiella och tangentiella distorsionen. \cite{detphcomvis}.
+Eftersom färgkameran och IR-kameran inte har exakt samma position i en Kinect-kamera behöver dessa kameror kalibreras. Utan kalibrering kommer texturen att projiceras på modellen inkorrekt\cite{Kinectsensor}. Båda kamerorna i Kinecten kalibreras samtidigt genom att använda en bild av ett schackmönster. Båda kamerorna måste sedan extrahera hörnpunkterna i schackmönstret, vilket till exempel kan utföras med hjälp av biblioteket \textbf{OpenCV}. Dessa punkter sparas sedan för att ta fram en \emph{\textbf{translationsmatris}} som beskriver sambandet mellan djupbilden från IR-kameran och bilden från färgkameran. Translationsmatrisen används för att förflytta färgbilden innan den projiceras som textur på objektet. Utöver translationsmatrisen erhålls även koefficienter som beskriver den radiella och tangentiella distorsionen. \cite{detphcomvis}.
 
 \subsection{Positionskalibrering av Kinect-kamerorna}
 För att flera kameror skall kunna användas behöver deras position utifrån ett gemensamt origo vara känt. Genom att använda den schackrutiga bilden som ovan för att placera ut origo kan translationsmatrisen och distortionskoefficenterna användas för att skapa en vymatris för kameran. Denna matris kan användas för att transformera bilder och punkter mellan världskoordinater och kamerakoordinater. Positionskalibreringen möjliggör att projiceringen av färg-bilden sker utifrån korrekt vinkel och position på modellen\cite{kinectextrinc}.
@@ -197,6 +197,10 @@ En metod som kan användas till att jämna ut ytan, som består av XYZ-koordinat
 
 \subsection{MongoDB}
 \emph{MongoDB} är en \emph{no-sql} dokumentdatabas som använder \emph{BSON}, som är en binär variant av JSON\footnote{JavaScript Object Notation, en dokumenstruktur för javascript objekt}.
+
+\subsection{DART} 
+\emph{DART} är ett programmeringsspråk som är \textbf{open-source}, skalbart och anpassat för webbapplikationer.
+
 
 \chapter{Arbetssätt}
 \section{Arbetsmetoden Scrum}
@@ -294,7 +298,7 @@ Alla filer i projektet kommenterades enligt \emph{Doxygens}\footnote{www.doxygen
 \section{Versionshantering}
 \emph{Git} användes för versionshantering under projektet. För att dela koden användes \emph{Github} med välkommenterade \emph{commits} om vilka ändringar som utförts vid varje \emph{push}.
 
-För att enkelt separera olika delar i projektet använde utvecklingsteamet olika grenar. Det fanns tre olika huvudgrenar förutom \emph{develop} och \emph{master}. Dessa var bildbehandling, scanning och DART-utveckling. DART är ett programmeringsspråk som är \textbf{open-source}, skalbart och anpassat för web-applikationer. Förutom dessa grenar skapades även separata grenar av alla utvecklare för att arbeta på mindre funktionaliteter. Dessa kunde sedan implementeras in i huvudgrenarna.
+För att enkelt separera olika delar i projektet använde utvecklingsteamet olika grenar. Det fanns tre olika huvudgrenar förutom \emph{develop} och \emph{master}. Dessa var bildbehandling, scanning och DART-utveckling. Förutom dessa grenar skapades även separata grenar av alla utvecklare för att arbeta på mindre funktionaliteter. Dessa kunde sedan implementeras in i huvudgrenarna.
 
 \section{Testning}
 Testningen som har genomförts innefattar användartester på gränssnittet samt kodgranskningar för att säkerställa att en god kvalité hölls och koden följde de bestämda riktlinjerna. Kodgranskningarna underlättade även för olika ansvarsgrupperna att förstå varandras kod.
@@ -331,7 +335,7 @@ För att genomföra scanningen användes Microsofts Kinect-kameror för Xbox 360
 \subsubsection{Kalibrering av kamerornas position}
 För att underlätta uppsättningen av det fysiska båset för kunden gjordes en kalibreringsfunktion av kamerornas position. Målet med kalibreringen var att kamerorna ska veta sin position i förhållande till ett gemensamt origo.
 
-Vid en kalibrering måste först Kinect-kamerorna kalibreras enskilt för att ta reda på deras interna distortionskoefficienter och kameramatris. Detta sker genom att låta alla kameror ta bilder kontinuerligt och försöka hitta schackbrädet,ref teori, i tio stycken individuella bilder. Utifrån dessa tio bilder kan koefficienter och en kameramatris tas fram för att sedan kalibrera Kinect-kamerornas position. En funktion för att sedan få alla Kinect-kameror att ta en bild samtidigt på schackbrödet skapades. Dessa bilder kunde användas för att skapa ett gemensamt origio för alla Kinect-kameror\cite{kinectextrinc}.
+Vid en kalibrering måste först Kinect-kamerorna kalibreras enskilt för att ta reda på deras interna distortionskoefficienter och kameramatris. Detta sker genom att låta alla kameror ta bilder kontinuerligt och försöka hitta schackbrädet, som tidigare nämnts, i tio stycken individuella bilder. Utifrån dessa tio bilder kan koefficienter och en kameramatris tas fram för att sedan kalibrera Kinect-kamerornas position. En funktion för att sedan få alla Kinect-kameror att ta en bild samtidigt på schackbrödet skapades. Dessa bilder kunde användas för att skapa ett gemensamt origio för alla Kinect-kameror\cite{kinectextrinc}.
 
 \subsection{Bildbehandling}
 För bearbetning av djupdata användes \textbf{PCL}. \textbf{PCL} är en samling av moderna algoritmer och metoder för att hantera 3D-data för både företag och privatpersoner. Bibliotekets uppbyggnad är modulbaserat vilket innebär att det är ett relativt enkelt att hantera metoder för önskad funktionalitet\cite{pcl}.
@@ -366,7 +370,7 @@ För att lagra filerna används MongoDB, vilket möjliggör lagring av \emph{obj
 \section{Scanning}
 Projektarbetet resulterade i ett system som utför en scanning med ett flertal sammankopplade Kinect-kameror. Hårdvarans prestanda avgör hur många Kinect-kameror som kan användas samtidigt. Dock är minsta möjliga antal kameror för en total scanning tre stycken för total täckning. Systemet är utformat för att sättas upp i ett bås med en skärm på insidan som via ett gränssnitt går att interagera med.
 \section{Gränssnitt}
-Bilderna nedan, se Figur \ref{fig:gui1} \ref{fig:gui2} representerar gränssnittets utseende och vad som händer när användaren interagerar med de olika knappalternativen. Användaren möts först av sidan som visas på skärmen högst upp till vänster. Där finns det två alternativ en knapp med texten “Info” som leder till skärmen högst upp till vänster. Där får användaren information om projektet och om systemet. Andra knappen med texten “START” på leder vidare i scanninngsprocessen. En kort information om vad användaren ska göra för att starta scanningen och en tillhörande knapp under informationen som leder till sidan längst ner till höger. Den sidan visar en nedräkning på när scanningen startas och användaren hinner ställa sig i den position den vill bli scannad i. När nedräkningen når noll kommer användaren vidare till nästa sida som visar en laddningssymbol på hur långt scanningen har kommit. När den är fylld kommer användaren till sista sidan och 3D-modellen visas och får då tre alternativ.
+Bilderna nedan, se Figur \ref{fig:gui1} och \ref{fig:gui2} representerar gränssnittets utseende och vad som händer när användaren interagerar med de olika knappalternativen. Användaren möts först av sidan som visas på skärmen högst upp till vänster. Där finns det två alternativ en knapp med texten “Info” som leder till skärmen högst upp till vänster. Där får användaren information om projektet och om systemet. Andra knappen med texten “START” på leder vidare i scanninngsprocessen. En kort information om vad användaren ska göra för att starta scanningen och en tillhörande knapp under informationen som leder till sidan längst ner till höger. Den sidan visar en nedräkning på när scanningen startas och användaren hinner ställa sig i den position den vill bli scannad i. När nedräkningen når noll kommer användaren vidare till nästa sida som visar en laddningssymbol på hur långt scanningen har kommit. När den är fylld kommer användaren till sista sidan och 3D-modellen visas och får då tre alternativ.
 
 \begin{figure}[h]
   \centering
@@ -481,7 +485,7 @@ Utvecklingsteamet hade från början endast tillgång till en äldre version av 
 
 Projektet har utvecklats med \textbf{OpenKinect} eftersom flera utvecklingsplattformar har använts. Om utvecklingsteamet istället valt att endast utveckla på Windows med deras egna API hade det möjliggjort för systemet att skapa ett skelett till den inscannade kroppen. Det hade i sin tur kunnat leda till att utvecklingsteamet hade hunnit med att skapa en animation till modellen. En annan utvecklingsmöjlighet inom liknande område är om endast huvudscanning skulle möjliggöras. Huvudet skulle sedan kunna appliceras på andra färdiga modeller i spel. Det skulle ge användaren en känsla av närvaro.
 
-\section{Konsekvenser för berör målgrupp}
+\section{Konsekvenser för berörd målgrupp}
 En bra scanningsprocess medför ett mindre behov av manuell 3D-modellering, detta kan leda till att jobb inom denna bransch försvinner.
 
 Ett enkelt och billigt scanningssystem ger mindre företag och privatpersoner med lägre budget möjligheten att använda sig utav ett scanningssystem. Det kan medföra nya idéer och utvecklingsmöjligheter som underlättar för till exempel spelutvecklare som då inte behöver skapa en 3D-modell från grunden.
@@ -518,9 +522,9 @@ Ett enkelt och billigt scanningssystem ger mindre företag och privatpersoner me
 \chapter{Involverade parter}
 Utvecklingsteamet
 \begin{itemize}
-\item Pelle Serander: Scrummaster, jobbat med bildbehandling, MD5-kryptering samt databasstöd från C++-sidan.
+\item Pelle Serander: Scrummaster, arbetat med bildbehandling, MD5-kryptering samt databasstöd från C++-sidan.
 
-\item Erik Sandrén: Kundkontakt, arbetat med de flesta delarna
+\item Erik Sandrén: Kundkontakt, arbetat med de flesta delarna.
 
 \item Cecilia Lagerwall: Arbetat med scanning(kalibrering av IR- och färgkamera) och gränssnittet.
 
