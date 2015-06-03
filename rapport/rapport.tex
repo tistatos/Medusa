@@ -47,8 +47,7 @@
 
 
 \begin{document}
-
-\pagestyle{empty}
+\[\pagestyle{empty}
 \thispagestyle{empty}
 
 \frontmatter
@@ -105,10 +104,10 @@ Teckensnitt & Förklaring & Exempel \\ \hline
 
 \chapter{Inledning}
 \label{ch:inledning}
-Möjligheten att återskapa objekt från verkliga världen i en virtuell värld har varit ett intresseområde de senaste 30 åren i både underhållningssyfte och för informationsvisualisering\cite{craigroberts}. Det är en process som tidigare krävt komplettering av mänskligt arbete. Med hjälp av ny teknik och mer datorkraft, har denna process kunnat automatiseras till den grad att det som förut skulle kunna ta en vecka nu kan ske på några sekunder. Hårdvaran som har använts har utvecklats och är nu tillgänglig för alla. Detta, i kombination med utvecklingen av \emph{3D-skrivare}, har lett till att intresset för att återskapa objekt blivit ett populärt ämne.
+Möjligheten att återskapa objekt från verkliga världen i en virtuell värld har varit ett intresseområde de senaste 30 åren i både underhållningssyfte och för informationsvisualisering\cite{craigroberts}. Det är en process som tidigare krävt komplettering av mänskligt arbete. Med hjälp av ny teknik och mer datorkraft, har denna process kunnat automatiseras till den grad att det som förut skulle kunna ta en vecka nu kan ske på några sekunder. Hårdvaran som har använts har utvecklats genom åren och är nu tillgänglig för alla. Detta, i kombination med utvecklingen av \emph{3D-skrivare}, har lett till att intresset för att återskapa objekt blivit ett populärt ämne.
 
 \section{Bakgrund}
-I kursen “Medietekniskt kandidatarbete”, TNM094, fick ett utvecklingsteam bestående av sju personer i uppgift att utveckla ett 3D-scannerbås för att skapa en modell av användaren i färg. Båset skulle innehålla flera djupkameror för att scanna användaren. Den erhållna punktdatan skulle användas för att skapa en solid tredimensionell modell. Användaren skulle även ha möjlighet att interagera med systemet via ett enkelt gränssnitt. Gränssnittet skulle ha som användningsområde att starta scanning, spara- och kasta modell och göra om scanningsprocessen. En stor del av uppgiften var att arbeta med en agil utvecklingsmetod. Fokus för projektet har legat på att utveckla programvaran till ett fysiskt scanningsbås.
+I kursen “Medietekniskt kandidatarbete”, TNM094, fick ett utvecklingsteam bestående av sju personer i uppgift att utveckla ett mjukvarusystem för ett 3D-scannerbås för att skapa en modell av användaren i färg. Båset skulle innehålla flera djupkameror för att scanna användaren. Den erhållna punktdatan skulle användas för att skapa en solid tredimensionell modell. Användaren skulle även ha möjlighet att interagera med systemet via ett enkelt gränssnitt. Gränssnittet skulle ha som användningsområde att starta scanning, spara- och kasta modell och göra om scanningsprocessen. En stor del av uppgiften var att arbeta med en agil utvecklingsmetod. Fokus för projektet har legat på att utveckla programvaran till ett fysiskt scanningsbås.
 
 \section{Syfte}
 Syftet med rapporten är att framlägga målet med projektet och beskriva arbetsmetoder och verktyg som har behandlats under projektets gång. Syftet är även att ge en tydlig reflektion över metodval för arbetsprocessen och undersöka dessa metoder i verklig miljö. Samtliga medlemmar i projektet ska utveckla en förståelse för teoretiska metoder inom systemutveckling.
@@ -137,7 +136,7 @@ En annan avgränsning för systemet var att ingen automatisering av 3D-utskrift 
 En \emph{Kinect-kamera} består av en färgkamera, en IR-kamera\footnote{Infraröd-kamera} samt en projektor. Projektorn sänder ut punkter som fångas upp av IR-kameran. Punkterna jämförs sedan med ett referensmönster som erhålls genom att Kinect-kameran skapar ett plan på ett känt avstånd från kamerasensorn. Planet sparas sedan i Kinect-kamerans sensorminne. Genom att jämföra om varje punkt är placerad framför eller bakom planet kan Kinect-kameran avgöra vilka punkter som är synliga eller gömda bakom olika föremål. Denna process utförs automatiskt av Kinecten. För bästa resultat bör det inscannade objektet befinna sig inom ett område av en till tre meter från sensorn, vilket resulterar i mindre brus och bättre upplösning av djupdatan\cite{Kinectsensor}.
 
 \subsection{Kalibrering av färgkamera och IR-kamera hos Kinect}
-Eftersom färgkameran och IR-kameran inte har exakt samma position i en Kinect-kamera behöver dessa kameror kalibreras. Utan kalibrering kommer texturen att projiceras på modellen inkorrekt\cite{Kinectsensor}. BBåda kamerorna i Kinecten kalibreras samtidigt genom att använda en bild av ett schackmönster. Båda kamerorna måste sedan extrahera hörnpunkterna i schackmönstret, vilket till exempel kan utföras med hjälp av biblioteket \textbf{OpenCV}. Dessa punkter sparas sedan för att ta fram en \emph{\textbf{translationsmatris}} som beskriver sambandet mellan djupbilden från IR-kameran och bilden från färgkameran. Translationsmatrisen används för att förflytta färgbilden innan den projiceras som textur på objektet. Utöver translationsmatrisen erhålls även koefficienter som beskriver den radiella och tangentiella distorsionen. \cite{detphcomvis}.
+Eftersom färgkameran och IR-kameran inte har exakt samma position i en Kinect-kamera behöver dessa kameror kalibreras. Utan kalibrering kommer texturen att projiceras på modellen inkorrekt\cite{Kinectsensor}. Båda kamerorna i Kinecten kalibreras samtidigt genom att använda en bild av ett schackmönster. Båda kamerorna måste sedan extrahera hörnpunkterna i schackmönstret, vilket till exempel kan utföras med hjälp av biblioteket \textbf{OpenCV}. Dessa punkter sparas sedan för att ta fram en \emph{\textbf{translationsmatris}} som beskriver sambandet mellan djupbilden från IR-kameran och bilden från färgkameran. Translationsmatrisen används för att förflytta färgbilden innan den projiceras som textur på objektet. Utöver translationsmatrisen erhålls även koefficienter som beskriver den radiella och tangentiella distorsionen. \cite{detphcomvis}.
 
 \subsection{Positionskalibrering av Kinect-kamerorna}
 För att flera kameror skall kunna användas behöver deras position utifrån ett gemensamt origo vara känt. Genom att använda den schackrutiga bilden som ovan för att placera ut origo kan translationsmatrisen och distortionskoefficenterna användas för att skapa en vymatris för kameran. Denna matris kan användas för att transformera bilder och punkter mellan världskoordinater och kamerakoordinater. Positionskalibreringen möjliggör att projiceringen av färg-bilden sker utifrån korrekt vinkel och position på modellen\cite{kinectextrinc}.
@@ -153,11 +152,11 @@ För att rekonstruera en 3D-modell utifrån inläst punktdata används flera pro
 \end{figure}
 
 \begin{enumerate}
-\item Inläsning av punkdata
+\item \textbf{Inläsning av punkdata}
 
 Inläsning av de punkter som finns kan ske med till exempel en Kinect-kamera. Processen sker då enligt kapitel \ref{Kinect}.
 
-\item Förbehandling: Reducering av punkdata
+\item \textbf{Förbehandling: Reducering av punkdata}
 
 Vid inläsning av punktdata via ett flertal Kinect-kameror erhålls punkter i en stor mängd, vilket medför att programmet blir beräkningstungt för datorn. Punkter placerade nära varandra kommer inte att tillföra någon märkbar kvalitetsförändring av modellen. Alla dessa punkter är därmed inte nödvändiga för att erhålla en tillräckligt noggrann tredimensionell modell för ett bra utseende. Reducering av punktdata kommer att underlätta senare beräkningar för datorn. Det finns flera metoder för att utföra reducering av data och det är nödvändigt att avväga vad som viktigast, prestanda eller kvalité.\cite{cluster}
 
@@ -165,13 +164,13 @@ Vid inläsning av punktdata via ett flertal Kinect-kameror erhålls punkter i en
 \cite{pclvoxel}
 
 
-\item Förbehandling: Reducering av brus
+\item \textbf{Förbehandling: Reducering av brus}
 
 Vid scanningen kan det uppstå felaktiga punkter med extremvärden som uppkommer på grund av mätningsfel vid inläsningen. Detta beror på att IR-kameran registrerar felaktig data som exempelvis kan inträffa vid inläsning av partiklar i luften. Felaktiga eller fristående punkter tolkas som brus och måste avlägsnas för att senare kunna skapa en solid modell.
 
 \emph{StatisticalOutlierRemoval filter} är en metod för att hantera brusreducering och är en del av \textbf{PCL}. Brusreduceringen analyserar den statistiska sannolikheten för att en punkts position är relevant i förhållande till sin omgivning. För att identifiera skräppunkter, beräknas det genomsnittliga avståndet för varje punkt till de närmast intilliggande punkterna. Detta genomförs genom att använda både ett globalt medelavstånd samt en lokal standardavvikelse. Det globala medelavståndet har en förbestämd konstant definition medan standardavvikelsen beräknas med radien för varje punkt. De punkter som antar ett större avstånd än beräknat medelvärde kan tolkas som skräppunkter och därmed tas bort från punktdatan\cite{cluster}.
 
-\item Rekonstruktion
+\item \textbf{Rekonstruktion}
 
 För att sammanfoga punkter till en solid modell, används triangulering\cite{pointcloud2surface}. Triangulering innebär att att punkterna omvandlas till vertexpunkter och att kanter och ytor bildar en solid polygonmodell. Det finns flera metoder för rekonstruktion som kan appliceras på punktdatan, dessa med både för- och nackdelar.
 
@@ -181,9 +180,9 @@ Globala metoder innebär att hela datamängden behandlas direkt vilket medför a
 
 Lokala metoder behandlar rekonstruktionen för mindre delar av datan för sig. Hur delarna sedan byggs ihop är en uppskattning av ytan. Lokala metoder ger ett detaltrikare resultat men har en högre känslighet för brus \cite{poisson}.
 
-\emph{Poisson Surface Reconstruction} är en global metod där en ytterlinje skapas baserat på gradienten för en 3D-indicatorfunktion, som fås genom en integralrelation med punkterna. Funktionen är bitvis konstant vilket medför att ytan får obegränsat stora värden. För att undvika det appliceras ett \emph{smoothing filter} på funktionen och gradienter beräknas för den nya funktionen. Användning av Poisson medför därför att följande steg, post-processing, inte behöver appliceras då de redan är inkluderat i metoden\cite{cluster, poisson}.
+\emph{Poisson Surface Reconstruction} är en global metod där en ytterlinje skapas baserat på gradienten för en 3D-indicatorfunktion, som fås genom en integralrelation med punkterna. Funktionen är bitvis konstant vilket medför att ytan får obegränsat stora värden. För att undvika det appliceras ett \emph{smoothing filter} på funktionen och gradienter beräknas för den nya funktionen. Användning av Poisson medför därför att följande steg, efterbehandling, inte behöver appliceras då de redan är inkluderat i metoden\cite{cluster, poisson}.
 
-\item Efterbehandling
+\item \textbf{Efterbehandling}
 
 Vid inläsning av punktdata via Kinect-kamerorna uppstår det små distansfel mellan vissa av punkterna. Dessa fel orsakar ojämnhet hos modellens yta, vilket måste korrigeras för att modellen ska se tillräckligt bra ut. En ojämn yta kommer att ha normaler med spretiga riktningar, medan en jämnare yta har normaler som förhåller sig bättre till varandra.
 
@@ -199,33 +198,37 @@ En metod som kan användas till att jämna ut ytan, som består av XYZ-koordinat
 \subsection{MongoDB}
 \emph{MongoDB} är en \emph{no-sql} dokumentdatabas som använder \emph{BSON}, som är en binär variant av JSON\footnote{JavaScript Object Notation, en dokumenstruktur för javascript objekt}.
 
+\subsection{DART} 
+\emph{DART} är ett programmeringsspråk som är \textbf{open-source}, skalbart och anpassat för webbapplikationer.
+
+
 \chapter{Arbetssätt}
 \section{Arbetsmetoden Scrum}
 Projektet har utvecklats agilt med arbetsmetoden \emph{scrum}. En agil arbetsmetod var att föredra eftersom det är en iterativ och flexibel arbetsprocess och scrum är en bra metod för arbete mellan utvecklingsteam och kund. Idén med scrum är att leverera bästa möjliga resultat genom att arbeta kreativt och effektivt för att attackera olika typer av problem. Utvecklingsteamet ska vara av den storlek att arbetet kan utföras effektivt med minsta möjliga antal utvecklare men ändå resultera i ett system av hög kvalité. Samtliga medlemmar i utvecklingsteamet ska arbeta under samma titel, det vill säga en platt hierarki. I och med detta kan varje enskild person i utvecklingsteamet hålla sina arbetsuppgifter rörliga mellan arbetsområdena.
 
-En \emph{produktbacklogg} användes för att lista relevanta \emph{user stories} tillhörande projektet. \emph{Stories} beskriver krav från kund och utvecklingsteam och användes därmed som kravspecifikation för produkten. Projektet delades upp i mindre arbetsperioder, \emph{sprints}, där varje sprint pågick under två veckors tid. Tidpunkten för dessa sprints planerades in i ett \emph{gantt-schema} som utvecklingsteamet använde under projektets gång, se bilaga \ref{app:gantt}. En viktig del för projektteamet var att längden av en sprint var tillräckligt lång för att kunna uppnå ett resultat, utan att sprintens mål blev för komplext. Inför varje sprint  genomfördes en sprint-planering där olika user stories valdes till den kommande sprinten. Varje user story, delades sedan upp i \emph{tasks}, där en task var ett arbetsmål med tidsbegränsningen på högst en dag. För att organisera produktbackloggen och för att planera uppsatta tasks och sprints använde arbetsteamet\emph{Trello}\footnote{www.trello.com}. Alla tasks lades från början i en lista märkt med \emph{“To Do”}. Efter arbetets gång flyttades de sedan till \emph{“Doing”}, \emph{“Under Review”} och \emph{“Done”}, se Figur \ref{fig:trello}. En ofärdig eller ej påbörjad task flyttades till kommande sprint, förutsatt att den ansågs ha tillräckligt hög prioritet för att färdigställas.
+En \emph{produktbacklogg} användes för att lista relevanta \emph{user stories} tillhörande projektet. \emph{Stories} beskriver krav från kund och utvecklingsteam och användes därmed som kravspecifikation för produkten. Projektet delades upp i mindre arbetsperioder, \emph{sprints}, där varje sprint pågick under två veckors tid. Tidpunkten för dessa sprints planerades in i ett \emph{gantt-schema} som utvecklingsteamet använde under projektets gång, se bilaga \ref{app:gantt}. En viktig del för projektteamet var att längden av en sprint var tillräckligt lång för att kunna uppnå ett resultat, utan att sprintens mål blev för komplext. Inför varje sprint  genomfördes en sprint-planering där olika user stories valdes till den kommande sprinten. Varje user story, delades sedan upp i \emph{tasks}, där en task var ett arbetsmål med tidsbegränsningen på högst en dag. För att organisera produktbackloggen och för att planera uppsatta tasks och sprints använde arbetsteamet \emph{Trello}\footnote{www.trello.com}. Alla tasks lades från början i en lista märkt med \emph{“To Do”}. Efter arbetets gång flyttades de sedan till \emph{“Doing”}, \emph{“Under Review”} och \emph{“Done”}, se Figur \ref{fig:trello}. En ofärdig eller ej påbörjad task flyttades till kommande sprint, förutsatt att den ansågs ha tillräckligt hög prioritet för att färdigställas.
 
 Utvecklingsteamet bestod av sammanlagt sju personer men för att effektivisera arbetet delades utvecklingsteamet in i tre mindre ansvarsgrupper; scanning, bildbehandling och gränssnitt.
 En beskrivning av ansvarsgruppernas huvudområden följer nedan:
 
-\begin{itemize}
-\item \textbf{Scanning}
+\textbf{Scanning}
 
 Gruppen scanning ansvarade för att ta in data från kamerorna, både djup och färg. Gruppen ansvarade även för kalibrering av position och kalibrering av färg- och IR-kamera.
 
 
-\item \textbf{Bildbehandling}
+\textbf{Bildbehandling}
 
 Gruppen bildbehandling ansvarade för att bygga en solid 3D-modell utifrån den data som kamerorna scannade in.
 
-\item \textbf{Gränssnitt}
+\textbf{Gränssnitt}
+
 Gruppen gränssnitt ansvarade för att bygga ett gränssnitt som användaren kan interagera med, samt att koppla ihop scanningssystemet med gränssnittet.
-\end{itemize}
+
 
 \begin{figure}[htb]
   \centering
   \includegraphics[width=0.9\textwidth]{bilder/trello.png}
-  \caption{planering av scrum med hjälp av trello}
+  \caption{Planering av scrum med hjälp av Trello}
   \label{fig:trello}
 \end{figure}
 
@@ -266,7 +269,8 @@ Efter varje avslutad sprint hölls ett utvärderingsmöte. Under utvärderingsm�
 Retrospektivmöten skedde i slutet av varje sprint där det togs upp vad som hade gått dåligt respektive bra med arbetssättet under sprinten. Där kom utvecklingsteamet överens om det behövdes ändra någonting till nästkommande sprint och gav förslag på förbättringsmöjligheter som kunde utföras. Ett exempel på vad som förändrades tidigt i projektet var att de stående mötena flyttades bak från 09.00 till 08.30 för att teamet tidigare skulle kunna komma igång med arbetet för dagen och att alla skulle vara uppdaterade med vad andra gjorde.
 
 \subsubsection{Planeringsmöte}
-Ett planeringsmöte hölls en gång per sprint och syftade till att välja ut user stories från projektets produktbacklogg inför den kommande sprinten. Varje story delades sedan upp i mindre tasks och utvecklingsteamet diskuterade vad som skulle prioriteras. Utvecklingsteamet valde att planera flera tasks än vad som antogs hinna med och sedan arbeta med de högst prioriterade tasksen.
+Ett planeringsmöte hölls en gång per sprint och syftade till att välja ut user stories från projektets produktbacklogg inför den kommande sprinten. Varje story delades sedan upp i mindre tasks och utvecklingsteamet diskuterade vad som skulle prioriteras. Utvecklingsteamet valde att planera flera tasks än vad som antogs hinna med och sedan arbeta med de högst prioriterade tasksen. Detta motsäger dock arbetsmetodiken \emph{scrums} grundprinciper, som menar att en sprint ska innehålla de tasks som utvecklingssteamet tror sig hinna med.
+
 
 \subsubsection{Kodgranskning}
 Kodgranskningstillfällen hölls i slutet av varje vecka, alltså två gånger per sprint. Målet med kodgranskningen var att säkerställa att all kod höll en hög standard, var välkommenterad och följde de riktlinjer om kodstandard som utvecklingsteamet hade beslutat om. Det var viktigt för utvecklingsteamet att alla ansvarsgrupperna närvarade oavsett vilken kod som granskades, eftersom koden skulle vara förstålig oavsett vem som skrivit den.
@@ -279,6 +283,7 @@ Efter första mötet med kunden fick utvecklingsteamet krav som slutprodukten sk
 \item Modellen ska vara solid, alltså ett objekt som är slutet.
 \item Det ska vara möjligt för användaren att antingen kunna spara eller kasta modellen.
 \item Modellen ska vara redo för att kunna skrivas ut på 3D-skrivare.
+\item Kunden hade som önskemål att systemet skulle fungera på en dator med operativsystemet Linux.  
 \end{itemize}
 
 Ut efter dessa krav gjordes en kravspecifikation, vilket teamets produktbacklogg inkluderar, med krav som går att mäta.
@@ -330,12 +335,12 @@ För att genomföra scanningen användes Microsofts Kinect-kameror för Xbox 360
 \subsubsection{Kalibrering av kamerornas position}
 För att underlätta uppsättningen av det fysiska båset för kunden gjordes en kalibreringsfunktion av kamerornas position. Målet med kalibreringen var att kamerorna ska veta sin position i förhållande till ett gemensamt origo.
 
-Vid en kalibrering måste först Kinect-kamerorna kalibreras enskilt för att ta reda på deras interna distortionskoefficienter och kameramatris. Detta sker genom att låta alla kameror ta bilder kontinuerligt och försöka hitta schackbrädet,ref teori, i tio stycken individuella bilder. Utifrån dessa tio bilder kan koefficienter och en kameramatris tas fram för att sedan kalibrera Kinect-kamerornas position. En funktion för att sedan få alla Kinect-kameror att ta en bild samtidigt på schackbrödet skapades. Dessa bilder kunde användas för att skapa ett gemensamt origio för alla Kinect-kameror\cite{kinectextrinc}.
+Vid en kalibrering måste först Kinect-kamerorna kalibreras enskilt för att ta reda på deras interna distortionskoefficienter och kameramatris. Detta sker genom att låta alla kameror ta bilder kontinuerligt och försöka hitta schackbrädet, som tidigare nämnts, i tio stycken individuella bilder. Utifrån dessa tio bilder kan koefficienter och en kameramatris tas fram för att sedan kalibrera Kinect-kamerornas position. En funktion för att sedan få alla Kinect-kameror att ta en bild samtidigt på schackbrödet skapades. Dessa bilder kunde användas för att skapa ett gemensamt origio för alla Kinect-kameror\cite{kinectextrinc}.
 
 \subsection{Bildbehandling}
 För bearbetning av djupdata användes \textbf{PCL}. \textbf{PCL} är en samling av moderna algoritmer och metoder för att hantera 3D-data för både företag och privatpersoner. Bibliotekets uppbyggnad är modulbaserat vilket innebär att det är ett relativt enkelt att hantera metoder för önskad funktionalitet\cite{pcl}.
 
-\subsubsection{Scanningsporcessen}
+\subsubsection{Scanningsprocessen}
 För att minska risken för förbisedda punkter och få en tillräckligt stor täckning av objektet användes tre stycken Kinect-kameror, positionerade enligt Figur \ref{fig:kinect}. Punkterna hos det scannade objektet registrerades med Kinect-kamerornas IR-kameror, enligt kapitel \ref{Kinect}. Bruspunkter i punktdatan rensades bort med metoden \textbf{\emph{StatisticalOutlierRemoval filter}}, en metod i \textbf{PCL}.
 
 \begin{figure}[tb]
@@ -365,12 +370,22 @@ För att lagra filerna används MongoDB, vilket möjliggör lagring av \emph{obj
 \section{Scanning}
 Projektarbetet resulterade i ett system som utför en scanning med ett flertal sammankopplade Kinect-kameror. Hårdvarans prestanda avgör hur många Kinect-kameror som kan användas samtidigt. Dock är minsta möjliga antal kameror för en total scanning tre stycken för total täckning. Systemet är utformat för att sättas upp i ett bås med en skärm på insidan som via ett gränssnitt går att interagera med.
 \section{Gränssnitt}
-Det första som användaren möter är en touchskärm med en startsida innehållande en stor knapp i mitten med texten \emph{‘Starta’} samt en liten knapp i det övre vänstra hörnet där det står \emph{‘Info’}. Trycker användaren på info-knappen visas bakgrundsinformation om projektet samt kort om hur systemet fungerar. Trycker användaren på \emph{‘Starta’} byts mittenknappen ut mot en ruta med enkla instruktioner om vart användaren bör placera sig och uppmannas att stå still under scanningen. Tillsammans med instruktionerna finns en knapp där det står \emph{‘Starta scanning’}. Om användaren trycker på den knappen visas en nedräkning på tre sekunder med texten \emph{“Scanningen börjar om ...”}. Då nedräkningen kommer till noll utförs själva scanningen och en laddningssymbol visas då istället. När scanningen är klar och bildbehandlingen har utförts kommer användaren till den sista sidan där modellen presenteras. Användaren har här tre knappar att trycka på, \emph{‘Spara’}, \emph{‘Gör om’} och \emph{‘Avsluta’}. Då användaren trycker på \emph{‘Spara’} dyker det upp en ruta där användaren kan skriva in sin e-postadress och trycka på \emph{‘Skicka’} eller \emph{‘Avbryt’}. Trycker användaren på ‘Skicka’ kommer modellen att skickas till den angivna e-postadressen och knappen \emph{‘Spara’} får en neutral färg och görs oklickbar. Om knappen \emph{‘Gör om’} trycks dyker en bekräftelseruta upp där användaren kan trycka på antingen \emph{‘Avbryt’} eller \emph{‘Ja, gör om!’}. Trycker användaren på \emph{‘Ja, gör om!’} kommer användaren till nedräkningssidan. Väljer användaren att trycka på \emph{‘Avsluta’} kommer en bekräftelseruta upp som säger \emph{“Din modell kommer nu att kastas om du inte har sparat den!”.} Användaren kan då trycka på \emph{‘Avbryt’} eller \emph{‘OK’}. Trycker användaren på \emph{‘OK’} kommer användaren tillbaka till startskärmen.
+Bilderna nedan, se Figur \ref{fig:gui1} och \ref{fig:gui2} representerar gränssnittets utseende och vad som händer när användaren interagerar med de olika knappalternativen. Användaren möts först av sidan som visas på skärmen högst upp till vänster. Där finns det två alternativ en knapp med texten “Info” som leder till skärmen högst upp till vänster. Där får användaren information om projektet och om systemet. Andra knappen med texten “START” på leder vidare i scanninngsprocessen. En kort information om vad användaren ska göra för att starta scanningen och en tillhörande knapp under informationen som leder till sidan längst ner till höger. Den sidan visar en nedräkning på när scanningen startas och användaren hinner ställa sig i den position den vill bli scannad i. När nedräkningen når noll kommer användaren vidare till nästa sida som visar en laddningssymbol på hur långt scanningen har kommit. När den är fylld kommer användaren till sista sidan och 3D-modellen visas och får då tre alternativ.
+
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.85\textwidth]{bilder/gui.png}
+  \includegraphics[width=0.85\textwidth]{bilder/granssnitt.jpg}
   \caption{Gränssnittet när modellen presenteras för användaren}
-  \label{fig:gui}
+  \label{fig:gui1}
+\end{figure}
+
+Användaren kan välja mellan att spara, gör om och avsluta systemet. Varje alternativ visar ett pop-up fönster enligt figuren ovan. Väljer användaren att spara kommer det upp ett fönster där en e-postadress kan skrivas in. Här valideras e-postadressen till den grad att användaren behöver skriva in rätt format på adressen, alltså kontrolleras inte att adressen finns. Stämmer inte formatet på adressen måste användaren skriva om adressen igen. Stämmer adressen får användaren en återkoppling om att modellen är sparad och skickad till den angivna adressen. Användaren kommer då tillbaka till sidan där modellen visas men det är nu inte längre möjligt att spara om modellen på nytt. Väljer användaren att göra om modellen kommer det upp ett fönster som frågar om användaren är säker på att användaren vill göra om modellen och talar om att nuvarande modell kommer att kastas, detta visas i figuren ovan på den mellersta skärmen. Nu hamnar användaren tillbaka till det steget där användaren ska ställa sig i position för scanningen. Sista alternativet, “Avsluta”, fungerar som “Gör om” men användaren kommer nu komma tillbaka till första skärmen.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.85\textwidth]{bilder/save_doover.jpg}
+  \caption{Gränssnittet när modellen presenteras för användaren}
+  \label{fig:gui2}
 \end{figure}
 
 \newpage
@@ -399,12 +414,13 @@ Teamet valde att scanna med Microsofts Kinect-kameror för Xbox 360 som är utve
 
 För projektet valdes det att använda tre Kinect-kameror som tillsammans scannar in en människa. För att inte missa viktig information om punktdatan behövs det minst tre kameror, detta gäller om Kinect-kamerorna är statiskt placerade. Fördelen med att använda minsta möjliga antal Kinect-kameror är att detta minskar mängden data som tas in i systemet, utan att påverka kvalitén för den resulterande 3D-modellen. Detta bidrar till mindre beräkningar för datorn. Nackdelen är att kamerorna är placerade runt objektet och det är därför möjligt att missa information om vissa delar är täckta av andra och missar även informationen som är på objektet, till exempel huvudets topp. Detta gör att systemet gissar hur objektet ser ut bakom dolda delar. En lösning hade varit att ha fler kameror för att ta in mer information om objektet. Risken blir då att systemet blir trögt och i värsta fall inte uppfyller kravet att användaren ska uppleva systemet tillräckligt snabbt. En annan lösning på problemet, som tidigare har nämnts i rapporten, är att ha en rörlig kamera. Detta var inte praktiskt möjligt med de resurser som teamet hade. En rörlig kamera som snurrar kräver en mer komplicerad anordning och eftersom teamet inte hade som krav att faktiskt bygga det fysiska båset blev det en ytterligare faktor till att inte ha en rörlig kamera.
 
-\subsubsection{Kalibrering av djup- och färgkamera}
+\textbf{Kalibrering av djup- och färgkamera}
+
 Kalibering av djup- och färgkamera undersöktes, men prioriterades senare bort. Resultatet skulle hypotetisk bli ännu bättre med en kalibrering, men ansågs ändå tillräckligt bra för att lämnas till senare arbete.
 
 
 \subsection{Ytrekonstruktion}
-Reduceringen av data som användes av systemet är effektiv och tillräckligt snabb för att köras inom en rimlig tid. Användaren behöver endast vänta en kortare stund innan processen är klar. Nedsamplingsmetoden tar bort cirka 90 procent av punkterna i scenen. Det finns flera olika metoder för själva ytrekonstruktionen. Metoden som valdes, Poisson, gav en bra blandning av jämna och solida ytor. Andra metoder som testades var \emph{greedyprojectiontriangulation}, \emph{marching cubes}, \emph{marching cubes hoppe}  och \emph{moving least squares}. Ingen av dessa metoder skapade en solid yta, vilket var ett av kraven på projeket, och därför valdes de bort.
+Reduceringen av data som användes av systemet är effektiv och tillräckligt snabb för att köras inom en rimlig tid. Användaren behöver endast vänta en kortare stund innan processen är klar. Nedsamplingsmetoden tar bort cirka 90 procent av punkterna i scenen. Det finns flera olika metoder för själva ytrekonstruktionen. Metoden som valdes, Poisson, gav en bra blandning av jämna och solida ytor. Andra metoder som testades var \emph{greedyprojectiontriangulation}, \emph{marching cubes}, \emph{marching cubes hoppe}  och \emph{moving least squares}. Ingen av dessa metoder skapade en solid yta, vilket var ett av kraven på projektet, och därför valdes de bort.
 
 
 \subsection{Gränssnittet}
@@ -419,7 +435,7 @@ Resultatet förhåller sig bra till vad som kunde förväntas. Det kan dock vari
 Eftersom resultatet har en estetisk synvinkel finns vissa svårigheter med att mäta hur bra resultatet är. Utvecklingsteamets mål var att att modellen skulle vara solid, vilket har uppnåtts. En färdig 3D-modell är lik den scannade människan och kan därför ses som ett bra resultat.
 
 \section{Arbetet i ett vidare sammanhang}
-I ett vidare sammanhang skulle en 3D-skrivare möjligen kunna kopplas direkt till systemet. Med detta skulle användaren direkt kunna få en fysisk modell efter scanningprocessen istället för en digital 3D-modell via e-post. Om modellen skulle skrivas ut behöver det vara inom en rimlig tid, något som inte finns tillgängligt idag med dagens 3D-skrivarteknik. Skrivaren skulle även behöva skriva ut modellen med tilhörande textur för bästa resultat.
+I ett vidare sammanhang skulle en 3D-skrivare möjligen kunna kopplas direkt till systemet. Med detta skulle användaren direkt kunna få en fysisk modell efter scanningprocessen istället för en digital 3D-modell via e-post. Om modellen skulle skrivas ut behöver det vara inom en rimlig tid, något som inte finns tillgängligt idag med dagens 3D-skrivarteknik. Skrivaren skulle även behöva skriva ut modellen med tillhörande textur för bästa resultat.
 
 \subsection{Samhälleliga aspekter}
 Vill samhället att en person ska ha möjlighet att skapa en ny identitet i ett spel som sig själv? Detta är en fråga som kanske inte har ett rätt svar. Om den här tekniken överfördes på spel, skulle det kunna tänkas att personer som redan lever sina liv på Internet blir ännu mer isolerade genom att faktiskt överföras till en fysisk kropp. Detta skulle i sin tur generera en större grad av passivitet från denna grupp av människor.
@@ -469,7 +485,7 @@ Utvecklingsteamet hade från början endast tillgång till en äldre version av 
 
 Projektet har utvecklats med \textbf{OpenKinect} eftersom flera utvecklingsplattformar har använts. Om utvecklingsteamet istället valt att endast utveckla på Windows med deras egna API hade det möjliggjort för systemet att skapa ett skelett till den inscannade kroppen. Det hade i sin tur kunnat leda till att utvecklingsteamet hade hunnit med att skapa en animation till modellen. En annan utvecklingsmöjlighet inom liknande område är om endast huvudscanning skulle möjliggöras. Huvudet skulle sedan kunna appliceras på andra färdiga modeller i spel. Det skulle ge användaren en känsla av närvaro.
 
-\section{Konsekvenser för berör målgrupp}
+\section{Konsekvenser för berörd målgrupp}
 En bra scanningsprocess medför ett mindre behov av manuell 3D-modellering, detta kan leda till att jobb inom denna bransch försvinner.
 
 Ett enkelt och billigt scanningssystem ger mindre företag och privatpersoner med lägre budget möjligheten att använda sig utav ett scanningssystem. Det kan medföra nya idéer och utvecklingsmöjligheter som underlättar för till exempel spelutvecklare som då inte behöver skapa en 3D-modell från grunden.
@@ -506,9 +522,9 @@ Ett enkelt och billigt scanningssystem ger mindre företag och privatpersoner me
 \chapter{Involverade parter}
 Utvecklingsteamet
 \begin{itemize}
-\item Pelle Serander: Scrummaster, jobbat med bildbehandling, MD5-kryptering samt databasstöd från C++-sidan.
+\item Pelle Serander: Scrummaster, arbetat med bildbehandling, MD5-kryptering samt databasstöd från C++-sidan.
 
-\item Erik Sandrén: Kundkontakt, arbetat med de flesta delarna
+\item Erik Sandrén: Kundkontakt, arbetat med de flesta delarna.
 
 \item Cecilia Lagerwall: Arbetat med scanning(kalibrering av IR- och färgkamera) och gränssnittet.
 
@@ -536,4 +552,11 @@ Utvecklingsteamet
 \includegraphics[angle=270,origin=c,scale=0.62]{Ganttschema.pdf}
 \end{figure}
 
+\newpage
+\chapter{Användartest}\label{app:gantt}
+\begin{figure}[h]
+\includegraphics{anvandartest.pdf}
+\end{figure}
+
+\]
 \end{document}
