@@ -1,32 +1,5 @@
-<!DOCTYPE html>
+<div class="inProgress" id="inProgress">
+	<h1>Scanning pågår...</h1>
+</div>
 
-<!--
-  Page to show for the user that the scanning is going on.
--->
-
-<html>
-  <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Medusa</title>
-      <link rel="stylesheet" href="styles/loadingPage.css">
-  </head>
-
-
-  <body>
-
-    <div class="inProgress" id="inProgress" >
-      <h1> Scanning pågår... </h1>
-    </div>
-
-    <div class="rotating progress" id="progress"></div>      
-      
-    <script src="js/loadingPage.js"></script>
-
-  </body>
-
-  <!-- Include javascript-files -->
-  <script type="application/javascript" src="js/classie.js"></script>
-  <script type="application/javascript" src="js/progressbar.min.js"></script>
-  <script data-pub-inline src="packages/browser/dart.js"></script>
-</html>
+<div class="rotating progress" id="progress"></div>
