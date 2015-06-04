@@ -176,17 +176,17 @@ För att sammanfoga punkter till en solid modell, används triangulering\cite{po
 
 Vid rekonstruktionen kan vissa problem uppstå. Metoderna kan till exempel ha problem med att förutse normalriktning om datan har en hög brusnivå. Det kan även finnas områden i datan, exempelvis skuggade områden, som saknar information vilket medför problem hurvida modellen blir solid eller ej. För att hantera problemen finns två kategorier med metoder, globala metoder samt lokala metoder\cite{poisson}.
 
-Globala metoder innebär att hela datamängden behandlas direkt vilket medför att rekonstruktionen för objektet sker på en gång. Globala metoder innehåller ofta implicita funktioner. Funktionerna är växande vilket skapar täta matriser, vilket betyder att de flesta värdena i matrisen är skilda från noll. Dessa matriser har även sämre villkor som till exempel kan ge felaktiga resultat\cite{poisson}.
+Globala metoder innebär att hela datamängden behandlas direkt vilket medför att rekonstruktionen för objektet sker på en gång. Globala metoder innehåller ofta implicita funktioner. Funktionerna är växande vilket skapar täta matriser, vilket betyder att de flesta värdena i matrisen är skilda från noll. Dessa matriser har även sämre villkor som kan ge felaktiga resultat\cite{poisson}.
 
 Lokala metoder behandlar rekonstruktionen för mindre delar av datan för sig. Hur delarna sedan byggs ihop är en uppskattning av ytan. Lokala metoder ger ett detaljtrikare resultat men har en högre känslighet för brus \cite{poisson}.
 
-\emph{Poisson Surface Reconstruction} är en global metod där en ytterlinje skapas baserat på gradienten för en 3D-indikatorfunktion, som erhålls genom en integralrelation med punkterna. Funktionen är bitvis konstant vilket medför att ytan får obegränsat stora värden. För att undvika det appliceras ett \emph{smoothing filter} på funktionen och gradienter beräknas för den nya funktionen. Användning av Poisson medför därför att följande steg, efterbehandling, inte behöver appliceras då de redan är inkluderat i metoden\cite{cluster, poisson}.
+\emph{Poisson Surface Reconstruction} är en global metod där en ytterlinje skapas baserat på gradienten för en 3D-indikatorfunktion, som erhålls genom en integralrelation med punkterna. Funktionen är bitvis konstant vilket medför att ytan får obegränsat stora värden. För att undvika det appliceras ett \emph{smoothing filter} på funktionen och gradienter beräknas för den nya funktionen. Användning av Poisson medför därför att nästa steg, efterbehandling, inte behöver appliceras då de redan är inkluderat i metoden\cite{cluster, poisson}.
 
 \item \textbf{Efterbehandling}
 
-Vid inläsning av punktdata via Kinect-kamerorna uppstår det små distansfel mellan vissa av punkterna. Dessa fel orsakar ojämnhet hos modellens yta, vilket måste korrigeras för att modellen ska se tillräckligt bra ut. En ojämn yta kommer att ha normaler med spretiga riktningar, medan en jämnare yta har normaler som förhåller sig bättre till varandra.
+Vid inläsning av punktdata via Kinect-kamerorna uppstår det små distansfel mellan vissa av punkterna. Dessa fel orsakar ojämnhet hos modellens yta, vilket måste korrigeras för att modellen ska se estetiskt bra ut. En ojämn yta kommer att ha normaler med spretiga riktningar, medan en jämnare yta har normaler som förhåller sig bättre till varandra.
 
-En metod som kan användas till att jämna ut ytan, som består av XYZ-koordinater, är marching cubes. Med \emph{marching cubes} sätts de punkter som är placerade längst ut till ett referensplan. Metoden grundar sig i att en vertexpunkt väljs ut och att man därifrån stegar sig fram till de närmaste vertexpunkter med hjälp av \emph{smallest edge detection}\cite{pointcloud2surface}.
+En metod som kan användas till att jämna ut ytan, som består av XYZ-koordinater, är \emph{marching cubes}. Med marching cubes sätts de punkter som är placerade längst ut till ett referensplan. Metoden grundar sig i att en vertexpunkt väljs ut och att man därifrån stegar sig fram till de närmaste vertexpunkterna med hjälp av \emph{smallest edge detection}\cite{pointcloud2surface}.
 
 \end{enumerate}
 
