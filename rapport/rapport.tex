@@ -8,6 +8,7 @@
 \usepackage[english,swedish]{babel}
 \usepackage{tabularx}
 \usepackage{geometry}
+\usepackage{float}
 
 \geometry{
  margin=20mm
@@ -198,7 +199,7 @@ En metod som kan användas till att jämna ut ytan, som består av XYZ-koordinat
 \subsection{MongoDB}
 \emph{MongoDB} är en \emph{no-sql} dokumentdatabas som använder \emph{BSON}, som är en binär variant av JSON\footnote{JavaScript Object Notation, en dokumenstruktur för javascript objekt}.
 
-\subsection{DART} 
+\subsection{DART}
 \emph{DART} är ett programmeringsspråk som är \textbf{open-source}, skalbart och anpassat för webbapplikationer.
 
 
@@ -282,10 +283,10 @@ Efter första mötet med kunden fick utvecklingsteamet krav som slutprodukten sk
 \item Den färdiga modellen ska visas i gränssnittet.
 \item Modellen ska vara solid, alltså ett objekt som är slutet.
 \item Det ska vara möjligt för användaren att kunna spara och kasta modellen.
-\item Modellen ska vara redo för att kunna skrivas ut med en 3D-skrivare. 
+\item Modellen ska vara redo för att kunna skrivas ut med en 3D-skrivare.
 \end{itemize}
 
-Utefter dessa krav gjordes en kravspecifikation, vilket teamets produktbacklogg inkluderar, med krav som går att mäta. Kunden hade som önskemål att systemet skulle fungera på en dator med operativsystemet Linux. 
+Utefter dessa krav gjordes en kravspecifikation, vilket teamets produktbacklogg inkluderar, med krav som går att mäta. Kunden hade som önskemål att systemet skulle fungera på en dator med operativsystemet Linux.
 
 \section{Dokumentation}
 \subsection{Textdokument och bildfiler}
@@ -329,7 +330,7 @@ Ovanstående systemarkitektur användes sedan som grund för projektet och utvec
 \section{Systemets delar}
 \subsection{Scanning}
 \subsubsection{Hårdvara}
-För att genomföra scanningen användes Microsofts Kinect-kameror för Xbox 360. En viktig fråga för utvecklingsteamet var hur insamlingen av data skulle hanteras på bäst sätt där två möjliga alternativ fanns tillgängliga. Antingen kan kamerorna vara utplacerade på fasta bestämda platser, vilket medför att flera kameror måste användas för en total täckning av det scannade objektet. Vid undersökning av att scanna en kropp visades att tre kameror, jämnt utplacerade, var tillräckligt antal för denna metod. Det andra alternativet var att använda en kamera som sedan roterar runt objektet. Metoden avvisades då den ansågs komplicerad att genomföra. 
+För att genomföra scanningen användes Microsofts Kinect-kameror för Xbox 360. En viktig fråga för utvecklingsteamet var hur insamlingen av data skulle hanteras på bäst sätt där två möjliga alternativ fanns tillgängliga. Antingen kan kamerorna vara utplacerade på fasta bestämda platser, vilket medför att flera kameror måste användas för en total täckning av det scannade objektet. Vid undersökning av att scanna en kropp visades att tre kameror, jämnt utplacerade, var tillräckligt antal för denna metod. Det andra alternativet var att använda en kamera som sedan roterar runt objektet. Metoden avvisades då den ansågs komplicerad att genomföra.
 
 \subsubsection{Kalibrering av kamerornas position}
 För att underlätta uppsättningen av det fysiska båset för kunden gjordes en kalibreringsfunktion av kamerornas position. Målet med kalibreringen var att kamerorna ska veta sin position i förhållande till ett gemensamt origo.
@@ -375,19 +376,19 @@ I dagsläget så kan inte systemet användas för att scanna från flera håll d
 Bilderna nedan, se Figur \ref{fig:gui1} och \ref{fig:gui2}, representerar gränssnittets utseende och vad som händer när användaren interagerar med de olika knappalternativen. Användaren möts först av sidan som visas på skärmen högst upp till vänster. Där finns det två alternativ, en knapp med texten “Info” som leder till skärmen högst upp till vänster. Där får användaren information om projektet och om systemet. Andra knappen med texten “START” på leder vidare i scanningsprocessen. En kort information om vad användaren ska göra för att starta scanningen och en tillhörande knapp under informationen som leder till sidan längst ner till höger. Den sidan visar en nedräkning på när scanningen startas och användaren hinner ställa sig i den position den vill bli scannad i. När nedräkningen når noll kommer användaren vidare till nästa sida som visar en laddningssymbol på hur långt scanningen har kommit. När den är fylld kommer användaren till sista sidan där 3D-modellen visas och får då tre alternativ.
 
 
-\begin{figure}[H!]
+\begin{figure}[H]
   \centering
-  \includegraphics[width=0.85\textwidth]{bilder/granssnitt.jpg}
+  \includegraphics[width=0.7\textwidth]{bilder/granssnitt.jpg}
   \caption{Gränssnittet när modellen presenteras för användaren}
   \label{fig:gui1}
 \end{figure}
 
-Användaren kan välja mellan att spara, gör om och avsluta systemet. Varje alternativ visar ett pop-up fönster enligt figuren ovan. Väljer användaren att spara kommer det upp ett fönster där en e-postadress kan skrivas in. Här valideras e-postadressen till den grad att användaren behöver skriva in rätt format på adressen, alltså kontrolleras inte att adressen finns. Stämmer inte formatet på adressen måste användaren skriva om adressen igen. Stämmer adressen får användaren en återkoppling om att modellen är sparad och skickad till den angivna adressen. Systemet har i nuläget ingen \textbf{\emph{mailserver}} och inget mail kommer därför att skickas iväg till användaren. Användaren kommer sedan tillbaka till sidan där modellen visas men det är nu inte längre möjligt att spara om modellen på nytt. Väljer användaren att göra om modellen kommer det upp ett fönster som frågar om användaren är säker på att användaren vill göra om modellen och talar om att nuvarande modell kommer att kastas. Nu hamnar användaren tillbaka till det steget där användaren ska ställa sig i position för scanningen. Om användaren trycker på "Avsluta" byts sidan tillbaka till den första sidan. 
+Användaren kan välja mellan att spara, gör om och avsluta systemet. Varje alternativ visar ett pop-up fönster enligt figuren ovan. Väljer användaren att spara kommer det upp ett fönster där en e-postadress kan skrivas in. Här valideras e-postadressen till den grad att användaren behöver skriva in rätt format på adressen, alltså kontrolleras inte att adressen finns. Stämmer inte formatet på adressen måste användaren skriva om adressen igen. Stämmer adressen får användaren en återkoppling om att modellen är sparad och skickad till den angivna adressen. Systemet har i nuläget ingen \textbf{\emph{mailserver}} och inget mail kommer därför att skickas iväg till användaren. Användaren kommer sedan tillbaka till sidan där modellen visas men det är nu inte längre möjligt att spara om modellen på nytt. Väljer användaren att göra om modellen kommer det upp ett fönster som frågar om användaren är säker på att användaren vill göra om modellen och talar om att nuvarande modell kommer att kastas, detta visas i figuren ovan på den mellersta skärmen. Nu hamnar användaren tillbaka till det steget där användaren ska ställa sig i position för scanningen. Om användaren trycker på \emph{Avsluta} byts sidan tillbaka till den första sidan.
 
 
-\begin{figure}[H!]
+\begin{figure}[H]
   \centering
-  \includegraphics[width=0.85\textwidth]{bilder/save_doover.jpg}
+  \includegraphics[width=0.7\textwidth]{bilder/save_doover.jpg}
   \caption{Gränssnittet när modellen presenteras för användaren}
   \label{fig:gui2}
 \end{figure}
@@ -399,7 +400,7 @@ Enligt teorin kan en IR-kamera användas till att samla in punkter som sedan kan
 I bildserien nedan, se Figur \ref{fig:scans}, visar en stegvis behandling av data för scanning utförd av en Kinect-kamera. Scanningen är utförd med endast en kamera vilket resulterar i ett oönskat resultat efter Poissons metod för ytrekonstruktion. Metoden vet inte hur objektet ska byggas ihop då täckning saknas.
 
 
-\begin{figure}[H!]
+\begin{figure}[H]
 \centering
 \mbox{\subfigure{\includegraphics[width=.5\textwidth]{bilder/bilddata1.png}}\quad
 \subfigure{\includegraphics[width=0.5\textwidth]{bilder/bilddata2.png} }}
@@ -416,7 +417,7 @@ De valda metoderna i projektarbetet är bestämda efter de kompetenser som utvec
 
 Teamet valde att utföra scanningen med Microsofts Kinect-kameror för Xbox 360 som är utvecklat och anpassat framförallt för Windows. Eftersom teamet valde att utveckla ett system som passar till Linux, OS X och till Windows valdes biblioteket \textbf{libfreenect}. Biblioteket är öppen källkod som har utvecklats av personer med eget intresse för att skapa system till Kinect-kameror. Alternativet hade varit att enbart utveckla till Windows och då kunnat använda Kinect-kamerornas tillhörande bibliotek \textbf{Kinect for Windows SDK} som har finansiellt stöd från Microsoft och då större möjligheter till att utvecklas. Med \textbf{Kinect for Windows SDK} finns det större möjligheter och det är lättare att utveckla systemet då biblioteket har fler färdiga funktioner än \textbf{libfreenect}.
 
-För projektet valdes det att använda tre Kinect-kameror som tillsammans scannar in en människa. För att inte missa viktig information om punktdatan behövs det minst tre kameror om Kinect-kamerorna är statiskt placerade. Fördelen med att använda minsta möjliga antal Kinect-kameror är att minska mängden data som tas in i systemet utan att påverka kvalitén för den resulterande 3D-modellen. Detta bidrar till mindre beräkningar för datorn. Nackdelen är att kamerorna är placerade runt objektet och det är därför möjligt att missa information om vissa delar är täckta av andra och missar även informationen som är på objektet, till exempel huvudets topp. Detta gör att systemet gissar hur objektet ser ut bakom dolda delar. En lösning hade varit att ha fler kameror för att ta in mer information om objektet. Risken blir då att systemet blir trögt och i värsta fall inte uppfyller kravet att användaren ska uppleva att systemet är tillräckligt snabbt. En annan lösning på problemet, som tidigare nämnts i rapporten, är att ha en rörlig kamera. Detta var inte praktiskt möjligt med de resurser som teamet hade. En rörlig kamera som snurrar kräver en mer komplicerad anordning och eftersom teamet inte hade som krav att faktiskt bygga det fysiska båset blev det en ytterligare faktor till att inte ha en rörlig kamera.
+För projektet valdes det att använda tre Kinect-kameror som tillsammans scannar in en människa. För att inte missa viktig information om punktdatan behövs det minst tre kameror om Kinect-kamerorna är statiskt placerade. Fördelen med att använda minsta möjliga antal Kinect-kameror är att minska mängden data som tas in i systemet utan att påverka kvalitén för den resulterande 3D-modellen. Detta bidrar till mindre beräkningar för datorn. Nackdelen är att kamerorna är placerade runt objektet och det är därför möjligt att missa information om vissa delar är täckta av andra och missar även informationen som är på objektet, till exempel huvudets topp. Detta gör att systemet gissar hur objektet ser ut bakom dolda delar. En lösning hade varit att ha fler kameror för att ta in mer information om objektet. Risken blir då att systemet blir långsamt och i värsta fall inte uppfyller kravet att användaren ska uppleva att systemet är tillräckligt snabbt. En annan lösning på problemet, som tidigare nämnts i rapporten, är att ha en rörlig kamera. Detta var inte praktiskt möjligt med de resurser som teamet hade. En rörlig kamera som snurrar kräver en mer komplicerad anordning och eftersom teamet inte hade som krav att faktiskt bygga det fysiska båset blev det en ytterligare faktor till att inte ha en rörlig kamera.
 
 \textbf{Kalibrering av djup- och färgkamera}
 
@@ -439,12 +440,12 @@ Resultatet förhåller sig bra till vad som kunde förväntas. Det kan dock vari
 Eftersom resultatet har en estetisk synvinkel finns vissa svårigheter med att mäta hur bra resultatet är. Utvecklingsteamets mål var att att modellen skulle vara solid, vilket har uppnåtts. En färdig 3D-modell är lik den scannade människan och kan därför ses som ett bra resultat.
 
 \section{Arbetet i ett vidare sammanhang}
-I ett vidare sammanhang skulle en 3D-skrivare möjligen kunna kopplas direkt till systemet. Med detta skulle användaren direkt kunna få en fysisk modell efter scanningprocessen istället för en digital 3D-modell via e-post. Om modellen skulle skrivas ut behöver det vara inom en rimlig tid, något som inte finns tillgängligt idag med dagens 3D-skrivarteknik. Skrivaren skulle även behöva skriva ut modellen med tillhörande textur för bästa resultat. 
+I ett vidare sammanhang skulle en 3D-skrivare möjligen kunna kopplas direkt till systemet. Med detta skulle användaren direkt kunna få en fysisk modell efter scanningprocessen istället för en digital 3D-modell via e-post. Om modellen skulle skrivas ut behöver det vara inom en rimlig tid, något som inte finns tillgängligt idag med dagens 3D-skrivarteknik. Skrivaren skulle även behöva skriva ut modellen med tillhörande textur för bästa resultat.
 
 \subsection{Samhälleliga aspekter}
-Vill samhället att en person ska ha möjlighet att skapa en ny identitet i ett spel som sig själv? Detta är en fråga som kanske inte har ett rätt svar. Om den här tekniken överfördes på spel, skulle det kunna tänkas att personer som redan lever sina liv på Internet blir ännu mer isolerade genom att faktiskt överföras till en fysisk kropp. Detta skulle i sin tur generera en större grad av passivitet från denna grupp av människor.
+Vill samhället att en person ska ha möjlighet att skapa en ny identitet i ett spel som sig själv? Detta är en fråga som kanske inte har ett rätt svar. Om den här tekniken överfördes på spel, skulle det kunna tänkas att personer som redan lever sina liv på Internet blir ännu mer isolerade genom att faktiskt överföras till en fysisk kropp. Detta skulle i sin tur hypotetiskt generera en större grad av passivitet från denna grupp av människor.
 
-Det finns en osäkerhet kring hur sparad data bör hanteras och vilka lagar som skulle gälla om produkten blev kommersiell på exempelvis Microsoft. 
+Det finns en osäkerhet kring hur sparad data bör hanteras och vilka lagar som skulle gälla om produkten blev kommersiell på exempelvis Microsoft.
 Skulle företaget exempelvis kunna använda modeller av scannade människor, utan personens vetskap, genom att personerna skulle godkänna en policy?
 
 \section {Problem som har uppstått under projektet}
@@ -486,7 +487,7 @@ Framtida förbättringar för systemet som kan utvecklas är att koppla en 3D-sk
 
 En annan utvecklingsmöjlighet är att användaren skulle kunna ha som val att spara sin modell i en gästbok där andra användare kan bläddra bland modeller. Det skulle ge användaren en insyn om vad scanningen handlar om och användaren kan därefter ta ställning till om man vill utföra en egen scanning. Det är dock viktigt att denna process är frivillig och användaren är inte tvingad till att göra modellen synlig för andra.
 
-Utvecklingsteamet hade från början endast tillgång till en äldre version av Kinect-kamerorna. Då den nya versionen inte medförde en vesäntlig förbättring för ändamålet prioriterades inte en implementation av den nya versionen. Ytterligare ett steg skulle vara att göra programvaran kompatibelt med båda versionerna eller byta helt till den nyare versionen.
+Utvecklingsteamet hade från början endast tillgång till en äldre version av Kinect-kamerorna. Då den nya versionen inte medförde en väsentlig förbättring för ändamålet prioriterades inte en implementation av den nya versionen. Ytterligare ett steg skulle vara att göra programvaran kompatibelt med båda versionerna eller byta helt till den nyare versionen.
 
 Projektet har utvecklats med \textbf{libfreenect} eftersom flera utvecklingsplattformar har använts. Om utvecklingsteamet istället valt att endast utveckla på Windows med deras egna API hade det möjliggjort för systemet att skapa ett skelett till den inscannade kroppen. Det hade i sin tur kunnat leda till att utvecklingsteamet hade hunnit med att skapa en animation till modellen. En annan utvecklingsmöjlighet inom liknande område är om endast huvudscanning skulle möjliggöras. Huvudet skulle sedan kunna appliceras på andra färdiga modeller i spel. Det skulle ge användaren en känsla av närvaro.
 
