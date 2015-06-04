@@ -7,42 +7,55 @@
 
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medusa</title>
-    <link rel="stylesheet" href="styles/startPage.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medusa</title>
+<link rel="stylesheet" href="styles/startPage.css">
+<link rel="stylesheet" href="styles/countDown.css">
+<link rel="stylesheet" href="styles/loadingPage.css">
 </head>
 
 <body>
+	<div id="container">
+		<!--buttons on the start screen -->
+		<button class="button" id="startButton">STARTA</button>
+		<button class="button" id="infoButton">Info</button>
 
-  <!--buttons on the start screen -->
-  <button class="button" id="startButton">STARTA</button>
-  <button class="button" id="infoButton">Info</button> 
-  
-  
-  <!-- Info "menu" -->
-  <nav class="infoMenu">
-    <button class="button" id="closeButton">Stäng</button>
-    <h1>Om scanningen</h1>
-    <p>För scanningen används sex stycken Microsoft kinectkameror för Xbox360. Kamerorna samlar in djupdata som sedan blir grunden till en 3D-modell. Från kamerorna kommer också en färgbild som används som textur till modellen. Den färdiga modellen kan du få mejlad till dig. </p>
 
-    <h1>Om projektet</h1>
-    <p>Detta är projekt skapat i kursen TNM094, Medietekniskt kandidatprojekt. Ett projekt som har gått ut på att få en bättre förståelse för systemutveckling och samla all kunskap som studenterna har fått på de tre åren vid Linköpings univeristet i ett projekt.</p>
-  </nav>
-  
-  <!-- Instructions to how the scanning works and the "STARTA SCANNING"-button -->
-  <div class="instructions">
-     <h1>Instruktioner</h1>
-     <p>Tryck på knappen och ställ dig på markerat område och stå still tills scanningen är klar.</p>
-     <a href="countDown.html"><button class="button" id ="continueButton">STARTA SCANNING</button></a>
-  </div>
+		<!-- Info "menu" -->
+		<nav class="infoMenu">
+			<button class="button" id="closeButton">Stäng</button>
+			<h1>Om scanningen</h1>
+			<p>För scanningen används sex stycken Microsoft kinectkameror för
+				Xbox360. Kamerorna samlar in djupdata som sedan blir grunden till en
+				3D-modell. Från kamerorna kommer också en färgbild som används som
+				textur till modellen. Den färdiga modellen kan du få mejlad till
+				dig.</p>
 
+			<h1>Om projektet</h1>
+			<p>Detta är projekt skapat i kursen TNM094, Medietekniskt
+				kandidatprojekt. Ett projekt som har gått ut på att få en bättre
+				förståelse för systemutveckling och samla all kunskap som
+				studenterna har fått på de tre åren vid Linköpings univeristet i ett
+				projekt.</p>
+		</nav>
+
+		<!-- Instructions to how the scanning works and the "STARTA SCANNING"-button -->
+		<div class="instructions">
+			<h1>Instruktioner</h1>
+			<p>Tryck på knappen och ställ dig på markerat område och stå
+				still tills scanningen är klar.</p>
+			<button class="button" id="continueButton">STARTA SCANNING</button>
+		</div>
+	</div>
 </body>
 
 <!-- include DART-files and javascript-files -->
 <script type="application/dart" src="main.dart"></script>
+<script src="js/jquery.js" type="text/javascript"></script>
 <script type="application/javascript" src="js/startPage.js"></script>
 <script type="application/javascript" src="js/classie.js"></script>
+<script type="application/javascript" src="js/progressbar.min.js"></script>
+<script type="application/javascript" src="js/loadingPage.js"></script>
 <script data-pub-inline src="packages/browser/dart.js"></script>
-
 </html>

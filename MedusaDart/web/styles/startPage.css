@@ -1,157 +1,143 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto);
 
-html, body 
-{
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    font-family: 'Roboto', sans-serif;
-    background-repeat: no-repeat;
-    background-size: 100%;
-    overflow: hidden;
+html,body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	font-family: 'Roboto', sans-serif;
+	background-repeat: no-repeat;
+	background-size: 100%;
+	overflow: hidden;
 }
 
 /*Standard button*/
-.button
-{
-  color: #FFF;
-  background-color: #7EC0EA;
-  box-shadow: 0px 0px 2px, 0px 0px 0px 1px rgba(0, 0, 0, 0.05) inset;
-  border: medium none;
-  font-size: 100%;
-  outline:none;
-  text-align: center;
-  display: inline-block;
-  position: absolute;
-  font-size: 17px;
-  cursor: pointer;
-  border-radius: 5px;
-  font-weight: 500;
-  -webkit-transition: all 0.5s !important;
-  -moz-transition: all 0.5s;
-  -ms-transition: all 0.5s;
-  -o-transition: all 0.5s;
-  transition: all 0.5s;
+.button {
+	color: #FFF;
+	background-color: #7EC0EA;
+	box-shadow: 0px 0px 2px, 0px 0px 0px 1px rgba(0, 0, 0, 0.05) inset;
+	border: medium none;
+	font-size: 100%;
+	outline: none;
+	text-align: center;
+	display: inline-block;
+	position: absolute;
+	font-size: 17px;
+	cursor: pointer;
+	border-radius: 5px;
+	font-weight: 500;
+	-webkit-transition: all 0.5s !important;
+	-moz-transition: all 0.5s;
+	-ms-transition: all 0.5s;
+	-o-transition: all 0.5s;
+	transition: all 0.5s;
 }
 
 /*Start button, position and size*/
-#startButton
-{
-  padding: 7px 0px;
-  top:40%;
-  height: 10%;
-  width: 30%; 
-  left:35%;
+#startButton {
+	padding: 7px 0px;
+	top: 40%;
+	height: 10%;
+	width: 30%;
+	left: 35%;
 }
 
 /*make the button disappear*/
-body.startButton-open #startButton
-{
-  top: 100%;
-  overflow: hidden;
+body.startButton-open #startButton {
+	top: 100%;
+	overflow: hidden;
 }
 
 /*Continue button, position and size*/
-#continueButton 
-{
-  top:200%;
-  height: 65px;
-  width: 200px; 
-  margin-left: -185px;  
-  left: 85%;
+#continueButton {
+	top: 200%;
+	height: 65px;
+	width: 200px;
+	margin-left: -185px;
+	left: 85%;
 }
 
 /*Info button, position and size*/
-#infoButton
-{
-  padding: 7px 0px;
-  width: 60px; 
-  margin-left: 2%;
-  margin-top: 2%;
+#infoButton {
+	padding: 7px 0px;
+	width: 60px;
+	margin-left: 2%;
+	margin-top: 2%;
 }
 
 /*Custum information menu*/
-.infoMenu
-{
-  position: fixed;
-  color: #323232;
-  z-index: 20;
-  background-color: #F5F5F5;
-  overflow: hidden;
-  top: 0;
-  width: 300px;
-  height: 100%;
-  left: -300px;
-  -webkit-transition: all 0.3s !important;
-  -moz-transition: all 0.3s;
-  -ms-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  transition: all 0.3s;
+.infoMenu {
+	position: fixed;
+	color: #323232;
+	z-index: 20;
+	background-color: #F5F5F5;
+	overflow: hidden;
+	top: 0;
+	width: 300px;
+	height: 100%;
+	left: -300px;
+	-webkit-transition: all 0.3s !important;
+	-moz-transition: all 0.3s;
+	-ms-transition: all 0.3s;
+	-o-transition: all 0.3s;
+	transition: all 0.3s;
 }
 
-
-body.menu-open .infoMenu
-{
-  left: 0px;
+body.menu-open .infoMenu {
+	left: 0px;
 }
 
-.infoMenu h3 
-{
-  color: #afdefa;
-  font-size: 1.9em;
-  padding: 20px;
-  margin: 0;
-  font-weight: 300;
-  background: #0d77b6;
+.infoMenu h3 {
+	color: #afdefa;
+	font-size: 1.9em;
+	padding: 20px;
+	margin: 0;
+	font-weight: 300;
+	background: #0d77b6;
 }
-.infoMenu h1
-{
-  padding-left: 5%;
+
+.infoMenu h1 {
+	padding-left: 5%;
 }
-.infoMenu p
-{
-  display: block;
-  font-size: 0.9em;
-  font-weight: 300;
-  padding-left: 5%;
-  padding-right: 5%;
+
+.infoMenu p {
+	display: block;
+	font-size: 0.9em;
+	font-weight: 300;
+	padding-left: 5%;
+	padding-right: 5%;
 }
 
 /*Custum close button in information menu*/
-#closeButton 
-{
-  padding: 7px 0px;
-  width: 60px; 
-  margin-left: 71%;
-  margin-top: 15px;
+#closeButton {
+	padding: 7px 0px;
+	width: 60px;
+	margin-left: 71%;
+	margin-top: 15px;
 }
-
 
 /*Custum information text*/
-.instructions 
-{
-  text-align: center;
-  width: 250px;
-  font-size: 100%;
-  font-family: Arial;
-  top: 100%;
-  position: fixed;
-  color: #323232;
-  left: 50%;
-  margin-left: -130px;
+.instructions {
+	text-align: center;
+	width: 250px;
+	font-size: 100%;
+	font-family: Arial;
+	top: 100%;
+	position: fixed;
+	color: #323232;
+	left: 50%;
+	margin-left: -130px;
 }
 
-body.instructions-open .instructions
-{
-  top: 30%;
-  left: 50%;
-  margin-left: -130px;
-  height: 10%;
-  text-align: center;   
-  -webkit-transition: all 0.5s !important;
-  -moz-transition: all 0.5s;
-  -ms-transition: all 0.5s;
-  -o-transition: all 0.5s;
-  transition: all 0.5s; 
+body.instructions-open .instructions {
+	top: 30%;
+	left: 50%;
+	margin-left: -130px;
+	height: 10%;
+	text-align: center;
+	-webkit-transition: all 0.5s !important;
+	-moz-transition: all 0.5s;
+	-ms-transition: all 0.5s;
+	-o-transition: all 0.5s;
+	transition: all 0.5s;
 }
