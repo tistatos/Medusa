@@ -180,7 +180,7 @@ Globala metoder innebär att hela datamängden behandlas direkt vilket medför a
 
 Lokala metoder behandlar rekonstruktionen för mindre delar av datan för sig. Hur delarna sedan byggs ihop är en uppskattning av ytan. Lokala metoder ger ett detaljtrikare resultat men har en högre känslighet för brus \cite{poisson}.
 
-\emph{Poisson Surface Reconstruction} är en global metod där en ytterlinje skapas baserat på gradienten för en 3D-indicatorfunktion, som erhålls genom en integralrelation med punkterna. Funktionen är bitvis konstant vilket medför att ytan får obegränsat stora värden. För att undvika det appliceras ett \emph{smoothing filter} på funktionen och gradienter beräknas för den nya funktionen. Användning av Poisson medför därför att följande steg, efterbehandling, inte behöver appliceras då de redan är inkluderat i metoden\cite{cluster, poisson}.
+\emph{Poisson Surface Reconstruction} är en global metod där en ytterlinje skapas baserat på gradienten för en 3D-indikatorfunktion, som erhålls genom en integralrelation med punkterna. Funktionen är bitvis konstant vilket medför att ytan får obegränsat stora värden. För att undvika det appliceras ett \emph{smoothing filter} på funktionen och gradienter beräknas för den nya funktionen. Användning av Poisson medför därför att följande steg, efterbehandling, inte behöver appliceras då de redan är inkluderat i metoden\cite{cluster, poisson}.
 
 \item \textbf{Efterbehandling}
 
