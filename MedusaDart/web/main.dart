@@ -1,76 +1,58 @@
 //Medusa 3D-reconstruction
-
-
+import 'wsclient.dart';
 import 'dart:html';
-//import 'package:three/three.dart';
+import 'dart:core';
 import 'dart:async';
+import 'dart:js';
 
-
-class Client
-{
-  static const Duration RECONNECT_DELAY = const Duration(milliseconds: 500);
-  
+var timer;
+var sTime;
+var countDown = 3; //set the countdown to start from 3
+Client client;
+void main() {
+  client = new Client('#continueButton');
   ButtonElement button = querySelector('#continueButton');
-  WebSocket ws;
-  
-  //Constructor
-  Client()
-  {
-    connect(); 
-    button.onClick.listen(sendToServer);
-  }
-  
-  //Connect client to server
-  void connect()
-  {
-    ws = new WebSocket('ws://127.0.0.1:7681'); 
-    
-    ws.onOpen.listen((e)  
-    {
-      onConnected();    
-    });
-    
-    ws.onError.listen((e) 
-    {
-      print("Error connecting to ws");
-      reconnect();
-    });
-  }
-  
-  //When connected to server...
-  void onConnected()
-  {
-    print('Connected');
-    
-    ws.onMessage.listen((e) 
-    {
-      handleMessage(e.data);
-    });
-  }
-  
-  //Handle data from server
-  void handleMessage(data)
-  { 
-     print('något från servern');
-  }
-  
-  //Send data to server (start scanning process)
-  void sendToServer(Event e) 
-  {
-    ws.send('hej');
-  }
-  
-  //If error in connection, reconnect in 500 ms
-  void reconnect()
-  {
-    new Timer(RECONNECT_DELAY, connect);
-  }
-  
+  button.onClick.listen(startCountdown);
 }
 
-void main() 
-{
-  var client = new Client();
+void startCountdown(e) {
+  HttpRequest.getString("countDown.html").then((html) {
+    querySelector('#container').innerHtml = html;
+  });
+  sTime = new DateTime.now();
+  timer = new Timer(const Duration(milliseconds: 500), updateTime);
 }
 
+//function to update the time from 3 to 0
+void updateTime() {
+  var cTime = new DateTime.now();
+  var diff = cTime.difference(sTime).inMilliseconds; //difference between the time now and the start time(real time)
+  var seconds = countDown - (diff / 1000).floor(); //3sec minus the time that have past(floor) is the time left to scanning
+  if (seconds >= 0) {
+    querySelector("#seconds").text = seconds;
+    timer = new Timer(const Duration(milliseconds: 500), updateTime);
+  } else {
+    HttpRequest.getString("loadingPage.html").then((html) {
+      querySelector('#container').innerHtml = html;
+      initProgress();
+      showProgress();
+    });
 
+  }
+}
+
+void initProgress() {
+  var obj = context.callMethod('initProgress');
+}
+
+void showProgress() {
+  if (client.hasHash) {
+    var obj = context.callMethod('finish');
+    Storage localStorage = window.localStorage;
+    localStorage['hash'] = client.hash;
+    window.location.replace("mainPage.html");
+  } else {
+    var obj = context.callMethod('increaseProgress');
+    timer = new Timer(const Duration(milliseconds: 500), showProgress);
+  }
+}
