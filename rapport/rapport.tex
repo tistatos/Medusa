@@ -47,7 +47,7 @@
 
 
 \begin{document}
-\[\pagestyle{empty}
+\pagestyle{empty}
 \thispagestyle{empty}
 
 \frontmatter
@@ -450,13 +450,13 @@ Någonting som har varit tidskrävande var att länka alla bibliotek på gruppen
 Utvecklingsteamet hade från början planerat att använda Googletest samt DARTs inbyggda testsystem. Efter hand upptäcktes dock att den typen av test inte var lämpade för projektet. En stor del av projektet handlade om att få modellen tillräckligt estetiskt tilltalande vilket inte är mätbart med dessa testmetoder.
 
 \chapter{Slutsatser}
-Rapporten syftade till att framlägga målet med projektet samt beskriva arbetsmetoder och verktyg som har använts under projektets gång. Rapporten har även reflekterat över projektets metodval och gett en förståelse för hur valda systemutvecklingsmetoder har fungerat i en verklig miljö.
+Rapporten syftade på att framlägga målet med projektet samt beskriva arbetsmetoder och verktyg som har använts under projektets gång. I rapporten har det även reflekterats över projektets metodval och gett en förståelse för hur valda systemutvecklingsmetoder har fungerat i en verklig miljö.
 
 \section{Svar på frågeställningar}
 \begin{itemize}
 \item \textbf{Hur kan ett användande av andra generations Kinect skapa en 3D-modell med tillräckligt god kvalité, utan komplicerade instruktioner och avancerade inställningar?}
 
-Utvecklingsteamet beslutade att använda första generationens Kinect då det var det som fanns tillgängligt från början. Det ansågs sedan inte tillräckligt prioriterat att byta till andra generationens Kinect eftersom prestandaskillnaden mellan dessa två kameror inte motiverade de ändringarna som skulle behöva göras i kodbasen. Kinect-kamerorna används för att läsa in punktdata med hjälp av den inbyggda IR-kameran. Punktdatan kan sedan användas för att skapa en polygonmodell. Genom att använda flera Kinect-kameror erhålls tillräckligt med täckning för att hela kroppen ska bli scannad och inga inställningar behöver ställas in under processen. Processen har gjorts helt automatiserad för att förenkla användningen och användaren kan starta scanningen genom ett enkelt webbaserat gränssnitt. Därmed har en 3D-modell av god kvalité kunnat skapas utan vidare invecklade inställningar och instruktioner.
+Utvecklingsteamet beslutade att använda Kinect för Xbox360 som är första generationens Kinect då det var det som fanns tillgängligt från projeketets start. Det ansågs sedan inte tillräckligt prioriterat att byta till Kinect One vilket är andra generationens Kinect eftersom prestandaskillnaden mellan dessa två kameror inte motiverade de ändringarna som skulle behöva göras i kodbasen. Kinect-kamerorna används för att läsa in punktdata med hjälp av den inbyggda IR-kameran. Punktdatan kan sedan användas för att skapa en polygonmodell. Genom att använda flera Kinect-kameror erhålls tillräckligt med täckning för att hela kroppen ska bli scannad och inga inställningar behöver utföras under processen. Processen har gjorts helt automatiserad för att förenkla användningen och användaren kan starta scanningen genom ett enkelt webbaserat gränssnitt. Därmed har en 3D-modell av god kvalité kunnat skapas utan vidare invecklade inställningar och instruktioner.
 
 
 \item \textbf{Vilka krav kan ställas på systemets justerbarhet, för att anpassa systemet efter varje individuell användare, och därmed kunna scanna och rendera en korrekt bild?}
@@ -469,7 +469,7 @@ Utvecklingsteamet har använt sig av \emph{\textbf{StatisticalOutlierRemoval}} f
 
 \item \textbf{Hur kan utvecklingsteamet, utifrån undersökningar av alternativa sätt för insamling av data, finna den bästa lösningen med avseende på kvalitén hos 3D-modellen och vad är för- respektive nackdelarna med de framtagna lösningarna?}
 
-Utvecklingsteamet kom fram till att tre kameror var det minsta antalet kameror som behövdes för total täckning. En annan lösning som diskuterades var att endast en kamera skulle användas, men med en rotationsrörelse runt människan. Fördelen med den metoden var att endast en kamera behövdes. Utvecklingsteamet ansåg dock att anordningen för en roterande kamera skulle komplicera arbetet och uppta tid från mer relevant arbete, eftersom målet inte var att bygga det fysiska båset. Även en lösning för hur kameran skulle ta bilder under rotationsrörelsen skulle blivit ett tillkommande problem.
+Utvecklingsteamet kom fram till att tre kameror var det minsta antalet kameror som krävdes för total täckning. En annan lösning som diskuterades var att endast en kamera skulle användas, men med en rotationsrörelse runt människan. Fördelen med den metoden var att endast en kamera behövdes. Utvecklingsteamet ansåg dock att anordningen för en roterande kamera skulle komplicera arbetet och uppta tid från mer relevant arbete, eftersom målet inte var att bygga det fysiska båset. Även en lösning för hur kameran skulle ta bilder under rotationsrörelsen skulle blivit ett tillkommande problem.
 \end{itemize}
 
 
@@ -477,13 +477,13 @@ Utvecklingsteamet kom fram till att tre kameror var det minsta antalet kameror s
 
 
 \section{Framtida förbättringar}
-Framtida förbättringar för systemet som kan utvecklas är att koppla en 3D-skrivare till systemet för en direkt utskrift av modellen i samband med scanningen. Eftersom den färdiga modellen sparas som en standardiserad \emph{obj-fil}, är en 3D-utskrift redan idag en möjlighet. Anledningen till att en 3D-skrivare inte är en del av systemet i dagsläget beror på att dagens 3D-skrivare inte har den utskriftshastighet som skulle behövas för att skriva ut modellen inom en godtycklig väntetid. Dagens 3D-skrivare saknar även den färgvariationen som behövs för att skriva ut en modell med den textur som skall appliceras. Men i och med att 3D-skrivare utvecklas och får snabbare utskrift, är en direkt utskrift en framtida möjlighet.
+Framtida förbättringar av systemet som kan utvecklas är att koppla en 3D-skrivare till systemet för en direkt utskrift av modellen i samband med scanningen. Eftersom den färdiga modellen sparas som en standardiserad \emph{obj-fil}, är 3D-utskrift redan idag en möjlighet. 
 
 En annan utvecklingsmöjlighet är att användaren skulle kunna ha som val att spara sin modell i en gästbok där andra användare kan bläddra bland modeller. Det skulle ge användaren en insyn om vad scanningen handlar om och användaren kan därefter ta ställning till om man vill utföra en egen scanning. Det är dock viktigt att denna process är frivillig och användaren är inte tvingad till att göra modellen synlig för andra.
 
 Utvecklingsteamet hade från början endast tillgång till en äldre version av Kinect-kamerorna. Då den nya versionen inte medförde en vesäntlig förbättring för ändamålet prioriterades inte en implementation av den nya versionen. Ytterligare ett steg skulle vara att göra programvaran kompatibelt med båda versionerna eller byta helt till den nyare versionen.
 
-Projektet har utvecklats med \textbf{OpenKinect} eftersom flera utvecklingsplattformar har använts. Om utvecklingsteamet istället valt att endast utveckla på Windows med deras egna API hade det möjliggjort för systemet att skapa ett skelett till den inscannade kroppen. Det hade i sin tur kunnat leda till att utvecklingsteamet hade hunnit med att skapa en animation till modellen. En annan utvecklingsmöjlighet inom liknande område är om endast huvudscanning skulle möjliggöras. Huvudet skulle sedan kunna appliceras på andra färdiga modeller i spel. Det skulle ge användaren en känsla av närvaro.
+Projektet har utvecklats med \textbf{libfreenect} eftersom flera utvecklingsplattformar har använts. Om utvecklingsteamet istället valt att endast utveckla på Windows med deras egna API hade det möjliggjort för systemet att skapa ett skelett till den inscannade kroppen. Det hade i sin tur kunnat leda till att utvecklingsteamet hade hunnit med att skapa en animation till modellen. En annan utvecklingsmöjlighet inom liknande område är om endast huvudscanning skulle möjliggöras. Huvudet skulle sedan kunna appliceras på andra färdiga modeller i spel. Det skulle ge användaren en känsla av närvaro.
 
 \section{Konsekvenser för berörd målgrupp}
 En bra scanningsprocess medför ett mindre behov av manuell 3D-modellering, detta kan leda till att jobb inom denna bransch försvinner.
@@ -528,7 +528,7 @@ Utvecklingsteamet
 
 \item Cecilia Lagerwall: Arbetat med scanning(kalibrering av IR- och färgkamera) och gränssnittet.
 
-\item Johan Reimann: Gruppledare, har arbetat med scanning, kalibrering, texturering och hantering av filer.
+\item Johan Reimann: Gruppledare, har arbetat med scanning(kalibrering av IR- och färgkamera), texturering och hantering av filer.
 
 \item Isabell Jansson: Rapportansvarig, arbetat med gränssnittet, websocket och textureringen på både DART- och C++ -sidan.
 
