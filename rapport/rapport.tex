@@ -17,7 +17,7 @@
 \usepackage{fancyhdr}
 
 \usepackage{titling}
-\title{Medusa - 3D-rekonstruktion\\Projektrapport, TNM094}
+\title{{\Huge \bfseries Medusa}\\ {\large 3D-rekonstruktion av människor med Kinect-kameror\\Projektrapport, TNM094}}
 \author{\\Caroline Gard\\Isabell Jansson\\Cecilia Lagerwall\\Johan Reimann\\Erik Sandrén\\Pelle Serander\\Carl Englund}
 
 \frenchspacing
@@ -111,7 +111,15 @@ Möjligheten att återskapa objekt från verkliga världen i en virtuell värld 
 I kursen “Medietekniskt kandidatarbete”, TNM094, fick ett utvecklingsteam bestående av sju personer i uppgift att utveckla ett mjukvarusystem för ett 3D-scannerbås för att skapa en modell av användaren med textur. Båset skulle innehålla en eller flera djupkameror för att scanna användaren. Den erhållna punktdatan skulle användas för att skapa en solid 3D-modell. Användaren skulle även ha möjlighet att interagera med systemet via ett enkelt gränssnitt. Gränssnittet skulle ha som användningsområde att starta scanningen, spara- och kasta modellen och göra om scanningsprocessen. En stor del av uppgiften var att arbeta med en agil utvecklingsmetod. Fokus för projektet har legat på att utveckla programvaran till ett fysiskt scanningsbås.
 
 \section{Syfte}
-Syftet med rapporten är att framlägga målet med projektet och beskriva arbetsmetoder och verktyg som har behandlats under projektets gång. Syftet är även att ge en tydlig reflektion över metodval för arbetsprocessen och undersöka dessa metoder i verklig miljö. Samtliga medlemmar i projektet bör utveckla en förståelse för teoretiska metoder inom systemutveckling.
+Syftet med projektet var att, med en agil utvecklingsmetod, utveckla ett mjukvarusystem för 3D-rekonstruktion. Projektet grundades på en kravlista från kund som systemet hade som ett minimum att uppfylla vid projektets slut.
+% Arbetet ska effektiviseras genom att ha kontinuerliga utvärderingar av arbetsprocessen. Vidare ska gruppen se till att alla bidrar maximalt till projektet.
+
+Genom detta projekt skulle medlemmarna i projektet öka sin förståelse för agila utvecklingsprocesser, utveckla sin förmåga att arbeta i grupp samt samla kunskap inom nya tekniska områden.
+
+
+
+
+%Syftet med rapporten är att framlägga målet med projektet och beskriva arbetsmetoder och verktyg som har behandlats under projektets gång. Syftet är även att ge en tydlig reflektion över metodval för arbetsprocessen och undersöka dessa metoder i verklig miljö. Samtliga medlemmar i projektet bör utveckla en förståelse för teoretiska metoder inom systemutveckling.
 
 \section{Frågeställning}
 
@@ -307,7 +315,7 @@ Testningen som har genomförts innefattar användartester på gränssnittet samt
 
 För att säkerställa att gränssnittet var enkelt och intuitivt genomfördes användartester, se Bilaga \ref{app:anvtest}. Innan testet inleddes informerades testpersonerna med samma information som de hade fått om de hade varit på plats i båset. De informerades om att de befann sig i ett 3D-scannerbås och att de hade en surfplatta framför sig. Testpersonerna fick sedan själva komma fram till vad som behövde göras för att utföra scanningen. Under tiden ombads de att beskriva sina tankar om både funktionaliteten och det grafiska. Även utvalda frågor ställdes till deltagarna. Totalt utfördes användartester på fem olika personer, vilket ansågs som tillräckligt eftersom resultaten liknade varandra. Gränssnittet uppdaterades sedan efter testpersonernas anmärkningar.
 
-\chapter{Redogörelse för arbetet}
+\chapter{Systemet}
 \section{Systemarkitektur}
 I början av projektet utfördes en enkel systemarkitektur för att säkerställa att utvecklingsteamet strävade mot ett gemensamt mål, samt för att på en abstrakt nivå veta hur systemet skulle se ut, se Figur \ref{fig:oldArch} nedan.
 
