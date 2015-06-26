@@ -9,6 +9,8 @@
 \usepackage{tabularx}
 \usepackage{geometry}
 \usepackage{float}
+\usepackage{pdfpages}
+\setboolean{@twoside}{false }
 
 \geometry{
  margin=20mm
@@ -567,8 +569,6 @@ Utvecklingsteamet
 \end{figure}
 
 \newpage
-\chapter{Användartest}\label{app:anvtest}
-\begin{figure}[ht]
-\includegraphics{anvandartest.pdf}
-\end{figure}
+\chapter{Användartester}\label{app:anvandartest}
+\includepdf[pages=-]{anvandartest.pdf}
 \end{document}
